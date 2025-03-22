@@ -13,6 +13,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import BottomNav from './BottomNav';
 import SearchBar from './SearchBar';
+import SettingsDialog from './SettingsDialog';
 import { 
   Sheet, 
   SheetContent, 
@@ -24,7 +25,7 @@ import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 
 const Layout: React.FC = () => {
-  const { theme, toggleTheme } = useTheme();
+  const { baseTheme, toggleBaseTheme } = useTheme();
   const { language, toggleLanguage, t } = useLanguage();
   const { isAuthenticated, logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -59,13 +60,13 @@ const Layout: React.FC = () => {
               {/* Theme toggle */}
               <div className="flex items-center justify-between px-4">
                 <div className="flex items-center gap-2">
-                  {theme === 'dark' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+                  {baseTheme === 'dark' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
                   <span>{t('sidebar.theme')}</span>
                 </div>
                 <Switch 
                   id="theme-mode"
-                  checked={theme === 'dark'}
-                  onCheckedChange={toggleTheme}
+                  checked={baseTheme === 'dark'}
+                  onCheckedChange={toggleBaseTheme}
                 />
               </div>
               
@@ -80,6 +81,14 @@ const Layout: React.FC = () => {
                   checked={language === 'en'}
                   onCheckedChange={toggleLanguage}
                 />
+              </div>
+              
+              {/* Settings button */}
+              <div className="flex items-center justify-between px-4">
+                <div className="flex items-center gap-2">
+                  <span>{t('sidebar.settings') || 'Настройки'}</span>
+                </div>
+                <SettingsDialog />
               </div>
             </div>
             

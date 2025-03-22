@@ -1,11 +1,13 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Home, Heart, BookMarked, Plus } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
+import PublishBookDialog from './PublishBookDialog';
 
 const BottomNav: React.FC = () => {
   const { t } = useLanguage();
+  const [publishDialogOpen, setPublishDialogOpen] = useState(false);
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-40 glass border-t border-border/50 backdrop-blur-lg">
@@ -36,6 +38,7 @@ const BottomNav: React.FC = () => {
             type="button"
             className="neon-button"
             aria-label="Add new book"
+            onClick={() => setPublishDialogOpen(true)}
           >
             <Plus className="h-6 w-6" strokeWidth={3} />
           </button>
@@ -51,6 +54,11 @@ const BottomNav: React.FC = () => {
           <span className="text-xs">{t('nav.saved')}</span>
         </NavLink>
       </nav>
+      
+      <PublishBookDialog 
+        open={publishDialogOpen} 
+        onOpenChange={setPublishDialogOpen} 
+      />
     </div>
   );
 };
