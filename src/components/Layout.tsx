@@ -20,14 +20,8 @@ import {
   SheetClose
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { 
-  Switch,
-  SwitchThumb,
-  SwitchTrigger,
-} from '@/components/ui/switch';
-import { 
-  Separator
-} from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
 
 const Layout: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
@@ -72,9 +66,7 @@ const Layout: React.FC = () => {
                   id="theme-mode"
                   checked={theme === 'dark'}
                   onCheckedChange={toggleTheme}
-                >
-                  <SwitchThumb />
-                </Switch>
+                />
               </div>
               
               {/* Language toggle */}
@@ -87,9 +79,7 @@ const Layout: React.FC = () => {
                   id="language-toggle"
                   checked={language === 'en'}
                   onCheckedChange={toggleLanguage}
-                >
-                  <SwitchThumb />
-                </Switch>
+                />
               </div>
             </div>
             
