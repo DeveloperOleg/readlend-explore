@@ -100,7 +100,7 @@ const Layout: React.FC = () => {
               {/* Settings button */}
               <div className="flex items-center justify-between px-4">
                 <div className="flex items-center gap-2">
-                  <span>{t('sidebar.settings') || 'Настройки'}</span>
+                  <span>{t('sidebar.settings')}</span>
                 </div>
                 <SettingsDialog />
               </div>

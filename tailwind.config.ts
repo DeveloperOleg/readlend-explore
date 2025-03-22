@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -140,7 +139,7 @@ export default {
         'scale-in': 'scale-in 0.3s ease-out',
         'search-expand': 'search-expand 0.3s ease-out forwards',
         'search-collapse': 'search-collapse 0.3s ease-out forwards',
-        'pulse-neon': 'pulse-neon 2s infinite'
+        'pulse-neon': 'pulse-neon 4s infinite'
 			}
 		}
 	},
