@@ -6,7 +6,8 @@ import {
   Moon, 
   Sun, 
   Languages, 
-  LogOut
+  LogOut,
+  Telegram
 } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -81,6 +82,19 @@ const Layout: React.FC = () => {
                   checked={language === 'en'}
                   onCheckedChange={toggleLanguage}
                 />
+              </div>
+              
+              {/* Telegram chat link */}
+              <div className="flex items-center px-4">
+                <a 
+                  href="https://t.me/+LeR5l4MeHVE4NjBi" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
+                >
+                  <Telegram className="h-5 w-5" />
+                  <span>Telegram чат</span>
+                </a>
               </div>
               
               {/* Settings button */}
