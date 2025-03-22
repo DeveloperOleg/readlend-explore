@@ -7,7 +7,7 @@ import {
   Sun, 
   Languages, 
   LogOut,
-  Telegram
+  MessageCircle
 } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -92,7 +92,7 @@ const Layout: React.FC = () => {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
                 >
-                  <Telegram className="h-5 w-5" />
+                  <MessageCircle className="h-5 w-5" />
                   <span>Telegram чат</span>
                 </a>
               </div>
