@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 type Language = 'ru' | 'en';
@@ -19,6 +18,7 @@ const translations: Record<Language, Record<string, string>> = {
     'greeting.night': 'Good night',
     'search.placeholder': 'What are you looking for?',
     'search.notFound': 'Oops, your book has escaped from us! 😭 The search fell into a book time hole. Maybe it\'s hiding behind the pages of other stories? Let\'s search together again! 📚✨',
+    'search.tryAgain': 'Try different keywords or browse our categories',
     'nav.home': 'Home',
     'nav.favorites': 'Favorites',
     'nav.saved': 'Saved',
@@ -70,6 +70,7 @@ const translations: Record<Language, Record<string, string>> = {
     'greeting.night': 'Доброй ночи',
     'search.placeholder': 'Что ищем?',
     'search.notFound': 'Увы, твоя книжечка ускользнула от нас! 😭 Поиск попал в книжную яму времени. Может, она прячется за страницами других историй? Давай поищем вместе ещё раз! 📚✨',
+    'search.tryAgain': 'Попробуйте другие ключевые слова или просмотрите наши категории',
     'nav.home': 'Главная',
     'nav.favorites': 'Избранное',
     'nav.saved': 'Сохраненные',

@@ -116,7 +116,12 @@ const SearchBar: React.FC = () => {
       
       {showEmpty && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-background/95 px-4 py-16 animate-fade-in">
-          <EmptyState onClose={() => setShowEmpty(false)} />
+          <EmptyState 
+            title={t('search.notFound') || 'No results found'}
+            description={t('search.tryAgain') || 'Please try another search term'}
+            icon="book"
+            onClose={() => setShowEmpty(false)} 
+          />
         </div>
       )}
       
