@@ -78,10 +78,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (username: string, password: string): Promise<boolean> => {
     // For demo, just check against hardcoded credentials
     if (username === 'tester111' && password === 'tester111') {
+      // Ensure we have a fixed test displayId for the demo account
+      const testDisplayId = '123456'; // Fixed 6-digit ID for test account
+      
       const userData: User = { 
         id: 'user-1234-5678-9012',
         username,
-        displayId: generateDisplayId(),
+        displayId: testDisplayId,
         subscriptions: [],
         subscribers: [],
         blockedUsers: [],
