@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
@@ -55,8 +54,8 @@ const BookReactions: React.FC<BookReactionsProps> = ({ bookId, authorId, authorN
     if (!user) {
       // Require login
       toast({
-        title: t('reactions.loginRequired') || 'Требуется авторизация',
-        description: t('reactions.loginRequiredMessage') || 'Войдите или зарегистрируйтесь, чтобы оставить реакцию',
+        title: t('reactions.loginRequired'),
+        description: t('reactions.loginRequiredMessage'),
         variant: 'destructive',
       });
       return;
@@ -91,8 +90,8 @@ const BookReactions: React.FC<BookReactionsProps> = ({ bookId, authorId, authorN
     
     // Show toast
     toast({
-      title: t('reactions.added') || 'Реакция добавлена',
-      description: t('reactions.addedMessage') || 'Ваша реакция была успешно добавлена',
+      title: t('reactions.added'),
+      description: t('reactions.addedMessage'),
     });
   };
   
@@ -106,18 +105,17 @@ const BookReactions: React.FC<BookReactionsProps> = ({ bookId, authorId, authorN
       setIsAuthorSubscribed(true);
       
       toast({
-        title: t('subscriptions.authorSubscribed') || 'Взаимная подписка',
-        description: t('subscriptions.authorSubscribedMessage', { author: authorName }) || 
-          `${authorName} подписался на вас в ответ!`,
+        title: t('subscriptions.authorSubscribed'),
+        description: t('subscriptions.authorSubscribedMessage'),
       });
     } else {
       toast({
         title: isSubscribed 
-          ? (t('subscriptions.unsubscribed') || 'Отписка выполнена')
-          : (t('subscriptions.subscribed') || 'Подписка оформлена'),
+          ? t('subscriptions.unsubscribed')
+          : t('subscriptions.subscribed'),
         description: isSubscribed
-          ? (t('subscriptions.unsubscribedMessage', { author: authorName }) || `Вы отписались от ${authorName}`)
-          : (t('subscriptions.subscribedMessage', { author: authorName }) || `Вы подписались на ${authorName}`),
+          ? t('subscriptions.unsubscribedMessage')
+          : t('subscriptions.subscribedMessage'),
       });
     }
   };
@@ -134,11 +132,11 @@ const BookReactions: React.FC<BookReactionsProps> = ({ bookId, authorId, authorN
     
     toast({
       title: isBlocked
-        ? (t('blocked.unblocked') || 'Пользователь разблокирован')
-        : (t('blocked.blocked') || 'Пользователь заблокирован'),
+        ? t('blocked.unblocked')
+        : t('blocked.blocked'),
       description: isBlocked
-        ? (t('blocked.unblockedMessage', { author: authorName }) || `Вы разблокировали ${authorName}`)
-        : (t('blocked.blockedMessage', { author: authorName }) || `Вы заблокировали ${authorName}`),
+        ? t('blocked.unblockedMessage')
+        : t('blocked.blockedMessage'),
     });
   };
   
@@ -153,10 +151,10 @@ const BookReactions: React.FC<BookReactionsProps> = ({ bookId, authorId, authorN
   
   const getReactionLabel = (type: ReactionType) => {
     switch (type) {
-      case 'like': return t('reactions.like') || 'Нравится';
-      case 'dislike': return t('reactions.dislike') || 'Не нравится';
-      case 'heart': return t('reactions.heart') || 'Любовь';
-      case 'fire': return t('reactions.fire') || 'Огонь';
+      case 'like': return t('reactions.like');
+      case 'dislike': return t('reactions.dislike');
+      case 'heart': return t('reactions.heart');
+      case 'fire': return t('reactions.fire');
     }
   };
   
@@ -191,12 +189,12 @@ const BookReactions: React.FC<BookReactionsProps> = ({ bookId, authorId, authorN
           {isSubscribed ? (
             <>
               <BellOff className="w-4 h-4" />
-              <span>{t('subscriptions.unsubscribe') || 'Отписаться'}</span>
+              <span>{t('subscriptions.unsubscribe')}</span>
             </>
           ) : (
             <>
               <Bell className="w-4 h-4" />
-              <span>{t('subscriptions.subscribe') || 'Подписаться'}</span>
+              <span>{t('subscriptions.subscribe')}</span>
             </>
           )}
         </Button>
@@ -210,12 +208,12 @@ const BookReactions: React.FC<BookReactionsProps> = ({ bookId, authorId, authorN
           {isBlocked ? (
             <>
               <UserPlus className="w-4 h-4" />
-              <span>{t('blocked.unblock') || 'Разблокировать'}</span>
+              <span>{t('blocked.unblock')}</span>
             </>
           ) : (
             <>
               <UserX className="w-4 h-4" />
-              <span>{t('blocked.block') || 'Заблокировать'}</span>
+              <span>{t('blocked.block')}</span>
             </>
           )}
         </Button>
@@ -223,15 +221,13 @@ const BookReactions: React.FC<BookReactionsProps> = ({ bookId, authorId, authorN
       
       {isAuthorSubscribed && (
         <div className="text-sm bg-primary/10 text-primary px-3 py-2 rounded-md">
-          {t('subscriptions.mutualSubscriptionMessage', { author: authorName }) || 
-            `${authorName} также подписан на вас!`}
+          {t('subscriptions.mutualSubscriptionMessage')}
         </div>
       )}
       
       {isBlocked && (
         <div className="text-sm bg-destructive/10 text-destructive px-3 py-2 rounded-md">
-          {t('blocked.activeMessage', { author: authorName }) || 
-            `${authorName} находится в вашем черном списке.`}
+          {t('blocked.activeMessage')}
         </div>
       )}
     </div>

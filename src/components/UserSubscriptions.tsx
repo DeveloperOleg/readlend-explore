@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
@@ -6,9 +5,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { UserX, Bell, BellOff } from 'lucide-react';
-import { EmptyState } from './EmptyState';
+import EmptyState from './EmptyState';
 
-// Mock data for subscriptions
 const mockSubscriptions = [
   { id: '1', username: 'anna_writer', avatarUrl: null, hasSubscribedBack: true },
   { id: '2', username: 'bookmaster', avatarUrl: null, hasSubscribedBack: false },
@@ -26,8 +24,8 @@ const UserSubscriptions: React.FC = () => {
     setSubscriptions(subscriptions.filter(sub => sub.id !== userId));
     
     toast({
-      title: t('subscriptions.unsubscribed') || 'Отписка выполнена',
-      description: t('subscriptions.unsubscribedMessage') || 'Вы успешно отписались от пользователя',
+      title: t('subscriptions.unsubscribed'),
+      description: t('subscriptions.unsubscribedMessage'),
     });
   };
   
@@ -36,8 +34,8 @@ const UserSubscriptions: React.FC = () => {
     setSubscriptions(subscriptions.filter(sub => sub.id !== userId));
     
     toast({
-      title: t('subscriptions.blocked') || 'Пользователь заблокирован',
-      description: t('subscriptions.blockedMessage') || 'Вы заблокировали этого пользователя',
+      title: t('subscriptions.blocked'),
+      description: t('subscriptions.blockedMessage'),
     });
   };
   

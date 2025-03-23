@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Ban } from 'lucide-react';
-import { EmptyState } from './EmptyState';
+import EmptyState from './EmptyState';
 
 // Mock data for blocked users
 const mockBlockedUsers = [
@@ -25,8 +25,8 @@ const UserBlocked: React.FC = () => {
     setBlockedUsers(blockedUsers.filter(user => user.id !== userId));
     
     toast({
-      title: t('blocked.unblocked') || 'Пользователь разблокирован',
-      description: t('blocked.unblockedMessage') || 'Вы успешно разблокировали пользователя',
+      title: t('blocked.unblocked'),
+      description: t('blocked.unblockedMessage'),
     });
   };
   
