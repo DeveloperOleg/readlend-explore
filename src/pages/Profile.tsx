@@ -18,6 +18,9 @@ const Profile: React.FC = () => {
     return null;
   }
 
+  // Format display name
+  const displayName = [user.firstName, user.lastName].filter(Boolean).join(' ') || user.username;
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6">{t('profile.title') || 'Профиль пользователя'}</h1>
@@ -43,8 +46,9 @@ const Profile: React.FC = () => {
                   </AvatarFallback>
                 </Avatar>
                 <div className="text-center">
-                  <p className="text-xl font-medium mb-1">{user.username}</p>
-                  <p className="text-sm text-muted-foreground mb-3">ID: {user.id}</p>
+                  <p className="text-xl font-medium mb-1">{displayName}</p>
+                  <p className="text-sm text-muted-foreground mb-1">@{user.username}</p>
+                  <p className="text-sm text-muted-foreground mb-3">ID: {user.displayId}</p>
                 </div>
               </CardContent>
             </Card>

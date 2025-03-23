@@ -6,16 +6,35 @@ import { useToast } from "@/hooks/use-toast";
 interface User {
   id: string;
   username: string;
+  firstName?: string;
+  lastName?: string;
   avatarUrl?: string;
+  displayId: string; // 6-digit ID
   subscriptions?: string[]; // IDs of users this user is subscribed to
   subscribers?: string[]; // IDs of users subscribed to this user
   blockedUsers?: string[]; // IDs of users this user has blocked
   publishedBooks?: string[]; // IDs of books published by this user
+  privacy: {
+    hideSubscriptions: boolean;
+    commentSettings: {
+      global: boolean; // true = enabled, false = disabled
+      perBook: Record<string, boolean>; // bookId: boolean (true = enabled, false = disabled)
+    };
+  };
 }
 
 interface ProfileUpdateData {
-  username: string;
+  username?: string;
+  firstName?: string;
+  lastName?: string;
   avatarUrl?: string;
+  privacy?: {
+    hideSubscriptions?: boolean;
+    commentSettings?: {
+      global?: boolean;
+      perBook?: Record<string, boolean>;
+    };
+  };
 }
 
 interface AuthContextType {
@@ -28,7 +47,17 @@ interface AuthContextType {
   unsubscribeFromUser: (userId: string) => Promise<boolean>;
   blockUser: (userId: string) => Promise<boolean>;
   unblockUser: (userId: string) => Promise<boolean>;
+  setBookCommentSetting: (bookId: string, enabled: boolean) => Promise<boolean>;
+  toggleGlobalComments: (enabled: boolean) => Promise<boolean>;
+  toggleHideSubscriptions: (hide: boolean) => Promise<boolean>;
+  canViewSubscriptions: (userId: string) => boolean;
+  canCommentOnBook: (bookId: string, authorId: string) => boolean;
 }
+
+// Generate random 6-digit ID
+const generateDisplayId = (): string => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -52,10 +81,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const userData: User = { 
         id: 'user-1234-5678-9012',
         username,
+        displayId: generateDisplayId(),
         subscriptions: [],
         subscribers: [],
         blockedUsers: [],
-        publishedBooks: []
+        publishedBooks: [],
+        privacy: {
+          hideSubscriptions: false,
+          commentSettings: {
+            global: true,
+            perBook: {}
+          }
+        }
       };
       setUser(userData);
       setIsAuthenticated(true);
@@ -93,7 +130,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // For demo, we'll just update the local state
       const updatedUser = {
         ...user,
-        ...data
+        ...(data.username && { username: data.username }),
+        ...(data.firstName !== undefined && { firstName: data.firstName }),
+        ...(data.lastName !== undefined && { lastName: data.lastName }),
+        ...(data.avatarUrl && { avatarUrl: data.avatarUrl }),
+        privacy: {
+          ...user.privacy,
+          ...(data.privacy?.hideSubscriptions !== undefined && {
+            hideSubscriptions: data.privacy.hideSubscriptions
+          }),
+          commentSettings: {
+            ...user.privacy.commentSettings,
+            ...(data.privacy?.commentSettings?.global !== undefined && {
+              global: data.privacy.commentSettings.global
+            }),
+            ...(data.privacy?.commentSettings?.perBook && {
+              perBook: {
+                ...user.privacy.commentSettings.perBook,
+                ...data.privacy.commentSettings.perBook
+              }
+            })
+          }
+        }
       };
       
       setUser(updatedUser);
@@ -195,6 +253,83 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // New privacy and comment settings methods
+  const toggleHideSubscriptions = async (hide: boolean): Promise<boolean> => {
+    return updateProfile({
+      privacy: {
+        hideSubscriptions: hide
+      }
+    });
+  };
+
+  const toggleGlobalComments = async (enabled: boolean): Promise<boolean> => {
+    return updateProfile({
+      privacy: {
+        commentSettings: {
+          global: enabled
+        }
+      }
+    });
+  };
+
+  const setBookCommentSetting = async (bookId: string, enabled: boolean): Promise<boolean> => {
+    if (!user) return false;
+
+    const perBook = {
+      ...user.privacy.commentSettings.perBook,
+      [bookId]: enabled
+    };
+
+    return updateProfile({
+      privacy: {
+        commentSettings: {
+          perBook
+        }
+      }
+    });
+  };
+
+  // Helper functions for checking permissions
+  const canViewSubscriptions = (userId: string): boolean => {
+    if (!user) return false;
+    
+    // If it's the current user, they can see their own subscriptions
+    if (user.id === userId) return true;
+    
+    // Find the user in our mock data (in a real app this would be an API call)
+    // For demo, we'll simulate that the user exists and check their privacy settings
+    const targetUser = {
+      id: userId,
+      privacy: {
+        hideSubscriptions: true // This would come from a database in a real app
+      }
+    };
+    
+    return !targetUser.privacy.hideSubscriptions;
+  };
+
+  const canCommentOnBook = (bookId: string, authorId: string): boolean => {
+    if (!user) return false;
+    
+    // For demo, we'll simulate getting the author's settings
+    // In a real app, this would be an API call
+    const author = authorId === user.id ? user : {
+      id: authorId,
+      privacy: {
+        commentSettings: {
+          global: true,
+          perBook: {
+            [bookId]: undefined // This would come from database
+          }
+        }
+      }
+    };
+    
+    // Check per-book setting first, then fall back to global setting
+    const perBookSetting = author.privacy.commentSettings.perBook[bookId];
+    return perBookSetting !== undefined ? perBookSetting : author.privacy.commentSettings.global;
+  };
+
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
@@ -211,7 +346,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       subscribeToUser,
       unsubscribeFromUser,
       blockUser,
-      unblockUser
+      unblockUser,
+      toggleHideSubscriptions,
+      toggleGlobalComments,
+      setBookCommentSetting,
+      canViewSubscriptions,
+      canCommentOnBook
     }}>
       {children}
     </AuthContext.Provider>

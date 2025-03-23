@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { MessageSquareOff } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
@@ -42,18 +43,28 @@ const initialComments: Comment[] = [
 
 interface BookCommentsProps {
   bookId: string;
+  authorId: string;
 }
 
-const BookComments: React.FC<BookCommentsProps> = ({ bookId }) => {
+const BookComments: React.FC<BookCommentsProps> = ({ bookId, authorId }) => {
   const { t, language } = useLanguage();
-  const { user } = useAuth();
+  const { user, canCommentOnBook } = useAuth();
   const { toast } = useToast();
   const [comments, setComments] = useState<Comment[]>(initialComments);
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [commentsEnabled, setCommentsEnabled] = useState(true);
+
+  useEffect(() => {
+    // Check if comments are enabled for this book
+    if (user) {
+      const enabled = canCommentOnBook(bookId, authorId);
+      setCommentsEnabled(enabled);
+    }
+  }, [bookId, authorId, user, canCommentOnBook]);
 
   const handleSubmitComment = () => {
-    if (!user || !newComment.trim()) return;
+    if (!user || !newComment.trim() || !commentsEnabled) return;
     
     setIsSubmitting(true);
     
@@ -73,8 +84,8 @@ const BookComments: React.FC<BookCommentsProps> = ({ bookId }) => {
       setIsSubmitting(false);
       
       toast({
-        title: t('comments.added') || 'Комментарий добавлен',
-        description: t('comments.addedMessage') || 'Ваш комментарий был успешно добавлен',
+        title: t('comments.added'),
+        description: t('comments.addedMessage'),
       });
     }, 500);
   };
@@ -89,10 +100,10 @@ const BookComments: React.FC<BookCommentsProps> = ({ bookId }) => {
   return (
     <div className="space-y-6">
       <h3 className="text-xl font-semibold">
-        {t('comments.title') || 'Комментарии'} ({comments.length})
+        {t('comments.title')} ({comments.length})
       </h3>
       
-      {user && (
+      {user && commentsEnabled ? (
         <div className="space-y-4">
           <div className="flex items-start gap-3">
             <Avatar className="h-8 w-8">
@@ -101,7 +112,7 @@ const BookComments: React.FC<BookCommentsProps> = ({ bookId }) => {
             </Avatar>
             <div className="flex-1">
               <Textarea
-                placeholder={t('comments.placeholder') || 'Напишите комментарий...'}
+                placeholder={t('comments.placeholder')}
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 className="min-h-24"
@@ -116,25 +127,39 @@ const BookComments: React.FC<BookCommentsProps> = ({ bookId }) => {
               {isSubmitting ? (
                 <>
                   <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                  {t('comments.sending') || 'Отправка...'}
+                  {t('comments.sending')}
                 </>
               ) : (
-                t('comments.submit') || 'Отправить'
+                t('comments.submit')
               )}
             </Button>
           </div>
+        </div>
+      ) : !commentsEnabled && (
+        <div className="bg-muted p-4 rounded-md flex items-center gap-3">
+          <MessageSquareOff className="h-5 w-5 text-muted-foreground" />
+          <p className="text-muted-foreground">
+            {t('comments.disabled')}
+          </p>
         </div>
       )}
       
       <Separator />
       
-      <div className="space-y-4">
-        {comments.length === 0 ? (
-          <p className="text-center text-muted-foreground py-8">
-            {t('comments.noComments') || 'Нет комментариев. Будьте первым, кто оставит комментарий!'}
+      {!commentsEnabled ? (
+        <div className="text-center py-8">
+          <MessageSquareOff className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+          <p className="text-muted-foreground">
+            {t('comments.disabledMessage')}
           </p>
-        ) : (
-          comments.map((comment) => (
+        </div>
+      ) : comments.length === 0 ? (
+        <p className="text-center text-muted-foreground py-8">
+          {t('comments.noComments')}
+        </p>
+      ) : (
+        <div className="space-y-4">
+          {comments.map((comment) => (
             <Card key={comment.id}>
               <CardContent className="p-4">
                 <div className="flex items-start gap-3">
@@ -152,9 +177,9 @@ const BookComments: React.FC<BookCommentsProps> = ({ bookId }) => {
                 </div>
               </CardContent>
             </Card>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

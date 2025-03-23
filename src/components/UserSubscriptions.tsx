@@ -1,10 +1,12 @@
+
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
+import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { UserX, Bell, BellOff } from 'lucide-react';
+import { UserX, Bell, BellOff, Lock } from 'lucide-react';
 import EmptyState from './EmptyState';
 
 const mockSubscriptions = [
@@ -13,19 +15,29 @@ const mockSubscriptions = [
   { id: '3', username: 'sci_fi_author', avatarUrl: null, hasSubscribedBack: true },
 ];
 
-const UserSubscriptions: React.FC = () => {
+interface UserSubscriptionsProps {
+  userId?: string; // Optional, if provided will show another user's subscriptions
+}
+
+const UserSubscriptions: React.FC<UserSubscriptionsProps> = ({ userId }) => {
   const { t } = useLanguage();
-  const { toast } = useToast();
+  const { toast, user, unsubscribeFromUser, blockUser, canViewSubscriptions } = useAuth();
   
   const [subscriptions, setSubscriptions] = React.useState(mockSubscriptions);
+  const isOwnProfile = !userId || (user && userId === user.id);
+  const canView = isOwnProfile || (userId && canViewSubscriptions(userId));
   
   const handleUnsubscribe = (userId: string) => {
     // In a real app, this would make an API call
     setSubscriptions(subscriptions.filter(sub => sub.id !== userId));
     
+    if (unsubscribeFromUser) {
+      unsubscribeFromUser(userId);
+    }
+    
     toast({
-      title: t('subscriptions.unsubscribed'),
-      description: t('subscriptions.unsubscribedMessage'),
+      title: t('subscriptions.unsubscribed') || 'Отписка выполнена',
+      description: t('subscriptions.unsubscribedMessage') || 'Вы отписались от этого пользователя',
     });
   };
   
@@ -33,11 +45,29 @@ const UserSubscriptions: React.FC = () => {
     // In a real app, this would make an API call
     setSubscriptions(subscriptions.filter(sub => sub.id !== userId));
     
+    if (blockUser) {
+      blockUser(userId);
+    }
+    
     toast({
-      title: t('subscriptions.blocked'),
-      description: t('subscriptions.blockedMessage'),
+      title: t('subscriptions.blocked') || 'Пользователь заблокирован',
+      description: t('subscriptions.blockedMessage') || 'Этот пользователь был добавлен в ваш черный список',
     });
   };
+  
+  if (!canView) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16">
+        <Lock className="h-12 w-12 text-muted-foreground mb-4" />
+        <h3 className="text-xl font-medium mb-2">
+          {t('subscriptions.hidden') || 'Подписки скрыты'}
+        </h3>
+        <p className="text-muted-foreground text-center max-w-md">
+          {t('subscriptions.hiddenDescription') || 'Пользователь скрыл список своих подписок в настройках конфиденциальности'}
+        </p>
+      </div>
+    );
+  }
   
   if (subscriptions.length === 0) {
     return (
@@ -52,7 +82,9 @@ const UserSubscriptions: React.FC = () => {
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold">
-        {t('subscriptions.title') || 'Мои подписки'}
+        {isOwnProfile 
+          ? (t('subscriptions.title') || 'Мои подписки')
+          : (t('subscriptions.userTitle') || 'Подписки пользователя')}
       </h2>
       
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -83,26 +115,28 @@ const UserSubscriptions: React.FC = () => {
                 </div>
               </div>
               
-              <div className="flex justify-between gap-2 mt-4">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="flex-1" 
-                  onClick={() => handleUnsubscribe(sub.id)}
-                >
-                  <BellOff className="h-4 w-4 mr-2" />
-                  {t('subscriptions.unsubscribe') || 'Отписаться'}
-                </Button>
-                <Button 
-                  variant="destructive" 
-                  size="sm" 
-                  className="flex-1" 
-                  onClick={() => handleBlock(sub.id)}
-                >
-                  <UserX className="h-4 w-4 mr-2" />
-                  {t('subscriptions.block') || 'Заблокировать'}
-                </Button>
-              </div>
+              {isOwnProfile && (
+                <div className="flex justify-between gap-2 mt-4">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1" 
+                    onClick={() => handleUnsubscribe(sub.id)}
+                  >
+                    <BellOff className="h-4 w-4 mr-2" />
+                    {t('subscriptions.unsubscribe') || 'Отписаться'}
+                  </Button>
+                  <Button 
+                    variant="destructive" 
+                    size="sm" 
+                    className="flex-1" 
+                    onClick={() => handleBlock(sub.id)}
+                  >
+                    <UserX className="h-4 w-4 mr-2" />
+                    {t('subscriptions.block') || 'Заблокировать'}
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         ))}
