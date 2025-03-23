@@ -1,13 +1,14 @@
 
 import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import { 
   Menu, 
   Moon, 
   Sun, 
   Languages, 
   LogOut,
-  MessageCircle
+  MessageCircle,
+  User
 } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -24,11 +25,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const Layout: React.FC = () => {
   const { baseTheme, toggleBaseTheme } = useTheme();
   const { language, toggleLanguage, t } = useLanguage();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (!isAuthenticated) {
@@ -51,8 +53,21 @@ const Layout: React.FC = () => {
         </SheetTrigger>
         <SheetContent side="left" className="w-[280px] sm:w-[350px] bg-sidebar backdrop-blur-lg border-sidebar-border">
           <div className="flex flex-col h-full text-sidebar-foreground">
-            <div className="py-6">
-              <h2 className="text-2xl font-semibold tracking-tight px-4">ReadNest</h2>
+            <div className="py-6 px-4 flex items-center gap-3">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={user?.avatarUrl} alt={user?.username} />
+                <AvatarFallback className="text-lg">
+                  {user?.username ? user.username.charAt(0).toUpperCase() : 'U'}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <h2 className="text-lg font-semibold tracking-tight">{user?.username || 'Пользователь'}</h2>
+                <SheetClose asChild>
+                  <Link to="/profile" className="text-sm text-muted-foreground hover:text-sidebar-foreground transition-colors">
+                    {t('sidebar.viewProfile') || 'Просмотреть профиль'}
+                  </Link>
+                </SheetClose>
+              </div>
             </div>
             
             <Separator className="bg-sidebar-border" />
@@ -95,6 +110,19 @@ const Layout: React.FC = () => {
                   <MessageCircle className="h-5 w-5" />
                   <span>Telegram чат</span>
                 </a>
+              </div>
+              
+              {/* Profile link */}
+              <div className="flex items-center px-4">
+                <SheetClose asChild>
+                  <Link 
+                    to="/profile" 
+                    className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
+                  >
+                    <User className="h-5 w-5" />
+                    <span>{t('sidebar.profile') || 'Профиль'}</span>
+                  </Link>
+                </SheetClose>
               </div>
               
               {/* Settings button */}

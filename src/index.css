@@ -127,7 +127,24 @@
   }
   
   .neon-button {
-    @apply relative bg-neon rounded-full p-3 text-white shadow-[0_0_10px_rgba(var(--neon),0.7)] transition-all duration-300 animate-pulse-neon;
+    @apply relative bg-neon rounded-full p-3 text-white shadow-[0_0_10px_rgba(var(--neon),0.7)] transition-all duration-500 animate-pulse-slow;
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 10px rgba(var(--neon), 0.7);
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 15px rgba(var(--neon), 0.9);
+  }
+}
+
+@layer utilities {
+  .animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite;
   }
 }
 
