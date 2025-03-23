@@ -3,13 +3,21 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 
 interface User {
+  id: string;
   username: string;
+  avatarUrl?: string;
+}
+
+interface ProfileUpdateData {
+  username: string;
+  avatarUrl?: string;
 }
 
 interface AuthContextType {
   user: User | null;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
+  updateProfile: (data: ProfileUpdateData) => Promise<boolean>;
   isAuthenticated: boolean;
 }
 
@@ -32,7 +40,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (username: string, password: string): Promise<boolean> => {
     // For demo, just check against hardcoded credentials
     if (username === 'tester111' && password === 'tester111') {
-      const userData = { username };
+      const userData = { 
+        id: 'user-1234-5678-9012',
+        username 
+      };
       setUser(userData);
       setIsAuthenticated(true);
       localStorage.setItem('readnest-user', JSON.stringify(userData));
@@ -61,6 +72,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const updateProfile = async (data: ProfileUpdateData): Promise<boolean> => {
+    if (!user) return false;
+
+    try {
+      // In a real app, you would make an API call here
+      // For demo, we'll just update the local state
+      const updatedUser = {
+        ...user,
+        ...data
+      };
+      
+      setUser(updatedUser);
+      localStorage.setItem('readnest-user', JSON.stringify(updatedUser));
+      return true;
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      return false;
+    }
+  };
+
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
@@ -68,7 +99,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated }}>
+    <AuthContext.Provider value={{ user, login, logout, updateProfile, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );

@@ -20,12 +20,12 @@ const SettingsDialog: React.FC = () => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>{t('settings.title')}</DialogTitle>
+          <DialogTitle>{t('settings.title') || 'Настройки'}</DialogTitle>
         </DialogHeader>
         <div className="py-4 space-y-6">
           <div>
             <h3 className="font-medium text-lg mb-4">
-              {t('settings.appearance')}
+              {t('settings.appearance') || 'Внешний вид'}
             </h3>
             <ThemeSettings />
           </div>
@@ -34,11 +34,11 @@ const SettingsDialog: React.FC = () => {
           
           <div>
             <h3 className="font-medium text-lg mb-2">
-              {t('settings.version')}
+              {t('settings.version') || 'Версия'}
             </h3>
             <div className="text-sm text-muted-foreground">
-              <p className="font-medium">{t('settings.versionNumber')}</p>
-              <p className="italic mt-1">{t('settings.earlyVersion')}</p>
+              <p className="font-medium">1.0.0</p>
+              <p className="italic mt-1">{t('settings.earlyVersion') || 'Это ранняя версия приложения'}</p>
             </div>
           </div>
         </div>

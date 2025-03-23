@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
 import Favorites from "./pages/Favorites";
 import SavedBooks from "./pages/SavedBooks";
+import Profile from "./pages/Profile";
 import Layout from "./components/Layout";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
                   <Route path="/home" element={<Home />} />
                   <Route path="/favorites" element={<Favorites />} />
                   <Route path="/saved" element={<SavedBooks />} />
+                  <Route path="/profile" element={<Profile />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />
               </Routes>
