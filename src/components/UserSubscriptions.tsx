@@ -21,7 +21,8 @@ interface UserSubscriptionsProps {
 
 const UserSubscriptions: React.FC<UserSubscriptionsProps> = ({ userId }) => {
   const { t } = useLanguage();
-  const { toast, user, unsubscribeFromUser, blockUser, canViewSubscriptions } = useAuth();
+  const { user, unsubscribeFromUser, blockUser, canViewSubscriptions } = useAuth();
+  const { toast } = useToast();
   
   const [subscriptions, setSubscriptions] = React.useState(mockSubscriptions);
   const isOwnProfile = !userId || (user && userId === user.id);
