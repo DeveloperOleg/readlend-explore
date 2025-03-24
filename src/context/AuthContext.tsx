@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 
@@ -14,6 +13,21 @@ interface User {
   subscribers?: string[]; // IDs of users subscribed to this user
   blockedUsers?: string[]; // IDs of users this user has blocked
   publishedBooks?: string[]; // IDs of books published by this user
+  banStatus?: {
+    /**
+     * Defiance System (Система Неповиновения) - Ban levels
+     * В будущем будет интегрирована система бана по уровням в полноценной версии приложения.
+     * 
+     * Level 1: Caution (Осторожность)
+     * Level 2: 24-Hour Restriction (Ограничение на 24 часа)
+     * Level 3: Week of Silence (Неделя молчания)
+     * Level 4: 30-Day Isolation (30-дневная изоляция)
+     * Level 5: Ultimate Ban (Окончательный бан - блокировка аккаунта до уровня устройства)
+     */
+    level: number; // 1-5
+    expiresAt?: Date;
+    reason?: string;
+  };
   privacy: {
     hideSubscriptions: boolean;
     commentSettings: {
@@ -89,6 +103,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         subscribers: [],
         blockedUsers: [],
         publishedBooks: [],
+        banStatus: undefined, // User is not banned
         privacy: {
           hideSubscriptions: false,
           commentSettings: {
