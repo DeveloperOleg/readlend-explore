@@ -1,0 +1,189 @@
+
+import { useState } from 'react';
+import { User, ProfileUpdateData } from '@/types/auth';
+import { canViewSubscriptions, canCommentOnBook } from '@/utils/authUtils';
+
+export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<React.SetStateAction<User | null>>) => {
+
+  const updateProfile = async (data: ProfileUpdateData): Promise<boolean> => {
+    if (!user) return false;
+
+    try {
+      // In a real app, you would make an API call here
+      // For demo, we'll just update the local state
+      const updatedUser = {
+        ...user,
+        ...(data.username && { username: data.username }),
+        ...(data.firstName !== undefined && { firstName: data.firstName }),
+        ...(data.lastName !== undefined && { lastName: data.lastName }),
+        ...(data.avatarUrl && { avatarUrl: data.avatarUrl }),
+        privacy: {
+          ...user.privacy,
+          ...(data.privacy?.hideSubscriptions !== undefined && {
+            hideSubscriptions: data.privacy.hideSubscriptions
+          }),
+          commentSettings: {
+            ...user.privacy.commentSettings,
+            ...(data.privacy?.commentSettings?.global !== undefined && {
+              global: data.privacy.commentSettings.global
+            }),
+            ...(data.privacy?.commentSettings?.perBook && {
+              perBook: {
+                ...user.privacy.commentSettings.perBook,
+                ...data.privacy.commentSettings.perBook
+              }
+            })
+          }
+        }
+      };
+      
+      setUser(updatedUser);
+      localStorage.setItem('readnest-user', JSON.stringify(updatedUser));
+      return true;
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      return false;
+    }
+  };
+
+  const subscribeToUser = async (userId: string): Promise<boolean> => {
+    if (!user) return false;
+    
+    try {
+      // Check if already subscribed
+      if (user.subscriptions?.includes(userId)) {
+        return true;
+      }
+      
+      // In a real app, you would make an API call here
+      const updatedUser = {
+        ...user,
+        subscriptions: [...(user.subscriptions || []), userId]
+      };
+      
+      setUser(updatedUser);
+      localStorage.setItem('readnest-user', JSON.stringify(updatedUser));
+      return true;
+    } catch (error) {
+      console.error('Error subscribing to user:', error);
+      return false;
+    }
+  };
+  
+  const unsubscribeFromUser = async (userId: string): Promise<boolean> => {
+    if (!user || !user.subscriptions) return false;
+    
+    try {
+      const updatedUser = {
+        ...user,
+        subscriptions: user.subscriptions.filter(id => id !== userId)
+      };
+      
+      setUser(updatedUser);
+      localStorage.setItem('readnest-user', JSON.stringify(updatedUser));
+      return true;
+    } catch (error) {
+      console.error('Error unsubscribing from user:', error);
+      return false;
+    }
+  };
+  
+  const blockUser = async (userId: string): Promise<boolean> => {
+    if (!user) return false;
+    
+    try {
+      // Check if already blocked
+      if (user.blockedUsers?.includes(userId)) {
+        return true;
+      }
+      
+      // If we block someone, we should unsubscribe from them
+      let updatedSubscriptions = user.subscriptions || [];
+      if (updatedSubscriptions.includes(userId)) {
+        updatedSubscriptions = updatedSubscriptions.filter(id => id !== userId);
+      }
+      
+      const updatedUser = {
+        ...user,
+        subscriptions: updatedSubscriptions,
+        blockedUsers: [...(user.blockedUsers || []), userId]
+      };
+      
+      setUser(updatedUser);
+      localStorage.setItem('readnest-user', JSON.stringify(updatedUser));
+      return true;
+    } catch (error) {
+      console.error('Error blocking user:', error);
+      return false;
+    }
+  };
+  
+  const unblockUser = async (userId: string): Promise<boolean> => {
+    if (!user || !user.blockedUsers) return false;
+    
+    try {
+      const updatedUser = {
+        ...user,
+        blockedUsers: user.blockedUsers.filter(id => id !== userId)
+      };
+      
+      setUser(updatedUser);
+      localStorage.setItem('readnest-user', JSON.stringify(updatedUser));
+      return true;
+    } catch (error) {
+      console.error('Error unblocking user:', error);
+      return false;
+    }
+  };
+
+  // Privacy and comment settings methods
+  const toggleHideSubscriptions = async (hide: boolean): Promise<boolean> => {
+    return updateProfile({
+      privacy: {
+        hideSubscriptions: hide
+      }
+    });
+  };
+
+  const toggleGlobalComments = async (enabled: boolean): Promise<boolean> => {
+    return updateProfile({
+      privacy: {
+        commentSettings: {
+          global: enabled
+        }
+      }
+    });
+  };
+
+  const setBookCommentSetting = async (bookId: string, enabled: boolean): Promise<boolean> => {
+    if (!user) return false;
+
+    const perBook = {
+      ...user.privacy.commentSettings.perBook,
+      [bookId]: enabled
+    };
+
+    return updateProfile({
+      privacy: {
+        commentSettings: {
+          perBook
+        }
+      }
+    });
+  };
+
+  return {
+    updateProfile,
+    subscribeToUser,
+    unsubscribeFromUser,
+    blockUser,
+    unblockUser,
+    toggleHideSubscriptions,
+    toggleGlobalComments,
+    setBookCommentSetting,
+    canViewSubscriptions: (userId: string) => canViewSubscriptions(user, userId),
+    canCommentOnBook: (bookId: string, authorId: string) => canCommentOnBook(user, bookId, authorId)
+  };
+};
+
+export default useAuthFunctions;

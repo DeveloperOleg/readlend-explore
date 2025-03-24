@@ -1,0 +1,73 @@
+
+/**
+ * Authentication related types
+ */
+
+/**
+ * User type definition
+ */
+export interface User {
+  id: string;
+  username: string;
+  firstName?: string;
+  lastName?: string;
+  avatarUrl?: string;
+  displayId: string; // 6-digit ID
+  subscriptions?: string[]; // IDs of users this user is subscribed to
+  subscribers?: string[]; // IDs of users subscribed to this user
+  blockedUsers?: string[]; // IDs of users this user has blocked
+  publishedBooks?: string[]; // IDs of books published by this user
+  banStatus?: {
+    /**
+     * Defiance System (Система Неповиновения) - Ban levels
+     * В будущем будет интегрирована система бана по уровням в полноценной версии приложения.
+     * 
+     * Level 1: Caution (Осторожность)
+     * Level 2: 24-Hour Restriction (Ограничение на 24 часа)
+     * Level 3: Week of Silence (Неделя молчания)
+     * Level 4: 30-Day Isolation (30-дневная изоляция)
+     * Level 5: Ultimate Ban (Окончательный бан - блокировка аккаунта до уровня устройства)
+     */
+    level: number; // 1-5
+    expiresAt?: Date;
+    reason?: string;
+  };
+  privacy: {
+    hideSubscriptions: boolean;
+    commentSettings: {
+      global: boolean; // true = enabled, false = disabled
+      perBook: Record<string, boolean>; // bookId: boolean (true = enabled, false = disabled)
+    };
+  };
+}
+
+export interface ProfileUpdateData {
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+  avatarUrl?: string;
+  privacy?: {
+    hideSubscriptions?: boolean;
+    commentSettings?: {
+      global?: boolean;
+      perBook?: Record<string, boolean>;
+    };
+  };
+}
+
+export interface AuthContextType {
+  user: User | null;
+  login: (username: string, password: string) => Promise<boolean>;
+  logout: () => void;
+  updateProfile: (data: ProfileUpdateData) => Promise<boolean>;
+  isAuthenticated: boolean;
+  subscribeToUser: (userId: string) => Promise<boolean>;
+  unsubscribeFromUser: (userId: string) => Promise<boolean>;
+  blockUser: (userId: string) => Promise<boolean>;
+  unblockUser: (userId: string) => Promise<boolean>;
+  setBookCommentSetting: (bookId: string, enabled: boolean) => Promise<boolean>;
+  toggleGlobalComments: (enabled: boolean) => Promise<boolean>;
+  toggleHideSubscriptions: (hide: boolean) => Promise<boolean>;
+  canViewSubscriptions: (userId: string) => boolean;
+  canCommentOnBook: (bookId: string, authorId: string) => boolean;
+}
