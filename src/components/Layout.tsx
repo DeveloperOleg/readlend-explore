@@ -53,22 +53,24 @@ const Layout: React.FC = () => {
         </SheetTrigger>
         <SheetContent side="left" className="w-[280px] sm:w-[350px] bg-sidebar backdrop-blur-lg border-sidebar-border">
           <div className="flex flex-col h-full text-sidebar-foreground">
-            <div className="py-6 px-4 flex items-center gap-3">
-              <Avatar className="h-10 w-10">
-                <AvatarImage src={user?.avatarUrl} alt={user?.username} />
-                <AvatarFallback className="text-lg">
-                  {user?.username ? user.username.charAt(0).toUpperCase() : 'U'}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <h2 className="text-lg font-semibold tracking-tight">{user?.username ? `@${user.username}` : 'Пользователь'}</h2>
-                <SheetClose asChild>
-                  <Link to="/profile" className="text-sm text-muted-foreground hover:text-sidebar-foreground transition-colors">
-                    {t('sidebar.profile') || 'Профиль'}
-                  </Link>
-                </SheetClose>
-              </div>
-            </div>
+            <SheetClose asChild>
+              <Link to="/profile" className="py-6 px-4 flex items-center gap-3 hover:bg-sidebar-accent/10 rounded-lg transition-colors">
+                <Avatar className="h-10 w-10">
+                  <AvatarImage src={user?.avatarUrl} alt={user?.username} />
+                  <AvatarFallback className="text-lg">
+                    {user?.username ? user.username.charAt(0).toUpperCase() : 'U'}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <h2 className="text-lg font-semibold tracking-tight">
+                    {user?.username ? `@${user.username}` : 'Имя пользователя не указано'}
+                  </h2>
+                  <span className="text-sm text-muted-foreground hover:text-sidebar-foreground transition-colors">
+                    {t('sidebar.viewProfile') || 'Посмотреть профиль'}
+                  </span>
+                </div>
+              </Link>
+            </SheetClose>
             
             <Separator className="bg-sidebar-border" />
             

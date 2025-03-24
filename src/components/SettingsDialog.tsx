@@ -9,6 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ThemeSettings from './ThemeSettings';
 import { Switch } from '@/components/ui/switch';
+import UserBlocked from './UserBlocked';
 
 const SettingsDialog: React.FC = () => {
   const { t } = useLanguage();
@@ -34,7 +35,7 @@ const SettingsDialog: React.FC = () => {
           <span className="sr-only">{t('settings.open')}</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t('settings.title') || 'Настройки'}</DialogTitle>
           <DialogDescription>
@@ -46,6 +47,7 @@ const SettingsDialog: React.FC = () => {
           <TabsList className="w-full mb-4">
             <TabsTrigger value="appearance">{t('settings.appearance') || 'Внешний вид'}</TabsTrigger>
             <TabsTrigger value="privacy">{t('profile.privacy') || 'Конфиденциальность'}</TabsTrigger>
+            <TabsTrigger value="blocked">{t('blocked.title') || 'Черный список'}</TabsTrigger>
             <TabsTrigger value="about">{t('settings.about') || 'О приложении'}</TabsTrigger>
           </TabsList>
           
@@ -83,12 +85,33 @@ const SettingsDialog: React.FC = () => {
                     onCheckedChange={handleToggleComments}
                   />
                 </div>
+                
+                {user?.publishedBooks && user.publishedBooks.length > 0 && (
+                  <div className="pt-4">
+                    <h3 className="text-sm font-medium mb-2">
+                      {t('profile.perBookCommentsSettings') || 'Настройки комментариев для отдельных книг'}
+                    </h3>
+                    <p className="text-xs text-muted-foreground mb-4">
+                      {t('profile.perBookCommentsDescription') || 'Настройте возможность комментирования для каждой книги отдельно'}
+                    </p>
+                    
+                    <div className="space-y-2">
+                      <p className="text-sm text-muted-foreground italic">
+                        {t('profile.noPublishedBooks') || 'У вас пока нет опубликованных книг'}
+                      </p>
+                    </div>
+                  </div>
+                )}
               </>
             ) : (
               <p className="text-center text-muted-foreground py-4">
                 {t('settings.loginRequired') || 'Войдите, чтобы настроить параметры конфиденциальности'}
               </p>
             )}
+          </TabsContent>
+          
+          <TabsContent value="blocked">
+            <UserBlocked />
           </TabsContent>
           
           <TabsContent value="about" className="space-y-4">
