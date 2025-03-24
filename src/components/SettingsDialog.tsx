@@ -120,7 +120,7 @@ const SettingsDialog: React.FC = () => {
                 {t('settings.version') || 'Версия'}
               </h3>
               <div className="text-sm text-muted-foreground">
-                <p className="font-medium">1.1.0</p>
+                <p className="font-medium">1.0.0</p>
                 <p className="italic mt-1">{t('settings.earlyVersion') || 'Это ранняя версия приложения'}</p>
               </div>
             </div>
