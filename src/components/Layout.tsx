@@ -61,10 +61,10 @@ const Layout: React.FC = () => {
                 </AvatarFallback>
               </Avatar>
               <div>
-                <h2 className="text-lg font-semibold tracking-tight">{user?.username || 'Пользователь'}</h2>
+                <h2 className="text-lg font-semibold tracking-tight">{user?.username ? `@${user.username}` : 'Пользователь'}</h2>
                 <SheetClose asChild>
                   <Link to="/profile" className="text-sm text-muted-foreground hover:text-sidebar-foreground transition-colors">
-                    {t('sidebar.viewProfile') || 'Просмотреть профиль'}
+                    {t('sidebar.profile') || 'Профиль'}
                   </Link>
                 </SheetClose>
               </div>

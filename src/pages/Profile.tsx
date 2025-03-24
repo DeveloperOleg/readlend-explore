@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import UserSubscriptions from '@/components/UserSubscriptions';
 import UserBlocked from '@/components/UserBlocked';
+import { Book, Users } from 'lucide-react';
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
@@ -20,6 +21,47 @@ const Profile: React.FC = () => {
 
   // Format display name
   const displayName = [user.firstName, user.lastName].filter(Boolean).join(' ') || user.username;
+  
+  // User statistics with proper pluralization
+  const statistics = [
+    {
+      count: user.publishedBooks?.length || 0,
+      label: getBookLabel(user.publishedBooks?.length || 0),
+      icon: <Book className="h-5 w-5" />
+    },
+    {
+      count: user.subscribers?.length || 0,
+      label: getSubscribersLabel(user.subscribers?.length || 0),
+      icon: <Users className="h-5 w-5" />
+    },
+    {
+      count: user.subscriptions?.length || 0,
+      label: getSubscriptionsLabel(user.subscriptions?.length || 0),
+      icon: <Users className="h-5 w-5" />
+    }
+  ];
+
+  // Helper functions for pluralization
+  function getBookLabel(count: number): string {
+    if (count === 0) return 'книг';
+    if (count === 1) return 'книга';
+    if (count >= 2 && count <= 4) return 'книги';
+    return 'книг';
+  }
+
+  function getSubscribersLabel(count: number): string {
+    if (count === 0) return 'подписчиков';
+    if (count === 1) return 'подписчик';
+    if (count >= 2 && count <= 4) return 'подписчика';
+    return 'подписчиков';
+  }
+
+  function getSubscriptionsLabel(count: number): string {
+    if (count === 0) return 'подписок';
+    if (count === 1) return 'подписка';
+    if (count >= 2 && count <= 4) return 'подписки';
+    return 'подписок';
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -47,8 +89,22 @@ const Profile: React.FC = () => {
                 </Avatar>
                 <div className="text-center">
                   <p className="text-xl font-medium mb-1">{displayName}</p>
-                  <p className="text-sm text-muted-foreground mb-1">@{user.username}</p>
+                  <p className="text-sm text-muted-foreground mb-1">
+                    {user.username ? `@${user.username}` : 'Имя пользователя не указано'}
+                  </p>
                   <p className="text-sm text-muted-foreground mb-3">ID: {user.displayId}</p>
+                  
+                  <div className="flex justify-center gap-6 mt-4">
+                    {statistics.map((stat, index) => (
+                      <div key={index} className="flex flex-col items-center">
+                        <div className="flex gap-1 items-center">
+                          {stat.icon}
+                          <span className="text-xl font-bold">{stat.count}</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">{stat.label}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </CardContent>
             </Card>
