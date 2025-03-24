@@ -89,6 +89,31 @@
     
     --neon: 280 100% 70%;
   }
+
+  /* Gradient UI Variables */
+  .gradient-ui {
+    /* Light mode gradient variables */
+    --grad-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    --grad-secondary: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+    --grad-accent: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+    --grad-muted: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    --grad-card: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+    --grad-sidebar: linear-gradient(180deg, #f9fafb 0%, #f3f4f6 100%);
+    --grad-nav: linear-gradient(90deg, rgba(249, 250, 251, 0.8) 0%, rgba(243, 244, 246, 0.8) 100%);
+    --grad-neon: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
+  }
+
+  .dark.gradient-ui {
+    /* Dark mode gradient variables */
+    --grad-primary: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    --grad-secondary: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    --grad-accent: linear-gradient(135deg, #312e81 0%, #4338ca 100%);
+    --grad-muted: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    --grad-card: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    --grad-sidebar: linear-gradient(180deg, #111827 0%, #1f2937 100%);
+    --grad-nav: linear-gradient(90deg, rgba(31, 41, 55, 0.8) 0%, rgba(17, 24, 39, 0.8) 100%);
+    --grad-neon: linear-gradient(135deg, #7c3aed 0%, #c026d3 100%);
+  }
 }
 
 @layer base {
@@ -129,6 +154,38 @@
   .neon-button {
     @apply relative bg-neon rounded-full p-3 text-white shadow-[0_0_10px_rgba(var(--neon),0.7)] transition-all duration-500 animate-pulse-slow;
   }
+
+  /* Gradient UI Components */
+  .gradient-ui .glass {
+    @apply bg-transparent backdrop-blur-lg border border-white/10;
+    background: var(--grad-card);
+  }
+  
+  .gradient-ui .nav-item.active {
+    @apply text-transparent bg-clip-text;
+    background-image: var(--grad-primary);
+  }
+  
+  .gradient-ui .neon-button {
+    background-image: var(--grad-neon);
+    @apply shadow-[0_0_15px_rgba(139,92,246,0.7)];
+  }
+  
+  .gradient-ui .card {
+    background-image: var(--grad-card);
+  }
+  
+  .gradient-ui .btn-primary {
+    background-image: var(--grad-primary);
+  }
+  
+  .gradient-ui .sidebar {
+    background-image: var(--grad-sidebar);
+  }
+  
+  .gradient-ui .bottom-nav {
+    background-image: var(--grad-nav);
+  }
 }
 
 @keyframes pulse-slow {
@@ -145,6 +202,23 @@
 @layer utilities {
   .animate-pulse-slow {
     animation: pulse-slow 3s ease-in-out infinite;
+  }
+
+  .gradient-text {
+    @apply text-transparent bg-clip-text;
+    background-image: var(--grad-primary);
+  }
+  
+  .gradient-border {
+    @apply relative;
+  }
+  
+  .gradient-border::before {
+    content: "";
+    @apply absolute inset-0 rounded-md p-[1px] -z-10;
+    background-image: var(--grad-primary);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
   }
 }
 

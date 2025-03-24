@@ -1,8 +1,9 @@
 
 import React from 'react';
-import { Settings } from 'lucide-react';
+import { Settings, Palette } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
+import { useTheme } from '@/context/ThemeContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -13,6 +14,7 @@ import UserBlocked from './UserBlocked';
 
 const SettingsDialog: React.FC = () => {
   const { t } = useLanguage();
+  const { uiStyle } = useTheme();
   const { user, toggleHideSubscriptions, toggleGlobalComments } = useAuth();
 
   const handleTogglePrivacy = async (value: boolean) => {
@@ -30,14 +32,16 @@ const SettingsDialog: React.FC = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="text-primary">
+        <Button variant="ghost" size="icon" className={`text-primary ${uiStyle === 'gradient' ? 'gradient-text' : ''}`}>
           <Settings className="h-5 w-5" />
           <span className="sr-only">{t('settings.open')}</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+      <DialogContent className={`sm:max-w-[600px] max-h-[80vh] overflow-y-auto ${uiStyle === 'gradient' ? 'card' : ''}`}>
         <DialogHeader>
-          <DialogTitle>{t('settings.title') || 'Настройки'}</DialogTitle>
+          <DialogTitle className={uiStyle === 'gradient' ? 'gradient-text' : ''}>
+            {t('settings.title') || 'Настройки'}
+          </DialogTitle>
           <DialogDescription>
             {t('settings.description') || 'Настройте приложение под свои предпочтения'}
           </DialogDescription>
@@ -45,10 +49,18 @@ const SettingsDialog: React.FC = () => {
         
         <Tabs defaultValue="appearance" className="mt-4">
           <TabsList className="w-full mb-4">
-            <TabsTrigger value="appearance">{t('settings.appearance') || 'Внешний вид'}</TabsTrigger>
-            <TabsTrigger value="privacy">{t('profile.privacy') || 'Конфиденциальность'}</TabsTrigger>
-            <TabsTrigger value="blocked">{t('blocked.title') || 'Черный список'}</TabsTrigger>
-            <TabsTrigger value="about">{t('settings.about') || 'О приложении'}</TabsTrigger>
+            <TabsTrigger value="appearance" className={uiStyle === 'gradient' ? 'data-[state=active]:gradient-text' : ''}>
+              {t('settings.appearance') || 'Внешний вид'}
+            </TabsTrigger>
+            <TabsTrigger value="privacy" className={uiStyle === 'gradient' ? 'data-[state=active]:gradient-text' : ''}>
+              {t('profile.privacy') || 'Конфиденциальность'}
+            </TabsTrigger>
+            <TabsTrigger value="blocked" className={uiStyle === 'gradient' ? 'data-[state=active]:gradient-text' : ''}>
+              {t('blocked.title') || 'Черный список'}
+            </TabsTrigger>
+            <TabsTrigger value="about" className={uiStyle === 'gradient' ? 'data-[state=active]:gradient-text' : ''}>
+              {t('settings.about') || 'О приложении'}
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="appearance" className="space-y-6">

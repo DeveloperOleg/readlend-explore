@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 type Language = 'ru' | 'en';
@@ -20,6 +19,13 @@ const translations: Record<Language, Record<string, string>> = {
     'search.placeholder': 'What are you looking for?',
     'search.notFound': 'Oops, your book has escaped from us! 😭 The search fell into a book time hole. Maybe it\'s hiding behind the pages of other stories? Let\'s search together again! 📚✨',
     'search.tryAgain': 'Try different keywords or browse our categories',
+    'search.books': 'Books',
+    'search.authors': 'Authors',
+    'search.booksPlaceholder': 'Search for books...',
+    'search.authorsPlaceholder': 'Search for authors...',
+    'search.authorNotFound': 'Sorry, we couldn\'t find an author with that name! 😔✨',
+    'search.authorNotFoundDescription': 'Maybe they\'re just waiting for their moment to shine. Try searching for different names or check out new categories!',
+    'search.authorsFound': 'Found Authors',
     'nav.home': 'Home',
     'nav.favorites': 'Favorites',
     'nav.saved': 'Saved',
@@ -125,7 +131,8 @@ const translations: Record<Language, Record<string, string>> = {
     'blocked.noBlockedUsersDescription': 'You haven\'t blocked any users yet',
     'blocked.unblock': 'Unblock',
     'blocked.unblocked': 'User Unblocked',
-    'blocked.unblockedMessage': 'This user has been removed from your block list'
+    'blocked.unblockedMessage': 'This user has been removed from your block list',
+    'settings.gradientUI': 'Gradient UI',
   },
   ru: {
     'greeting.morning': 'Доброе утро',
@@ -135,6 +142,13 @@ const translations: Record<Language, Record<string, string>> = {
     'search.placeholder': 'Что ищем?',
     'search.notFound': 'Увы, твоя книжечка ускользнула от нас! 😭 Поиск попал в книжную яму времени. Может, она прячется за страницами других историй? Давай поищем вместе ещё раз! 📚✨',
     'search.tryAgain': 'Попробуйте другие ключевые слова или просмотрите наши категории',
+    'search.books': 'Книги',
+    'search.authors': 'Авторы',
+    'search.booksPlaceholder': 'Поиск книг...',
+    'search.authorsPlaceholder': 'Поиск авторов...',
+    'search.authorNotFound': 'К сожалению, мы не нашли автора с таким именем! 😔✨',
+    'search.authorNotFoundDescription': 'Возможно, он всего лишь ждет своего звездного часа. Поищите по другим именам или посмотрите в новых категориях!',
+    'search.authorsFound': 'Найденные авторы',
     'nav.home': 'Главная',
     'nav.favorites': 'Избранное',
     'nav.saved': 'Сохраненные',
@@ -207,7 +221,7 @@ const translations: Record<Language, Record<string, string>> = {
     'profile.perBookCommentsSettings': 'Настройки комментариев для отдельных книг',
     'profile.perBookCommentsDescription': 'Настройте возможность комментирования для каждой книги отдельно',
     'profile.noPublishedBooks': 'У вас пока нет опубликованных книг',
-    'profile.privacyUpdated': 'Настройки конфиденциальности обновлены',
+    'profile.privacyUpdated': 'Настро��ки конфиденциальности обновлены',
     'profile.subscriptionsHidden': 'Ваши подписки теперь скрыты от других пользователей',
     'profile.subscriptionsVisible': 'Ваши подписки теперь видны другим пользователям',
     'profile.privacyUpdateError': 'Произошла ошибка при обновлении настроек конфиденциальности',
@@ -240,7 +254,8 @@ const translations: Record<Language, Record<string, string>> = {
     'blocked.noBlockedUsersDescription': 'Вы еще не заблокировали ни одного пользователя',
     'blocked.unblock': 'Разблокировать',
     'blocked.unblocked': 'Пользователь разблокирован',
-    'blocked.unblockedMessage': 'Этот пользователь был удален из вашего черного списка'
+    'blocked.unblockedMessage': 'Этот пользователь был удален из вашего черного списка',
+    'settings.gradientUI': 'Градиентный дизайн',
   },
 };
 

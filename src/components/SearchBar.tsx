@@ -68,6 +68,8 @@ const SearchBar: React.FC = () => {
         );
         
         setAuthorResults(results);
+        setShowEmpty(results.length ===) {
+        setAuthorResults(results);
         setShowEmpty(results.length === 0);
       } else {
         // For books, always show empty state in this demo
@@ -106,11 +108,11 @@ const SearchBar: React.FC = () => {
                 <TabsList className="h-8">
                   <TabsTrigger value="books" className="text-xs px-3 py-1 h-6">
                     <Book className="h-3 w-3 mr-1" />
-                    {t('search.books') || 'Книги'}
+                    {t('search.books')}
                   </TabsTrigger>
                   <TabsTrigger value="authors" className="text-xs px-3 py-1 h-6">
                     <User className="h-3 w-3 mr-1" />
-                    {t('search.authors') || 'Авторы'}
+                    {t('search.authors')}
                   </TabsTrigger>
                 </TabsList>
                 
@@ -146,8 +148,8 @@ const SearchBar: React.FC = () => {
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder={
                     searchType === 'books' 
-                      ? (t('search.booksPlaceholder') || 'Поиск книг...') 
-                      : (t('search.authorsPlaceholder') || 'Поиск авторов...')
+                      ? t('search.booksPlaceholder')
+                      : t('search.authorsPlaceholder')
                   }
                   className="border-0 bg-transparent focus-visible:ring-0 h-10"
                 />
@@ -174,7 +176,7 @@ const SearchBar: React.FC = () => {
         <div className="fixed inset-0 z-40 flex items-start justify-center bg-background/95 px-4 py-16 animate-fade-in">
           <div className="w-full max-w-md bg-card rounded-lg shadow-lg overflow-hidden">
             <div className="p-4">
-              <h3 className="text-lg font-semibold mb-2">{t('search.authorsFound') || 'Найденные авторы'}</h3>
+              <h3 className="text-lg font-semibold mb-2">{t('search.authorsFound')}</h3>
               <div className="space-y-2">
                 {authorResults.map(author => (
                   <div key={author.id} className="flex items-center gap-3 p-2 hover:bg-muted rounded-md cursor-pointer">
@@ -197,7 +199,7 @@ const SearchBar: React.FC = () => {
                   setExpanded(false);
                 }}
               >
-                {t('search.close') || 'Закрыть'}
+                {t('search.close')}
               </Button>
             </div>
           </div>
@@ -209,13 +211,13 @@ const SearchBar: React.FC = () => {
           <EmptyState 
             title={
               searchType === 'books'
-                ? (t('search.notFound') || 'Книги не найдены')
-                : (t('search.authorNotFound') || 'К сожалению, мы не нашли автора с таким именем! 😔✨')
+                ? t('search.notFound')
+                : t('search.authorNotFound')
             }
             description={
               searchType === 'books'
-                ? (t('search.tryAgain') || 'Пожалуйста, попробуйте другой поисковый запрос')
-                : (t('search.authorNotFoundDescription') || 'Возможно, он всего лишь ждет своего звездного часа. Поищите по другим именам или посмотрите в новых категориях!')
+                ? t('search.tryAgain')
+                : t('search.authorNotFoundDescription')
             }
             icon={searchType === 'books' ? 'book' : 'user'}
             onClose={() => setShowEmpty(false)} 
@@ -229,8 +231,8 @@ const SearchBar: React.FC = () => {
             <div className="h-10 w-10 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
             <p className="mt-4 text-muted-foreground">
               {searchType === 'books' 
-                ? 'Ищем книги...' 
-                : 'Ищем авторов...'}
+                ? t('search.booksSearching' || 'Ищем книги...') 
+                : t('search.authorsSearching' || 'Ищем авторов...')}
             </p>
           </div>
         </div>
