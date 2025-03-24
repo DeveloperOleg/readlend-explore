@@ -8,6 +8,7 @@ interface EmptyStateProps {
   title: string;
   description: string;
   icon?: 'book' | 'user' | 'ban';
+  size?: 'sm' | 'md' | 'lg';
   onClose?: () => void;
 }
 
@@ -15,6 +16,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   title, 
   description, 
   icon = 'book',
+  size = 'md',
   onClose 
 }) => {
   const { t } = useLanguage();
@@ -31,9 +33,21 @@ const EmptyState: React.FC<EmptyStateProps> = ({
     }
   };
   
+  const getIconContainerSize = () => {
+    switch(size) {
+      case 'sm':
+        return 'w-16 h-16';
+      case 'lg':
+        return 'w-24 h-24';
+      case 'md':
+      default:
+        return 'w-20 h-20';
+    }
+  };
+  
   return (
     <div className="flex flex-col items-center justify-center text-center max-w-md mx-auto px-4 animate-slide-in">
-      <div className="w-20 h-20 rounded-full bg-muted/30 flex items-center justify-center mb-6">
+      <div className={`${getIconContainerSize()} rounded-full bg-muted/30 flex items-center justify-center mb-6`}>
         {getIcon()}
       </div>
       
