@@ -73,43 +73,43 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{t('publish.title') || 'Опубликовать книгу'}</DialogTitle>
+          <DialogTitle>{t('publish.title')}</DialogTitle>
           <DialogDescription>
-            {t('publish.description') || 'Заполните информацию о вашей книге и отредактируйте содержимое перед публикацией.'}
+            {t('publish.description')}
           </DialogDescription>
         </DialogHeader>
         
         <Tabs defaultValue="info" className="mt-4">
           <TabsList className="grid grid-cols-2">
-            <TabsTrigger value="info">{t('publish.bookInfo') || 'Информация о книге'}</TabsTrigger>
-            <TabsTrigger value="content">{t('publish.bookContent') || 'Содержание книги'}</TabsTrigger>
+            <TabsTrigger value="info">{t('publish.bookInfo')}</TabsTrigger>
+            <TabsTrigger value="content">{t('publish.bookContent')}</TabsTrigger>
           </TabsList>
           
           <TabsContent value="info" className="space-y-4 py-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="title">{t('publish.bookTitle') || 'Название книги'}</Label>
+                  <Label htmlFor="title">{t('publish.bookTitle')}</Label>
                   <Input 
                     id="title" 
                     value={title} 
                     onChange={(e) => setTitle(e.target.value)} 
-                    placeholder={t('publish.titlePlaceholder') || 'Введите название книги'} 
+                    placeholder={t('publish.titlePlaceholder')} 
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="authors">{t('publish.authors') || 'Авторы'}</Label>
+                  <Label htmlFor="authors">{t('publish.authors')}</Label>
                   <Input 
                     id="authors" 
                     value={authors} 
                     onChange={(e) => setAuthors(e.target.value)} 
-                    placeholder={t('publish.authorsPlaceholder') || 'Введите имена авторов через запятую'} 
+                    placeholder={t('publish.authorsPlaceholder')} 
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label>{t('publish.releaseDate') || 'Дата выхода'}</Label>
+                  <Label>{t('publish.releaseDate')}</Label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
@@ -120,7 +120,7 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
-                        {releaseDate ? format(releaseDate, 'PPP') : (t('publish.selectDate') || 'Выберите дату')}
+                        {releaseDate ? format(releaseDate, 'PPP') : t('publish.selectDate')}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
@@ -137,7 +137,7 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="description">{t('publish.description') || 'Описание книги'}</Label>
+                  <Label htmlFor="description">{t('publish.description')}</Label>
                   <TextEditor 
                     content={description} 
                     onChange={setDescription} 
@@ -146,24 +146,24 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
               </div>
               
               <div className="space-y-4">
-                <Label htmlFor="cover">{t('publish.coverImage') || 'Обложка книги'}</Label>
+                <Label htmlFor="cover">{t('publish.coverImage')}</Label>
                 <div className="border rounded-md p-4 text-center">
                   {coverImage ? (
                     <div className="space-y-4">
                       <img 
                         src={coverImage} 
-                        alt={t('publish.cover') || 'Обложка'} 
+                        alt={t('publish.cover')} 
                         className="max-h-[300px] mx-auto object-contain rounded" 
                       />
                       <Button variant="outline" size="sm" onClick={() => setCoverImage(null)}>
-                        {t('publish.changeCover') || 'Изменить обложку'}
+                        {t('publish.changeCover')}
                       </Button>
                     </div>
                   ) : (
                     <div className="space-y-4">
                       <div className="border-2 border-dashed border-muted-foreground/20 rounded-md p-8 flex flex-col items-center justify-center">
                         <p className="text-sm text-muted-foreground mb-2">
-                          {t('publish.dropImage') || 'Перетащите изображение сюда или нажмите для выбора'}
+                          {t('publish.dropImage')}
                         </p>
                         <Input 
                           id="cover" 
@@ -176,11 +176,11 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
                           variant="secondary" 
                           onClick={() => document.getElementById('cover')?.click()}
                         >
-                          {t('publish.selectImage') || 'Выбрать изображение'}
+                          {t('publish.selectImage')}
                         </Button>
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        {t('publish.recommendedSize') || 'Рекомендуемый размер: 800×1200 пикселей'}
+                        {t('publish.recommendedSize')}
                       </p>
                     </div>
                   )}
@@ -191,7 +191,7 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
           
           <TabsContent value="content" className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="content">{t('publish.content') || 'Содержание книги'}</Label>
+              <Label htmlFor="content">{t('publish.content')}</Label>
               <TextEditor 
                 content={content} 
                 onChange={setContent} 
@@ -202,19 +202,19 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
         
         <DialogFooter className="pt-4 flex flex-wrap gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {t('publish.cancel') || 'Отмена'}
+            {t('publish.cancel')}
           </Button>
           <Button 
             variant="secondary"
             onClick={handleSaveDraft}
           >
-            {t('publish.saveDraft') || 'Сохранить черновик'}
+            {t('publish.saveDraft')}
           </Button>
           <Button 
             onClick={handlePublish} 
             disabled={!title || !authors || !content}
           >
-            {t('publish.publish') || 'Опубликовать'}
+            {t('publish.publish')}
           </Button>
         </DialogFooter>
       </DialogContent>
