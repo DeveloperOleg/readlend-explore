@@ -68,8 +68,6 @@ const SearchBar: React.FC = () => {
         );
         
         setAuthorResults(results);
-        setShowEmpty(results.length ===) {
-        setAuthorResults(results);
         setShowEmpty(results.length === 0);
       } else {
         // For books, always show empty state in this demo
