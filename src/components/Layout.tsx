@@ -9,7 +9,6 @@ import {
   LogOut,
   MessageCircle,
   User,
-  Palette
 } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -29,7 +28,7 @@ import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const Layout: React.FC = () => {
-  const { baseTheme, uiStyle, toggleBaseTheme, toggleUIStyle } = useTheme();
+  const { baseTheme, toggleBaseTheme } = useTheme();
   const { language, toggleLanguage, t } = useLanguage();
   const { isAuthenticated, logout, user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -52,7 +51,7 @@ const Layout: React.FC = () => {
             <span className="sr-only">Open menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className={`w-[280px] sm:w-[350px] bg-sidebar backdrop-blur-lg border-sidebar-border ${uiStyle === 'gradient' ? 'sidebar' : ''}`}>
+        <SheetContent side="left" className="w-[280px] sm:w-[350px] bg-sidebar backdrop-blur-lg border-sidebar-border">
           <div className="flex flex-col h-full text-sidebar-foreground">
             <SheetClose asChild>
               <Link to="/profile" className="py-6 px-4 flex items-center gap-3 hover:bg-sidebar-accent/10 rounded-lg transition-colors">
@@ -63,7 +62,7 @@ const Layout: React.FC = () => {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <h2 className={`text-lg font-semibold tracking-tight ${uiStyle === 'gradient' ? 'gradient-text' : ''}`}>
+                  <h2 className="text-lg font-semibold tracking-tight">
                     {user?.username ? `@${user.username}` : 'Имя пользователя не указано'}
                   </h2>
                   <span className="text-sm text-muted-foreground hover:text-sidebar-foreground transition-colors">
@@ -89,19 +88,6 @@ const Layout: React.FC = () => {
                 />
               </div>
               
-              {/* UI Style toggle */}
-              <div className="flex items-center justify-between px-4">
-                <div className="flex items-center gap-2">
-                  <Palette className="h-5 w-5" />
-                  <span>{t('settings.gradientUI') || 'Градиентный дизайн'}</span>
-                </div>
-                <Switch 
-                  id="ui-style"
-                  checked={uiStyle === 'gradient'}
-                  onCheckedChange={toggleUIStyle}
-                />
-              </div>
-              
               {/* Language toggle */}
               <div className="flex items-center justify-between px-4">
                 <div className="flex items-center gap-2">
@@ -121,7 +107,7 @@ const Layout: React.FC = () => {
                   href="https://t.me/+LeR5l4MeHVE4NjBi" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className={`flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors ${uiStyle === 'gradient' ? 'hover:gradient-text' : ''}`}
+                  className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
                 >
                   <MessageCircle className="h-5 w-5" />
                   <span>Telegram чат</span>
@@ -133,7 +119,7 @@ const Layout: React.FC = () => {
                 <SheetClose asChild>
                   <Link 
                     to="/profile" 
-                    className={`flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors ${uiStyle === 'gradient' ? 'hover:gradient-text' : ''}`}
+                    className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
                   >
                     <User className="h-5 w-5" />
                     <span>{t('sidebar.profile') || 'Профиль'}</span>
