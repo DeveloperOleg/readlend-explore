@@ -1,5 +1,6 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { Card, CardContent } from '@/components/ui/card';
@@ -8,19 +9,35 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import UserSubscriptions from '@/components/UserSubscriptions';
-import { Grid, Book, Users, Edit } from 'lucide-react';
+import { Grid, Book, Users, Edit, Copy } from 'lucide-react';
 import ProfileEditDialog from '@/components/ProfileEditDialog';
+import { useToast } from '@/hooks/use-toast';
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
   const { t } = useLanguage();
+  const { userId } = useParams<{ userId?: string }>();
+  const navigate = useNavigate();
+  const { toast } = useToast();
   
-  if (!user) {
+  // If userId is provided and it's not the current user, we should fetch that user's data
+  // For now, we'll show the current user's profile if userId is not provided
+  const isCurrentUser = !userId || (user && userId === user.id);
+  const profileUser = user; // In a real app, we would fetch the user data based on userId
+  
+  useEffect(() => {
+    // If a userId is provided but the user is not found, redirect to the current user's profile
+    if (userId && !user) {
+      navigate('/profile');
+    }
+  }, [userId, user, navigate]);
+  
+  if (!profileUser) {
     return null;
   }
 
   // Format display name
-  const displayName = [user.firstName, user.lastName].filter(Boolean).join(' ') || user.username;
+  const displayName = [profileUser.firstName, profileUser.lastName].filter(Boolean).join(' ') || profileUser.username;
   
   // Pluralization helpers
   function getBookLabel(count: number): string {
@@ -44,54 +61,77 @@ const Profile: React.FC = () => {
     return 'подписок';
   }
 
+  const handleCopyUsername = () => {
+    navigator.clipboard.writeText(profileUser.username);
+    toast({
+      title: t('profile.usernameCopied') || 'Имя пользователя скопировано',
+      description: `@${profileUser.username}`,
+    });
+  };
+
   return (
     <div className="container mx-auto px-4 py-6">
       {/* Profile Header - Instagram Style */}
       <div className="flex flex-col md:flex-row gap-8 items-center md:items-start mb-8">
         {/* Avatar */}
         <Avatar className="h-24 w-24 md:h-36 md:w-36 border-2 border-muted">
-          <AvatarImage src={user.avatarUrl || ''} alt={user.username} />
+          <AvatarImage src={profileUser.avatarUrl || ''} alt={profileUser.username} />
           <AvatarFallback className="text-4xl">
-            {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
+            {profileUser.username ? profileUser.username.charAt(0).toUpperCase() : 'U'}
           </AvatarFallback>
         </Avatar>
         
         {/* Profile Info */}
         <div className="flex-1 flex flex-col items-center md:items-start">
           <div className="flex flex-col md:flex-row md:items-center gap-3 mb-4">
-            <h1 className="text-xl font-medium">
-              {user.username ? `@${user.username}` : 'Имя пользователя не указано'}
-            </h1>
-            <ProfileEditDialog>
-              <Button variant="outline" size="sm" className="h-8">
-                <Edit className="h-4 w-4 mr-2" />
-                {t('profile.editProfile') || 'Редактировать профиль'}
-              </Button>
-            </ProfileEditDialog>
+            <div className="flex items-center gap-2">
+              <h1 
+                className="text-xl font-medium cursor-pointer" 
+                onClick={handleCopyUsername}
+              >
+                {profileUser.username ? `@${profileUser.username}` : 'Имя пользователя не указано'}
+              </h1>
+              <button
+                onClick={handleCopyUsername}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                aria-label={t('profile.copyUsername') || 'Копировать имя пользователя'}
+              >
+                <Copy className="h-4 w-4" />
+              </button>
+            </div>
+            
+            {isCurrentUser && (
+              <ProfileEditDialog>
+                <Button variant="outline" size="sm" className="h-8">
+                  <Edit className="h-4 w-4 mr-2" />
+                  {t('profile.editProfile') || 'Редактировать профиль'}
+                </Button>
+              </ProfileEditDialog>
+            )}
           </div>
           
           {/* Stats */}
           <div className="flex justify-center md:justify-start gap-6 mb-4">
             <div className="flex flex-col items-center md:items-start">
-              <span className="font-bold">{user.publishedBooks?.length || 0}</span>
-              <span className="text-sm text-muted-foreground">{getBookLabel(user.publishedBooks?.length || 0)}</span>
+              <span className="font-bold">{profileUser.publishedBooks?.length || 0}</span>
+              <span className="text-sm text-muted-foreground">{getBookLabel(profileUser.publishedBooks?.length || 0)}</span>
             </div>
             
             <div className="flex flex-col items-center md:items-start">
-              <span className="font-bold">{user.subscribers?.length || 0}</span>
-              <span className="text-sm text-muted-foreground">{getSubscribersLabel(user.subscribers?.length || 0)}</span>
+              <span className="font-bold">{profileUser.subscribers?.length || 0}</span>
+              <span className="text-sm text-muted-foreground">{getSubscribersLabel(profileUser.subscribers?.length || 0)}</span>
             </div>
             
             <div className="flex flex-col items-center md:items-start">
-              <span className="font-bold">{user.subscriptions?.length || 0}</span>
-              <span className="text-sm text-muted-foreground">{getSubscriptionsLabel(user.subscriptions?.length || 0)}</span>
+              <span className="font-bold">{profileUser.subscriptions?.length || 0}</span>
+              <span className="text-sm text-muted-foreground">{getSubscriptionsLabel(profileUser.subscriptions?.length || 0)}</span>
             </div>
           </div>
           
           {/* Display Name */}
           <div className="text-center md:text-left">
             <h2 className="font-semibold">{displayName}</h2>
-            <p className="text-sm text-muted-foreground">ID: {user.displayId}</p>
+            <p className="text-sm text-muted-foreground">ID: {profileUser.displayId}</p>
           </div>
         </div>
       </div>

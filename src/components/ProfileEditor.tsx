@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -10,12 +9,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Camera } from 'lucide-react';
+import { Camera, Trash2 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-// Validation schema for profile form
 const profileFormSchema = z.object({
   username: z.string()
     .min(3, { message: 'Имя пользователя должно содержать не менее 3 символов' })
@@ -51,7 +49,6 @@ const ProfileEditor: React.FC = () => {
       const file = e.target.files[0];
       setAvatarFile(file);
       
-      // Create a preview URL
       const reader = new FileReader();
       reader.onloadend = () => {
         setAvatarPreview(reader.result as string);
@@ -60,13 +57,16 @@ const ProfileEditor: React.FC = () => {
     }
   };
 
+  const handleDeleteAvatar = () => {
+    setAvatarFile(null);
+    setAvatarPreview(null);
+  };
+
   const onSubmit = async (values: ProfileFormValues) => {
     if (!user) return;
     
     setIsLoading(true);
     try {
-      // In a real app we would upload the avatar file to a server
-      // For this demo we'll just use the preview URL
       await updateProfile({ 
         username: values.username,
         firstName: values.firstName,
@@ -164,9 +164,23 @@ const ProfileEditor: React.FC = () => {
                   />
                 </label>
               </div>
-              <p className="text-sm text-muted-foreground mt-2">
-                {t('profile.changeAvatar') || 'Нажмите на аватарку, чтобы изменить'}
-              </p>
+              <div className="flex items-center gap-2 mt-2">
+                <p className="text-sm text-muted-foreground">
+                  {t('profile.changeAvatar') || 'Нажмите на аватарку, чтобы изменить'}
+                </p>
+                {avatarPreview && (
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-8 w-8 text-destructive" 
+                    onClick={handleDeleteAvatar}
+                    type="button"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    <span className="sr-only">{t('profile.deleteAvatar') || 'Удалить аватар'}</span>
+                  </Button>
+                )}
+              </div>
               
               {user?.displayId && (
                 <div className="mt-4 p-2 bg-muted rounded-md">
@@ -283,7 +297,6 @@ const ProfileEditor: React.FC = () => {
                 </p>
                 
                 <div className="space-y-2">
-                  {/* In a real app, we'd map over the user's books here */}
                   <p className="text-sm text-muted-foreground italic">
                     {t('profile.noPublishedBooks') || 'У вас пока нет опубликованных книг'}
                   </p>
@@ -298,3 +311,4 @@ const ProfileEditor: React.FC = () => {
 };
 
 export default ProfileEditor;
+

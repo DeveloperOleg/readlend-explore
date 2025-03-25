@@ -99,13 +99,16 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="authors">{t('publish.authors')}</Label>
+                  <Label htmlFor="authors">{t('publish.author')}</Label>
                   <Input 
                     id="authors" 
                     value={authors} 
                     onChange={(e) => setAuthors(e.target.value)} 
-                    placeholder={t('publish.authorsPlaceholder')} 
+                    placeholder={t('publish.authorPlaceholder')} 
                   />
+                  <p className="text-xs text-muted-foreground">
+                    {t('publish.multipleAuthorsHint')}
+                  </p>
                 </div>
                 
                 <div className="space-y-2">
