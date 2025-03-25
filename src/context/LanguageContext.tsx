@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 type Language = 'ru' | 'en';
@@ -74,6 +75,7 @@ const translations: Record<Language, Record<string, string>> = {
     'publish.releaseDate': 'Release Date',
     'publish.selectDate': 'Select a date',
     'publish.saveDraft': 'Save Draft',
+    'publish.multipleAuthorsHint': 'If the book was written jointly with other authors, list their names separated by commas',
     'profile.title': 'User Profile',
     'profile.information': 'Information',
     'profile.subscriptions': 'Subscriptions',
@@ -111,6 +113,7 @@ const translations: Record<Language, Record<string, string>> = {
     'profile.commentsEnabled': 'Comments are enabled for all your books',
     'profile.commentsDisabled': 'Comments are disabled for all your books',
     'profile.commentsUpdateError': 'An error occurred while updating comment settings',
+    'profile.usernameCopied': 'Username copied',
     'comments.title': 'Comments',
     'comments.placeholder': 'Write a comment...',
     'comments.submit': 'Submit',
@@ -202,6 +205,7 @@ const translations: Record<Language, Record<string, string>> = {
     'publish.releaseDate': 'Дата выхода',
     'publish.selectDate': 'Выберите дату',
     'publish.saveDraft': 'Сохранить черновик',
+    'publish.multipleAuthorsHint': 'Если книгу писали совместно с другими авторами, укажите их имена через запятую',
     'profile.title': 'Профиль пользователя',
     'profile.information': 'Информация',
     'profile.subscriptions': 'Подписки',
@@ -239,6 +243,7 @@ const translations: Record<Language, Record<string, string>> = {
     'profile.commentsEnabled': 'Комментарии включены для всех ваших книг',
     'profile.commentsDisabled': 'Комментарии отключены для всех ваших книг',
     'profile.commentsUpdateError': 'Произошла ошибка при обновлении настроек комментариев',
+    'profile.usernameCopied': 'Имя пользователя скопировано',
     'comments.title': 'Комментарии',
     'comments.placeholder': 'Напишите комментарий...',
     'comments.submit': 'Отправить',

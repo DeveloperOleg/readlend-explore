@@ -4,13 +4,25 @@ import { Search, X, Book, User } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/LanguageContext';
+import { useAuth } from '@/context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import EmptyState from './EmptyState';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
-// Mock author search results
-const mockAuthors = [
+// Test authors for demo account
+const testAuthors = [
   { id: 'author1', username: 'bestseller', displayName: 'Игорь Бестселлер', avatarUrl: null },
   { id: 'author2', username: 'fantasywriter', displayName: 'Анна Фэнтези', avatarUrl: null },
+  { id: 'author3', username: 'scifi', displayName: 'Сергей Фантастика', avatarUrl: null },
+  { id: 'author4', username: 'detective', displayName: 'Мария Детектив', avatarUrl: null },
+];
+
+// Test books for demo account
+const testBooks = [
+  { id: 'book1', title: 'Путешествие во времени', author: 'Сергей Фантастика', coverUrl: null },
+  { id: 'book2', title: 'Тайна старого дома', author: 'Мария Детектив', coverUrl: null },
+  { id: 'book3', title: 'Королевство драконов', author: 'Анна Фэнтези', coverUrl: null },
+  { id: 'book4', title: 'Психология успеха', author: 'Игорь Бестселлер', coverUrl: null },
 ];
 
 type SearchType = 'books' | 'authors';
@@ -21,10 +33,13 @@ const SearchBar: React.FC = () => {
   const [searching, setSearching] = useState(false);
   const [showEmpty, setShowEmpty] = useState(false);
   const [searchType, setSearchType] = useState<SearchType>('books');
-  const [authorResults, setAuthorResults] = useState<typeof mockAuthors>([]);
+  const [authorResults, setAuthorResults] = useState<typeof testAuthors>([]);
+  const [bookResults, setBookResults] = useState<typeof testBooks>([]);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useLanguage();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   // Handle clicks outside the search bar to collapse it
   useEffect(() => {
@@ -49,6 +64,8 @@ const SearchBar: React.FC = () => {
     }
   }, [expanded]);
 
+  const isTestAccount = user?.username === 'tester111';
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -60,17 +77,28 @@ const SearchBar: React.FC = () => {
     setTimeout(() => {
       setSearching(false);
       
-      if (searchType === 'authors') {
-        // Mock author search results
-        const results = mockAuthors.filter(author => 
-          author.username.toLowerCase().includes(query.toLowerCase()) || 
-          author.displayName.toLowerCase().includes(query.toLowerCase())
-        );
-        
-        setAuthorResults(results);
-        setShowEmpty(results.length === 0);
+      if (isTestAccount) {
+        if (searchType === 'authors') {
+          // Filter test authors based on query
+          const results = testAuthors.filter(author => 
+            author.username.toLowerCase().includes(query.toLowerCase()) || 
+            author.displayName.toLowerCase().includes(query.toLowerCase())
+          );
+          
+          setAuthorResults(results);
+          setShowEmpty(results.length === 0);
+        } else {
+          // Filter test books based on query
+          const results = testBooks.filter(book => 
+            book.title.toLowerCase().includes(query.toLowerCase()) || 
+            book.author.toLowerCase().includes(query.toLowerCase())
+          );
+          
+          setBookResults(results);
+          setShowEmpty(results.length === 0);
+        }
       } else {
-        // For books, always show empty state in this demo
+        // For non-test users, show empty state
         setShowEmpty(true);
       }
     }, 800);
@@ -82,6 +110,7 @@ const SearchBar: React.FC = () => {
       setQuery('');
       setShowEmpty(false);
       setAuthorResults([]);
+      setBookResults([]);
     }
   };
 
@@ -89,6 +118,13 @@ const SearchBar: React.FC = () => {
     setSearchType(value as SearchType);
     setShowEmpty(false);
     setAuthorResults([]);
+    setBookResults([]);
+  };
+
+  const handleAuthorClick = (authorId: string) => {
+    navigate(`/profile/${authorId}`);
+    setAuthorResults([]);
+    setExpanded(false);
   };
 
   return (
@@ -177,7 +213,11 @@ const SearchBar: React.FC = () => {
               <h3 className="text-lg font-semibold mb-2">{t('search.authorsFound')}</h3>
               <div className="space-y-2">
                 {authorResults.map(author => (
-                  <div key={author.id} className="flex items-center gap-3 p-2 hover:bg-muted rounded-md cursor-pointer">
+                  <div 
+                    key={author.id} 
+                    className="flex items-center gap-3 p-2 hover:bg-muted rounded-md cursor-pointer"
+                    onClick={() => handleAuthorClick(author.id)}
+                  >
                     <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
                       <User className="h-5 w-5 text-primary" />
                     </div>
@@ -197,7 +237,44 @@ const SearchBar: React.FC = () => {
                   setExpanded(false);
                 }}
               >
-                {t('search.close')}
+                {t('search.close') || 'Закрыть'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {bookResults.length > 0 && (
+        <div className="fixed inset-0 z-40 flex items-start justify-center bg-background/95 px-4 py-16 animate-fade-in">
+          <div className="w-full max-w-md bg-card rounded-lg shadow-lg overflow-hidden">
+            <div className="p-4">
+              <h3 className="text-lg font-semibold mb-2">{t('search.books') || 'Книги'}</h3>
+              <div className="space-y-2">
+                {bookResults.map(book => (
+                  <div 
+                    key={book.id} 
+                    className="flex items-center gap-3 p-2 hover:bg-muted rounded-md cursor-pointer"
+                  >
+                    <div className="h-16 w-12 bg-primary/10 flex items-center justify-center rounded-md">
+                      <Book className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-medium">{book.title}</p>
+                      <p className="text-sm text-muted-foreground">{book.author}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <Button 
+                variant="outline" 
+                className="mt-4 w-full" 
+                onClick={() => {
+                  setBookResults([]);
+                  setShowEmpty(false);
+                  setExpanded(false);
+                }}
+              >
+                {t('search.close') || 'Закрыть'}
               </Button>
             </div>
           </div>

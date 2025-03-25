@@ -22,19 +22,18 @@ const UserProfileLink: React.FC<UserProfileLinkProps> = ({
   const { toast } = useToast();
   const { t } = useLanguage();
 
+  const handleCopyUsername = () => {
+    navigator.clipboard.writeText(username);
+    toast({
+      title: t('profile.usernameCopied'),
+      description: `@${username}`,
+    });
+  };
+
   const handleUserClick = (e: React.MouseEvent) => {
     // Navigate to the user's profile
     navigate(`/profile/${userId}`);
     e.stopPropagation(); // Prevent any parent clicks
-  };
-
-  const handleCopyUsername = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent navigation
-    navigator.clipboard.writeText(username);
-    toast({
-      title: t('profile.usernameCopied') || 'Имя пользователя скопировано',
-      description: `@${username}`,
-    });
   };
 
   return (
@@ -46,15 +45,15 @@ const UserProfileLink: React.FC<UserProfileLinkProps> = ({
       ) : (
         <div className="flex items-center gap-1">
           <span 
-            onClick={handleUserClick} 
+            onClick={handleCopyUsername} 
             className="font-medium cursor-pointer hover:underline"
           >
             @{username}
           </span>
           <button
-            onClick={handleCopyUsername}
+            onClick={handleUserClick}
             className="opacity-0 group-hover:opacity-100 transition-opacity"
-            aria-label={t('profile.copyUsername') || 'Копировать имя пользователя'}
+            aria-label={t('profile.viewProfile') || 'Просмотреть профиль'}
           >
             <Copy className="h-3.5 w-3.5 text-muted-foreground" />
           </button>
