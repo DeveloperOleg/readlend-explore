@@ -229,8 +229,8 @@ const SearchBar: React.FC = () => {
             <div className="h-10 w-10 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
             <p className="mt-4 text-muted-foreground">
               {searchType === 'books' 
-                ? t('search.booksSearching' || 'Ищем книги...') 
-                : t('search.authorsSearching' || 'Ищем авторов...')}
+                ? t('search.booksSearching') || 'Ищем книги...'
+                : t('search.authorsSearching') || 'Ищем авторов...'}
             </p>
           </div>
         </div>
