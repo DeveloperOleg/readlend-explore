@@ -7,6 +7,11 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import TextEditor from './TextEditor';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { format } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface PublishBookDialogProps {
   open: boolean;
@@ -16,10 +21,11 @@ interface PublishBookDialogProps {
 const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChange }) => {
   const { t } = useLanguage();
   const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
+  const [authors, setAuthors] = useState('');
   const [coverImage, setCoverImage] = useState<string | null>(null);
   const [description, setDescription] = useState('');
   const [content, setContent] = useState('');
+  const [releaseDate, setReleaseDate] = useState<Date | undefined>(undefined);
   
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -34,18 +40,33 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
   
   const handlePublish = () => {
     // Here you would handle the book publication
-    console.log({ title, author, coverImage, description, content });
+    console.log({ title, authors, coverImage, description, content, releaseDate });
     // In a real app, you'd send this to your backend
     
     // Reset form
-    setTitle('');
-    setAuthor('');
-    setCoverImage(null);
-    setDescription('');
-    setContent('');
+    resetForm();
     
     // Close dialog
     onOpenChange(false);
+  };
+
+  const handleSaveDraft = () => {
+    // Save as draft logic
+    console.log('Saving draft:', { title, authors, coverImage, description, content, releaseDate });
+    
+    // In a real app, you'd save this to local storage or backend
+    
+    // Don't reset the form, just close the dialog
+    onOpenChange(false);
+  };
+  
+  const resetForm = () => {
+    setTitle('');
+    setAuthors('');
+    setCoverImage(null);
+    setDescription('');
+    setContent('');
+    setReleaseDate(undefined);
   };
 
   return (
@@ -78,13 +99,41 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="author">{t('publish.author') || 'Автор'}</Label>
+                  <Label htmlFor="authors">{t('publish.authors') || 'Авторы'}</Label>
                   <Input 
-                    id="author" 
-                    value={author} 
-                    onChange={(e) => setAuthor(e.target.value)} 
-                    placeholder={t('publish.authorPlaceholder') || 'Введите имя автора'} 
+                    id="authors" 
+                    value={authors} 
+                    onChange={(e) => setAuthors(e.target.value)} 
+                    placeholder={t('publish.authorsPlaceholder') || 'Введите имена авторов через запятую'} 
                   />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label>{t('publish.releaseDate') || 'Дата выхода'}</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !releaseDate && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {releaseDate ? format(releaseDate, 'PPP') : (t('publish.selectDate') || 'Выберите дату')}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={releaseDate}
+                        onSelect={setReleaseDate}
+                        initialFocus
+                        className="p-3 pointer-events-auto"
+                        disabled={(date) => date < new Date()}
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 
                 <div className="space-y-2">
@@ -151,11 +200,20 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
           </TabsContent>
         </Tabs>
         
-        <DialogFooter className="pt-4">
+        <DialogFooter className="pt-4 flex flex-wrap gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             {t('publish.cancel') || 'Отмена'}
           </Button>
-          <Button onClick={handlePublish} disabled={!title || !author || !content}>
+          <Button 
+            variant="secondary"
+            onClick={handleSaveDraft}
+          >
+            {t('publish.saveDraft') || 'Сохранить черновик'}
+          </Button>
+          <Button 
+            onClick={handlePublish} 
+            disabled={!title || !authors || !content}
+          >
             {t('publish.publish') || 'Опубликовать'}
           </Button>
         </DialogFooter>
