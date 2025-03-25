@@ -8,22 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import EmptyState from './EmptyState';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-
-// Test authors for demo account
-const testAuthors = [
-  { id: 'author1', username: 'bestseller', displayName: 'Игорь Бестселлер', avatarUrl: null },
-  { id: 'author2', username: 'fantasywriter', displayName: 'Анна Фэнтези', avatarUrl: null },
-  { id: 'author3', username: 'scifi', displayName: 'Сергей Фантастика', avatarUrl: null },
-  { id: 'author4', username: 'detective', displayName: 'Мария Детектив', avatarUrl: null },
-];
-
-// Test books for demo account
-const testBooks = [
-  { id: 'book1', title: 'Путешествие во времени', author: 'Сергей Фантастика', coverUrl: null },
-  { id: 'book2', title: 'Тайна старого дома', author: 'Мария Детектив', coverUrl: null },
-  { id: 'book3', title: 'Королевство драконов', author: 'Анна Фэнтези', coverUrl: null },
-  { id: 'book4', title: 'Психология успеха', author: 'Игорь Бестселлер', coverUrl: null },
-];
+import { searchTestAuthors, searchTestBooks } from '@/utils/testData';
 
 type SearchType = 'books' | 'authors';
 
@@ -33,8 +18,8 @@ const SearchBar: React.FC = () => {
   const [searching, setSearching] = useState(false);
   const [showEmpty, setShowEmpty] = useState(false);
   const [searchType, setSearchType] = useState<SearchType>('books');
-  const [authorResults, setAuthorResults] = useState<typeof testAuthors>([]);
-  const [bookResults, setBookResults] = useState<typeof testBooks>([]);
+  const [authorResults, setAuthorResults] = useState<any[]>([]);
+  const [bookResults, setBookResults] = useState<any[]>([]);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useLanguage();
@@ -79,21 +64,13 @@ const SearchBar: React.FC = () => {
       
       if (isTestAccount) {
         if (searchType === 'authors') {
-          // Filter test authors based on query
-          const results = testAuthors.filter(author => 
-            author.username.toLowerCase().includes(query.toLowerCase()) || 
-            author.displayName.toLowerCase().includes(query.toLowerCase())
-          );
-          
+          // Use the search function from testData
+          const results = searchTestAuthors(query);
           setAuthorResults(results);
           setShowEmpty(results.length === 0);
         } else {
-          // Filter test books based on query
-          const results = testBooks.filter(book => 
-            book.title.toLowerCase().includes(query.toLowerCase()) || 
-            book.author.toLowerCase().includes(query.toLowerCase())
-          );
-          
+          // Use the search function from testData
+          const results = searchTestBooks(query);
           setBookResults(results);
           setShowEmpty(results.length === 0);
         }
@@ -124,6 +101,13 @@ const SearchBar: React.FC = () => {
   const handleAuthorClick = (authorId: string) => {
     navigate(`/profile/${authorId}`);
     setAuthorResults([]);
+    setExpanded(false);
+  };
+
+  const handleBookClick = (bookId: string) => {
+    // Здесь будет навигация к странице книги, когда она будет реализована
+    console.log(`Navigate to book ${bookId}`);
+    setBookResults([]);
     setExpanded(false);
   };
 
@@ -254,6 +238,7 @@ const SearchBar: React.FC = () => {
                   <div 
                     key={book.id} 
                     className="flex items-center gap-3 p-2 hover:bg-muted rounded-md cursor-pointer"
+                    onClick={() => handleBookClick(book.id)}
                   >
                     <div className="h-16 w-12 bg-primary/10 flex items-center justify-center rounded-md">
                       <Book className="h-5 w-5 text-primary" />

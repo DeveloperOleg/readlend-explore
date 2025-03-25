@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { User, ProfileUpdateData } from '@/types/auth';
 import { canViewSubscriptions, canCommentOnBook } from '@/utils/authUtils';
+import { getTestUserById } from '@/utils/testData';
 
 export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<React.SetStateAction<User | null>>) => {
 
@@ -16,7 +17,7 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
         ...(data.username && { username: data.username }),
         ...(data.firstName !== undefined && { firstName: data.firstName }),
         ...(data.lastName !== undefined && { lastName: data.lastName }),
-        ...(data.avatarUrl && { avatarUrl: data.avatarUrl }),
+        ...(data.avatarUrl !== undefined && { avatarUrl: data.avatarUrl }),
         privacy: {
           ...user.privacy,
           ...(data.privacy?.hideSubscriptions !== undefined && {
@@ -172,6 +173,14 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
     });
   };
 
+  const getUserById = (userId: string): User | null => {
+    // If the current user is tester111, return test user for demo purposes
+    if (user?.username === 'tester111') {
+      return getTestUserById(userId);
+    }
+    return null;
+  };
+
   return {
     updateProfile,
     subscribeToUser,
@@ -181,6 +190,7 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
     toggleHideSubscriptions,
     toggleGlobalComments,
     setBookCommentSetting,
+    getUserById,
     canViewSubscriptions: (userId: string) => canViewSubscriptions(user, userId),
     canCommentOnBook: (bookId: string, authorId: string) => canCommentOnBook(user, bookId, authorId)
   };

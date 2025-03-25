@@ -70,4 +70,5 @@ export interface AuthContextType {
   toggleHideSubscriptions: (hide: boolean) => Promise<boolean>;
   canViewSubscriptions: (userId: string) => boolean;
   canCommentOnBook: (bookId: string, authorId: string) => boolean;
+  getUserById: (userId: string) => User | null;
 }

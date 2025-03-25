@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -12,29 +12,42 @@ import UserSubscriptions from '@/components/UserSubscriptions';
 import { Grid, Book, Users, Edit, Copy } from 'lucide-react';
 import ProfileEditDialog from '@/components/ProfileEditDialog';
 import { useToast } from '@/hooks/use-toast';
+import { User } from '@/types/auth';
 
 const Profile: React.FC = () => {
-  const { user } = useAuth();
+  const { user, getUserById } = useAuth();
   const { t } = useLanguage();
   const { userId } = useParams<{ userId?: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  
-  // If userId is provided and it's not the current user, we should fetch that user's data
-  // For now, we'll show the current user's profile if userId is not provided
-  const isCurrentUser = !userId || (user && userId === user.id);
-  const profileUser = user; // In a real app, we would fetch the user data based on userId
+  const [profileUser, setProfileUser] = useState<User | null>(null);
   
   useEffect(() => {
-    // If a userId is provided but the user is not found, redirect to the current user's profile
-    if (userId && !user) {
-      navigate('/profile');
+    // If userId is provided, try to fetch that user's data
+    if (userId && userId !== user?.id) {
+      const foundUser = getUserById(userId);
+      if (foundUser) {
+        setProfileUser(foundUser);
+      } else {
+        // If user not found, redirect to current user's profile
+        navigate('/profile');
+      }
+    } else {
+      // Show current user's profile
+      setProfileUser(user);
     }
-  }, [userId, user, navigate]);
+  }, [userId, user, getUserById, navigate]);
   
   if (!profileUser) {
-    return null;
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="h-10 w-10 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
+      </div>
+    );
   }
+
+  // Determine if this is the current user's profile
+  const isCurrentUser = user?.id === profileUser.id;
 
   // Format display name
   const displayName = [profileUser.firstName, profileUser.lastName].filter(Boolean).join(' ') || profileUser.username;
