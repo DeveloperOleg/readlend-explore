@@ -5,6 +5,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -30,6 +31,7 @@ const profileFormSchema = z.object({
     }),
   firstName: z.string().max(30).optional(),
   lastName: z.string().max(30).optional(),
+  bio: z.string().max(500).optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
@@ -49,6 +51,7 @@ const ProfileEditor: React.FC = () => {
       username: user?.username || '',
       firstName: user?.firstName || '',
       lastName: user?.lastName || '',
+      bio: user?.bio || '',
     },
   });
 
@@ -142,6 +145,7 @@ const ProfileEditor: React.FC = () => {
         username: values.username,
         firstName: values.firstName,
         lastName: values.lastName,
+        bio: values.bio,
         avatarUrl: avatarPreview || undefined
       });
       
@@ -267,9 +271,9 @@ const ProfileEditor: React.FC = () => {
                 <Info className="h-4 w-4" />
                 <AlertDescription>
                   <ul className="text-xs list-disc pl-4 space-y-1">
-                    <li>{t('profile.avatarSizeLimit') || 'Максимальный размер файла: 10МБ'}</li>
-                    <li>{t('profile.avatarFormats') || 'Поддерживаемые форматы: JPEG, PNG, GIF'}</li>
-                    <li>{t('profile.avatarDimensions') || 'Рекомендуемый размер: 200x200 до 1000x1000 пикселей'}</li>
+                    <li>{t('profile.avatarSizeLimit')}</li>
+                    <li>{t('profile.avatarFormats')}</li>
+                    <li>{t('profile.avatarDimensions')}</li>
                   </ul>
                 </AlertDescription>
               </Alert>
@@ -322,6 +326,25 @@ const ProfileEditor: React.FC = () => {
                   <FormLabel>{t('profile.lastName') || 'Фамилия'}</FormLabel>
                   <FormControl>
                     <Input placeholder={t('profile.lastNamePlaceholder') || 'Введите вашу фамилию (по желанию)'} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            {/* Добавляем поле "О себе" */}
+            <FormField
+              control={form.control}
+              name="bio"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('profile.bio') || 'О себе'}</FormLabel>
+                  <FormControl>
+                    <Textarea 
+                      placeholder={t('profile.bioPlaceholder') || 'Расскажите что-нибудь о себе...'}
+                      className="min-h-[120px]"
+                      {...field} 
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

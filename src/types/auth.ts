@@ -12,6 +12,7 @@ export interface User {
   firstName?: string;
   lastName?: string;
   avatarUrl?: string;
+  bio?: string; // New field for bio information
   displayId: string; // 6-digit ID
   subscriptions?: string[]; // IDs of users this user is subscribed to
   subscribers?: string[]; // IDs of users subscribed to this user
@@ -49,6 +50,7 @@ export interface ProfileUpdateData {
   firstName?: string;
   lastName?: string;
   avatarUrl?: string;
+  bio?: string; // New field for bio information
   privacy?: {
     hideSubscriptions?: boolean;
     commentSettings?: {

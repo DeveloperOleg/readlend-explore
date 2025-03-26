@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 type Language = 'ru' | 'en';
@@ -141,6 +140,11 @@ const translations: Record<Language, Record<string, string>> = {
     'blocked.unblocked': 'User Unblocked',
     'blocked.unblockedMessage': 'This user has been removed from your block list',
     'settings.gradientUI': 'Gradient UI',
+    'profile.avatarSizeLimit': 'Maximum file size: 10MB',
+    'profile.avatarFormats': 'Supported formats: JPEG, PNG, GIF',
+    'profile.avatarDimensions': 'Recommended size: 200x200 to 1000x1000 pixels',
+    'profile.bio': 'About me',
+    'profile.bioPlaceholder': 'Tell something about yourself...',
   },
   ru: {
     'greeting.morning': 'Доброе утро',
@@ -271,6 +275,11 @@ const translations: Record<Language, Record<string, string>> = {
     'blocked.unblocked': 'Пользователь разблокирован',
     'blocked.unblockedMessage': 'Этот пользователь был удален из вашего черного списка',
     'settings.gradientUI': 'Градиентный дизайн',
+    'profile.avatarSizeLimit': 'Максимальный размер файла: 10МБ',
+    'profile.avatarFormats': 'Поддерживаемые форматы: JPEG, PNG, GIF',
+    'profile.avatarDimensions': 'Рекомендуемый размер: 200x200 до 1000x1000 пикселей',
+    'profile.bio': 'О себе',
+    'profile.bioPlaceholder': 'Расскажите что-нибудь о себе...',
   },
 };
 

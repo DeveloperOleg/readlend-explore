@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { Card, CardContent } from '@/components/ui/card';
@@ -141,10 +141,15 @@ const Profile: React.FC = () => {
             </div>
           </div>
           
-          {/* Display Name */}
+          {/* Display Name and Bio */}
           <div className="text-center md:text-left">
             <h2 className="font-semibold">{displayName}</h2>
             <p className="text-sm text-muted-foreground">ID: {profileUser.displayId}</p>
+            
+            {/* Add bio display */}
+            {profileUser.bio && (
+              <p className="mt-2 text-sm max-w-md">{profileUser.bio}</p>
+            )}
           </div>
         </div>
       </div>
