@@ -27,6 +27,9 @@ export interface User {
      * Level 3: Week of Silence (Неделя молчания)
      * Level 4: 30-Day Isolation (30-дневная изоляция)
      * Level 5: Ultimate Ban (Окончательный бан - блокировка аккаунта до уровня устройства)
+     * 
+     * В будущем эта система будет интегрирована с API Kaspersky Threat Intelligence Portal
+     * для обеспечения дополнительной безопасности и обнаружения вредоносной активности.
      */
     level: number; // 1-5
     expiresAt?: Date;

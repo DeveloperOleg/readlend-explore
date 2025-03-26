@@ -23,6 +23,10 @@ const mockBlockedUsers = [
  * - Уровень 3: Week of Silence (Неделя молчания)
  * - Уровень 4: 30-Day Isolation (30-дневная изоляция)
  * - Уровень 5: Ultimate Ban (Окончательный бан - блокировка аккаунта до уровня устройства)
+ * 
+ * В будущей версии эта система будет интегрирована с API Kaspersky Threat Intelligence Portal
+ * для улучшенного обнаружения вредоносной активности и автоматического бана пользователей,
+ * распространяющих опасный контент.
  */
 const banLevels = [
   { level: 1, name: 'Caution', nameLoc: 'Осторожность', description: 'Warning issued to the user' },
