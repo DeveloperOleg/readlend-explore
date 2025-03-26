@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 type Language = 'ru' | 'en';
@@ -145,6 +146,8 @@ const translations: Record<Language, Record<string, string>> = {
     'profile.avatarDimensions': 'Recommended size: 200x200 to 1000x1000 pixels',
     'profile.bio': 'About me',
     'profile.bioPlaceholder': 'Tell something about yourself...',
+    'profile.imageTooLarge': 'Avatar size must not exceed 10MB',
+    'profile.imageTooLargeTitle': 'Avatar upload error',
   },
   ru: {
     'greeting.morning': 'Доброе утро',
@@ -280,6 +283,8 @@ const translations: Record<Language, Record<string, string>> = {
     'profile.avatarDimensions': 'Рекомендуемый размер: 200x200 до 1000x1000 пикселей',
     'profile.bio': 'О себе',
     'profile.bioPlaceholder': 'Расскажите что-нибудь о себе...',
+    'profile.imageTooLarge': 'Размер аватара не должен превышать 10МБ',
+    'profile.imageTooLargeTitle': 'Ошибка загрузки аватара',
   },
 };
 

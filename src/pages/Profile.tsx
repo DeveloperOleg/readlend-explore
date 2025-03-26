@@ -146,9 +146,9 @@ const Profile: React.FC = () => {
             <h2 className="font-semibold">{displayName}</h2>
             <p className="text-sm text-muted-foreground">ID: {profileUser.displayId}</p>
             
-            {/* Add bio display */}
+            {/* Display bio if it exists */}
             {profileUser.bio && (
-              <p className="mt-2 text-sm max-w-md">{profileUser.bio}</p>
+              <p className="mt-2 text-sm max-w-md whitespace-pre-wrap">{profileUser.bio}</p>
             )}
           </div>
         </div>
