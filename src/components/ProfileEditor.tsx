@@ -9,10 +9,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Camera, Trash2 } from 'lucide-react';
+import { Camera, Trash2, AlertCircle } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+
+const MAX_AVATAR_SIZE = 2 * 1024 * 1024; // 2MB in bytes
 
 const profileFormSchema = z.object({
   username: z.string()
@@ -34,6 +37,7 @@ const ProfileEditor: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.avatarUrl || null);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -47,7 +51,19 @@ const ProfileEditor: React.FC = () => {
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+      
+      if (file.size > MAX_AVATAR_SIZE) {
+        setAvatarError(t('profile.avatarTooLarge') || 'Размер аватара не должен превышать 2МБ');
+        toast({
+          title: t('profile.avatarTooLargeTitle') || 'Ошибка загрузки аватара',
+          description: t('profile.avatarTooLarge') || 'Размер аватара не должен превышать 2МБ',
+          variant: 'destructive',
+        });
+        return;
+      }
+      
       setAvatarFile(file);
+      setAvatarError(null);
       
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -60,6 +76,7 @@ const ProfileEditor: React.FC = () => {
   const handleDeleteAvatar = () => {
     setAvatarFile(null);
     setAvatarPreview(null);
+    setAvatarError(null);
   };
 
   const onSubmit = async (values: ProfileFormValues) => {
@@ -164,6 +181,7 @@ const ProfileEditor: React.FC = () => {
                   />
                 </label>
               </div>
+              
               <div className="flex items-center gap-2 mt-2">
                 <p className="text-sm text-muted-foreground">
                   {t('profile.changeAvatar') || 'Нажмите на аватарку, чтобы изменить'}
@@ -180,6 +198,19 @@ const ProfileEditor: React.FC = () => {
                     <span className="sr-only">{t('profile.deleteAvatar') || 'Удалить аватар'}</span>
                   </Button>
                 )}
+              </div>
+              
+              {avatarError && (
+                <Alert variant="destructive" className="mt-3">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    {avatarError}
+                  </AlertDescription>
+                </Alert>
+              )}
+              
+              <div className="mt-2 text-xs text-muted-foreground">
+                {t('profile.avatarSizeLimit') || 'Максимальный размер файла: 2МБ'}
               </div>
               
               {user?.displayId && (
@@ -236,7 +267,7 @@ const ProfileEditor: React.FC = () => {
               )}
             />
             
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={isLoading || !!avatarError}>
               {isLoading ? (
                 <div className="flex items-center gap-2">
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
@@ -311,4 +342,3 @@ const ProfileEditor: React.FC = () => {
 };
 
 export default ProfileEditor;
-
