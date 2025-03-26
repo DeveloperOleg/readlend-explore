@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -9,13 +10,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Camera, Trash2, AlertCircle } from 'lucide-react';
+import { Camera, Trash2, AlertCircle, Info } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-const MAX_AVATAR_SIZE = 2 * 1024 * 1024; // 2MB in bytes
+const MAX_AVATAR_SIZE = 10 * 1024 * 1024; // 10MB in bytes
+const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
+const MIN_IMAGE_DIMENSION = 200;
+const MAX_IMAGE_DIMENSION = 1000;
 
 const profileFormSchema = z.object({
   username: z.string()
@@ -48,15 +52,65 @@ const ProfileEditor: React.FC = () => {
     },
   });
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const validateImageDimensions = (file: File): Promise<boolean> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const width = img.width;
+        const height = img.height;
+        URL.revokeObjectURL(img.src);
+        
+        if (width < MIN_IMAGE_DIMENSION || height < MIN_IMAGE_DIMENSION) {
+          setAvatarError(t('profile.imageTooSmall') || `Изображение слишком маленькое. Минимальный размер ${MIN_IMAGE_DIMENSION}x${MIN_IMAGE_DIMENSION} пикселей`);
+          resolve(false);
+        } else if (width > MAX_IMAGE_DIMENSION || height > MAX_IMAGE_DIMENSION) {
+          setAvatarError(t('profile.imageTooLarge') || `Изображение слишком большое. Максимальный размер ${MAX_IMAGE_DIMENSION}x${MAX_IMAGE_DIMENSION} пикселей`);
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      };
+      
+      img.onerror = () => {
+        resolve(false);
+      };
+      
+      img.src = URL.createObjectURL(file);
+    });
+  };
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       
+      // Проверка размера файла
       if (file.size > MAX_AVATAR_SIZE) {
-        setAvatarError(t('profile.avatarTooLarge') || 'Размер аватара не должен превышать 2МБ');
+        setAvatarError(t('profile.avatarTooLarge') || 'Размер аватара не должен превышать 10МБ');
         toast({
           title: t('profile.avatarTooLargeTitle') || 'Ошибка загрузки аватара',
-          description: t('profile.avatarTooLarge') || 'Размер аватара не должен превышать 2МБ',
+          description: t('profile.avatarTooLarge') || 'Размер аватара не должен превышать 10МБ',
+          variant: 'destructive',
+        });
+        return;
+      }
+      
+      // Проверка формата файла
+      if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+        setAvatarError(t('profile.unsupportedFormat') || 'Неподдерживаемый формат файла. Поддерживаются только JPEG, PNG и GIF');
+        toast({
+          title: t('profile.unsupportedFormatTitle') || 'Ошибка формата',
+          description: t('profile.unsupportedFormat') || 'Неподдерживаемый формат файла. Поддерживаются только JPEG, PNG и GIF',
+          variant: 'destructive',
+        });
+        return;
+      }
+      
+      // Проверка размеров изображения
+      const isValidDimensions = await validateImageDimensions(file);
+      if (!isValidDimensions) {
+        toast({
+          title: t('profile.invalidDimensionsTitle') || 'Ошибка размеров изображения',
+          description: avatarError,
           variant: 'destructive',
         });
         return;
@@ -175,7 +229,7 @@ const ProfileEditor: React.FC = () => {
                   <input 
                     id="avatar-upload" 
                     type="file" 
-                    accept="image/*" 
+                    accept="image/jpeg,image/png,image/gif" 
                     className="sr-only" 
                     onChange={handleAvatarChange} 
                   />
@@ -209,9 +263,16 @@ const ProfileEditor: React.FC = () => {
                 </Alert>
               )}
               
-              <div className="mt-2 text-xs text-muted-foreground">
-                {t('profile.avatarSizeLimit') || 'Максимальный размер файла: 2МБ'}
-              </div>
+              <Alert variant="info" className="mt-3">
+                <Info className="h-4 w-4" />
+                <AlertDescription>
+                  <ul className="text-xs list-disc pl-4 space-y-1">
+                    <li>{t('profile.avatarSizeLimit') || 'Максимальный размер файла: 10МБ'}</li>
+                    <li>{t('profile.avatarFormats') || 'Поддерживаемые форматы: JPEG, PNG, GIF'}</li>
+                    <li>{t('profile.avatarDimensions') || 'Рекомендуемый размер: 200x200 до 1000x1000 пикселей'}</li>
+                  </ul>
+                </AlertDescription>
+              </Alert>
               
               {user?.displayId && (
                 <div className="mt-4 p-2 bg-muted rounded-md">
