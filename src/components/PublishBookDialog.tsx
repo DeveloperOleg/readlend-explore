@@ -10,8 +10,26 @@ import TextEditor from './TextEditor';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, X, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { BookGenre, BookStatus } from '@/types/auth';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { 
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface PublishBookDialogProps {
   open: boolean;
@@ -26,6 +44,10 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
   const [description, setDescription] = useState('');
   const [content, setContent] = useState('');
   const [releaseDate, setReleaseDate] = useState<Date | undefined>(undefined);
+  const [genre, setGenre] = useState<BookGenre | ''>('');
+  const [status, setStatus] = useState<BookStatus>('published');
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState('');
   
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -40,7 +62,17 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
   
   const handlePublish = () => {
     // Here you would handle the book publication
-    console.log({ title, authors, coverImage, description, content, releaseDate });
+    console.log({ 
+      title, 
+      authors, 
+      coverImage, 
+      description, 
+      content, 
+      releaseDate,
+      genre,
+      status,
+      tags
+    });
     // In a real app, you'd send this to your backend
     
     // Reset form
@@ -52,7 +84,17 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
 
   const handleSaveDraft = () => {
     // Save as draft logic
-    console.log('Saving draft:', { title, authors, coverImage, description, content, releaseDate });
+    console.log('Saving draft:', { 
+      title, 
+      authors, 
+      coverImage, 
+      description, 
+      content, 
+      releaseDate,
+      genre,
+      status,
+      tags
+    });
     
     // In a real app, you'd save this to local storage or backend
     
@@ -67,6 +109,32 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
     setDescription('');
     setContent('');
     setReleaseDate(undefined);
+    setGenre('');
+    setStatus('published');
+    setTags([]);
+    setTagInput('');
+  };
+
+  const addTag = () => {
+    if (tagInput.trim() && !tags.includes(tagInput.trim())) {
+      setTags([...tags, tagInput.trim()]);
+      setTagInput('');
+    }
+  };
+
+  const removeTag = (tag: string) => {
+    setTags(tags.filter(t => t !== tag));
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addTag();
+    }
+  };
+
+  const setTodayAsReleaseDate = () => {
+    setReleaseDate(new Date());
   };
 
   return (
@@ -110,33 +178,120 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
                     {t('publish.multipleAuthorsHint')}
                   </p>
                 </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="genre">Жанр книги</Label>
+                  <Select value={genre} onValueChange={(value) => setGenre(value as BookGenre)}>
+                    <SelectTrigger id="genre">
+                      <SelectValue placeholder="Выберите жанр" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="fiction">Художественная литература</SelectItem>
+                      <SelectItem value="non-fiction">Нон-фикшн</SelectItem>
+                      <SelectItem value="fantasy">Фэнтези</SelectItem>
+                      <SelectItem value="sci-fi">Научная фантастика</SelectItem>
+                      <SelectItem value="romance">Романтика</SelectItem>
+                      <SelectItem value="thriller">Триллер</SelectItem>
+                      <SelectItem value="mystery">Детектив</SelectItem>
+                      <SelectItem value="horror">Хоррор</SelectItem>
+                      <SelectItem value="biography">Биография</SelectItem>
+                      <SelectItem value="history">История</SelectItem>
+                      <SelectItem value="poetry">Поэзия</SelectItem>
+                      <SelectItem value="children">Детская литература</SelectItem>
+                      <SelectItem value="young-adult">Подростковая литература</SelectItem>
+                      <SelectItem value="educational">Образовательная литература</SelectItem>
+                      <SelectItem value="other">Другое</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="status">Статус книги</Label>
+                  <Select value={status} onValueChange={(value) => setStatus(value as BookStatus)}>
+                    <SelectTrigger id="status">
+                      <SelectValue placeholder="Выберите статус" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="published">Опубликована</SelectItem>
+                      <SelectItem value="draft">Черновик</SelectItem>
+                      <SelectItem value="in-progress">В процессе написания</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
                 
                 <div className="space-y-2">
                   <Label>{t('publish.releaseDate')}</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          "w-full justify-start text-left font-normal",
-                          !releaseDate && "text-muted-foreground"
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {releaseDate ? format(releaseDate, 'PPP') : t('publish.selectDate')}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={releaseDate}
-                        onSelect={setReleaseDate}
-                        initialFocus
-                        className="p-3 pointer-events-auto"
-                        disabled={(date) => date < new Date()}
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <div className="flex gap-2">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full justify-start text-left font-normal",
+                            !releaseDate && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {releaseDate ? format(releaseDate, 'PPP') : t('publish.selectDate')}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={releaseDate}
+                          onSelect={setReleaseDate}
+                          initialFocus
+                          className="p-3 pointer-events-auto"
+                          disabled={(date) => date < new Date()}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <Button 
+                      variant="secondary" 
+                      onClick={setTodayAsReleaseDate} 
+                      className="whitespace-nowrap"
+                    >
+                      Сегодня
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="tags">Метки (теги)</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="tags"
+                      value={tagInput}
+                      onChange={(e) => setTagInput(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      placeholder="Добавьте теги"
+                    />
+                    <Button 
+                      type="button" 
+                      onClick={addTag} 
+                      variant="secondary"
+                      size="icon"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <ScrollArea className="h-20 w-full">
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {tags.map((tag, index) => (
+                        <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                          {tag}
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-4 w-4 p-0" 
+                            onClick={() => removeTag(tag)}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </Badge>
+                      ))}
+                    </div>
+                  </ScrollArea>
                 </div>
                 
                 <div className="space-y-2">

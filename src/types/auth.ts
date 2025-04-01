@@ -79,3 +79,18 @@ export interface AuthContextType {
   canCommentOnBook: (bookId: string, authorId: string) => boolean;
   getUserById: (userId: string) => User | null;
 }
+
+/**
+ * Book related types
+ */
+export type BookStatus = "published" | "draft" | "in-progress";
+
+export type BookGenre = 
+  "fiction" | "non-fiction" | "fantasy" | "sci-fi" | "romance" | 
+  "thriller" | "mystery" | "horror" | "biography" | "history" | 
+  "poetry" | "children" | "young-adult" | "educational" | "other";
+
+export interface BookTag {
+  id: string;
+  name: string;
+}
