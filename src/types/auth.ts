@@ -12,6 +12,7 @@ export interface User {
   firstName?: string;
   lastName?: string;
   avatarUrl?: string;
+  coverImageUrl?: string; // New field for profile cover image
   bio?: string; // New field for bio information
   displayId: string; // 6-digit ID
   subscriptions?: string[]; // IDs of users this user is subscribed to
@@ -50,6 +51,7 @@ export interface ProfileUpdateData {
   firstName?: string;
   lastName?: string;
   avatarUrl?: string;
+  coverImageUrl?: string; // New field for profile cover image
   bio?: string; // New field for bio information
   privacy?: {
     hideSubscriptions?: boolean;

@@ -11,16 +11,21 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Camera, Trash2, AlertCircle, Info } from 'lucide-react';
+import { Camera, Trash2, AlertCircle, Info, Image as ImageIcon } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 const MAX_AVATAR_SIZE = 10 * 1024 * 1024; // 10MB in bytes
-const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
+const MAX_COVER_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+const ALLOWED_AVATAR_FILE_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
+const ALLOWED_COVER_FILE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MIN_IMAGE_DIMENSION = 200;
 const MAX_IMAGE_DIMENSION = 1000;
+const RECOMMENDED_COVER_WIDTH = 960;
+const RECOMMENDED_COVER_HEIGHT = 479;
 
 const profileFormSchema = z.object({
   username: z.string()
@@ -38,12 +43,19 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 const ProfileEditor: React.FC = () => {
   const { user, updateProfile, toggleHideSubscriptions, toggleGlobalComments } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Avatar state
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.avatarUrl || null);
   const [avatarError, setAvatarError] = useState<string | null>(null);
+  
+  // Cover image state
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string | null>(user?.coverImageUrl || null);
+  const [coverError, setCoverError] = useState<string | null>(null);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -55,7 +67,7 @@ const ProfileEditor: React.FC = () => {
     },
   });
 
-  const validateImageDimensions = (file: File): Promise<boolean> => {
+  const validateImageDimensions = (file: File, minWidth: number, minHeight: number, maxWidth: number, maxHeight: number): Promise<boolean> => {
     return new Promise((resolve) => {
       const img = new Image();
       img.onload = () => {
@@ -63,15 +75,46 @@ const ProfileEditor: React.FC = () => {
         const height = img.height;
         URL.revokeObjectURL(img.src);
         
-        if (width < MIN_IMAGE_DIMENSION || height < MIN_IMAGE_DIMENSION) {
-          setAvatarError(t('profile.imageTooSmall') || `Изображение слишком маленькое. Минимальный размер ${MIN_IMAGE_DIMENSION}x${MIN_IMAGE_DIMENSION} пикселей`);
+        if (width < minWidth || height < minHeight) {
+          setAvatarError(t('profile.imageTooSmall') || `Изображение слишком маленькое. Минимальный размер ${minWidth}x${minHeight} пикселей`);
           resolve(false);
-        } else if (width > MAX_IMAGE_DIMENSION || height > MAX_IMAGE_DIMENSION) {
-          setAvatarError(t('profile.imageTooLarge') || `Изображение слишком большое. Максимальный размер ${MAX_IMAGE_DIMENSION}x${MAX_IMAGE_DIMENSION} пикселей`);
+        } else if (width > maxWidth || height > maxHeight) {
+          setAvatarError(t('profile.imageTooLarge') || `Изображение слишком большое. Максимальный размер ${maxWidth}x${maxWidth} пикселей`);
           resolve(false);
         } else {
           resolve(true);
         }
+      };
+      
+      img.onerror = () => {
+        resolve(false);
+      };
+      
+      img.src = URL.createObjectURL(file);
+    });
+  };
+
+  const validateCoverDimensions = (file: File): Promise<boolean> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const width = img.width;
+        const height = img.height;
+        URL.revokeObjectURL(img.src);
+        
+        // We'll allow any size but warn if not optimal
+        const isOptimal = width === RECOMMENDED_COVER_WIDTH && height === RECOMMENDED_COVER_HEIGHT;
+        if (!isOptimal) {
+          setCoverError(t('profile.invalidCoverDimensions'));
+          toast({
+            title: t('profile.invalidCoverDimensionsTitle'),
+            description: t('profile.invalidCoverDimensions'),
+            variant: "info",
+          });
+        } else {
+          setCoverError(null);
+        }
+        resolve(true);
       };
       
       img.onerror = () => {
@@ -88,17 +131,17 @@ const ProfileEditor: React.FC = () => {
       
       // Проверка размера файла
       if (file.size > MAX_AVATAR_SIZE) {
-        setAvatarError(t('profile.avatarTooLarge') || 'Размер аватара не должен превышать 10МБ');
+        setAvatarError(t('profile.imageTooLarge') || 'Размер аватара не должен превышать 10МБ');
         toast({
-          title: t('profile.avatarTooLargeTitle') || 'Ошибка загрузки аватара',
-          description: t('profile.avatarTooLarge') || 'Размер аватара не должен превышать 10МБ',
+          title: t('profile.imageTooLargeTitle') || 'Ошибка загрузки аватара',
+          description: t('profile.imageTooLarge') || 'Размер аватара не должен превышать 10МБ',
           variant: 'destructive',
         });
         return;
       }
       
       // Проверка формата файла
-      if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+      if (!ALLOWED_AVATAR_FILE_TYPES.includes(file.type)) {
         setAvatarError(t('profile.unsupportedFormat') || 'Неподдерживаемый формат файла. Поддерживаются только JPEG, PNG и GIF');
         toast({
           title: t('profile.unsupportedFormatTitle') || 'Ошибка формата',
@@ -109,7 +152,7 @@ const ProfileEditor: React.FC = () => {
       }
       
       // Проверка размеров изображения
-      const isValidDimensions = await validateImageDimensions(file);
+      const isValidDimensions = await validateImageDimensions(file, MIN_IMAGE_DIMENSION, MIN_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION);
       if (!isValidDimensions) {
         toast({
           title: t('profile.invalidDimensionsTitle') || 'Ошибка размеров изображения',
@@ -130,10 +173,55 @@ const ProfileEditor: React.FC = () => {
     }
   };
 
+  const handleCoverChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      
+      // Проверка размера файла
+      if (file.size > MAX_COVER_SIZE) {
+        setCoverError(t('profile.coverTooLarge'));
+        toast({
+          title: t('profile.coverTooLargeTitle'),
+          description: t('profile.coverTooLarge'),
+          variant: 'destructive',
+        });
+        return;
+      }
+      
+      // Проверка формата файла
+      if (!ALLOWED_COVER_FILE_TYPES.includes(file.type)) {
+        setCoverError(t('profile.unsupportedCoverFormat'));
+        toast({
+          title: t('profile.unsupportedCoverFormatTitle'),
+          description: t('profile.unsupportedCoverFormat'),
+          variant: 'destructive',
+        });
+        return;
+      }
+      
+      // Проверка/предупреждение о размерах изображения
+      await validateCoverDimensions(file);
+      
+      setCoverFile(file);
+      
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCoverPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleDeleteAvatar = () => {
     setAvatarFile(null);
     setAvatarPreview(null);
     setAvatarError(null);
+  };
+
+  const handleDeleteCover = () => {
+    setCoverFile(null);
+    setCoverPreview(null);
+    setCoverError(null);
   };
 
   const onSubmit = async (values: ProfileFormValues) => {
@@ -146,7 +234,8 @@ const ProfileEditor: React.FC = () => {
         firstName: values.firstName,
         lastName: values.lastName,
         bio: values.bio,
-        avatarUrl: avatarPreview || undefined
+        avatarUrl: avatarPreview || undefined,
+        coverImageUrl: coverPreview || undefined
       });
       
       toast({
@@ -216,6 +305,77 @@ const ProfileEditor: React.FC = () => {
       <TabsContent value="info">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {/* Cover Image Section */}
+            <div className="mb-6">
+              <h3 className="text-sm font-medium mb-2">{t('profile.coverImage')}</h3>
+              <div className="relative group rounded-md overflow-hidden border-2 border-border">
+                <AspectRatio ratio={960/479} className="bg-muted">
+                  {coverPreview ? (
+                    <img 
+                      src={coverPreview} 
+                      alt="Cover" 
+                      className="object-cover w-full h-full"
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center w-full h-full bg-muted">
+                      <ImageIcon className="h-12 w-12 text-muted-foreground opacity-50" />
+                    </div>
+                  )}
+                  
+                  <label 
+                    htmlFor="cover-upload" 
+                    className="absolute inset-0 flex items-center justify-center bg-black/40 text-white cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <Camera className="h-8 w-8" />
+                      <span className="text-sm font-medium">{t('profile.changeCover')}</span>
+                    </div>
+                    <input 
+                      id="cover-upload" 
+                      type="file" 
+                      accept="image/jpeg,image/png,image/webp" 
+                      className="sr-only" 
+                      onChange={handleCoverChange} 
+                    />
+                  </label>
+                </AspectRatio>
+                
+                {coverPreview && (
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="absolute top-2 right-2 h-8 w-8 bg-black/50 text-white hover:bg-black/70" 
+                    onClick={handleDeleteCover}
+                    type="button"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    <span className="sr-only">{t('profile.deleteAvatar')}</span>
+                  </Button>
+                )}
+              </div>
+              
+              {coverError && (
+                <Alert variant="info" className="mt-3">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    {coverError}
+                  </AlertDescription>
+                </Alert>
+              )}
+              
+              <Alert variant="info" className="mt-3">
+                <Info className="h-4 w-4" />
+                <AlertDescription>
+                  <ul className="text-xs list-disc pl-4 space-y-1">
+                    <li>{t('profile.coverSizeLimit')}</li>
+                    <li>{t('profile.coverFormats')}</li>
+                    <li>{t('profile.coverDimensions')}</li>
+                  </ul>
+                </AlertDescription>
+              </Alert>
+            </div>
+            
+            {/* Avatar Section */}
             <div className="flex flex-col items-center mb-6">
               <div className="relative group">
                 <Avatar className="h-24 w-24 border-2 border-border">
@@ -287,6 +447,7 @@ const ProfileEditor: React.FC = () => {
               )}
             </div>
           
+            {/* Form fields */}
             <FormField
               control={form.control}
               name="username"
@@ -351,7 +512,7 @@ const ProfileEditor: React.FC = () => {
               )}
             />
             
-            <Button type="submit" disabled={isLoading || !!avatarError}>
+            <Button type="submit" disabled={isLoading || !!avatarError || !!coverError}>
               {isLoading ? (
                 <div className="flex items-center gap-2">
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />

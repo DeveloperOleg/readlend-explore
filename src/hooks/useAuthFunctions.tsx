@@ -18,6 +18,7 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
         ...(data.firstName !== undefined && { firstName: data.firstName }),
         ...(data.lastName !== undefined && { lastName: data.lastName }),
         ...(data.avatarUrl !== undefined && { avatarUrl: data.avatarUrl }),
+        ...(data.coverImageUrl !== undefined && { coverImageUrl: data.coverImageUrl }), // Update cover image
         ...(data.bio !== undefined && { bio: data.bio }), // Make sure bio is updated
         privacy: {
           ...user.privacy,

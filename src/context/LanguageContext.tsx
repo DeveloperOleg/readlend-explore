@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 type Language = 'ru' | 'en';
@@ -148,6 +147,17 @@ const translations: Record<Language, Record<string, string>> = {
     'profile.bioPlaceholder': 'Tell something about yourself...',
     'profile.imageTooLarge': 'Avatar size must not exceed 10MB',
     'profile.imageTooLargeTitle': 'Avatar upload error',
+    'profile.coverImage': 'Profile Cover Image',
+    'profile.changeCover': 'Click to change cover image',
+    'profile.coverSizeLimit': 'Maximum file size: 5MB',
+    'profile.coverFormats': 'Supported formats: JPG, PNG, WEBP',
+    'profile.coverDimensions': 'Recommended size: 960×479 pixels',
+    'profile.coverTooLarge': 'Cover image size must not exceed 5MB',
+    'profile.coverTooLargeTitle': 'Cover image upload error',
+    'profile.unsupportedCoverFormat': 'Unsupported format. Supported: JPG, PNG, WEBP',
+    'profile.unsupportedCoverFormatTitle': 'Cover format error',
+    'profile.invalidCoverDimensions': 'Cover image dimensions not optimal. Recommended: 960×479 pixels',
+    'profile.invalidCoverDimensionsTitle': 'Cover dimensions warning',
   },
   ru: {
     'greeting.morning': 'Доброе утро',
@@ -258,7 +268,7 @@ const translations: Record<Language, Record<string, string>> = {
     'comments.noComments': 'Нет комментариев. Будьте первым, кто оставит комментарий!',
     'comments.added': 'Комментарий добавлен',
     'comments.addedMessage': 'Ваш комментарий был успешно добавлен',
-    'comments.disabled': 'Комментарии отключены',
+    'comments.disabled': 'Комме��тарии отключены',
     'comments.disabledMessage': 'Автор отключил комментарии для этой книги',
     'subscriptions.title': 'Мои подписки',
     'subscriptions.noSubscriptions': 'Нет подписок',
@@ -280,11 +290,22 @@ const translations: Record<Language, Record<string, string>> = {
     'settings.gradientUI': 'Градиентный дизайн',
     'profile.avatarSizeLimit': 'Максимальный размер файла: 10МБ',
     'profile.avatarFormats': 'Поддерживаемые форматы: JPEG, PNG, GIF',
-    'profile.avatarDimensions': 'Рекомендуемый размер: 200x200 до 1000x1000 пикселей',
+    'profile.avatarDimensions': 'Рекомендуемый размер: 200x200 to 1000x1000 pixels',
     'profile.bio': 'О себе',
     'profile.bioPlaceholder': 'Расскажите что-нибудь о себе...',
     'profile.imageTooLarge': 'Размер аватара не должен превышать 10МБ',
     'profile.imageTooLargeTitle': 'Ошибка загрузки аватара',
+    'profile.coverImage': 'Обложка профиля',
+    'profile.changeCover': 'Нажмите, чтобы изменить обложку',
+    'profile.coverSizeLimit': 'Максимальный размер файла: 5МБ',
+    'profile.coverFormats': 'Поддерживаемые форматы: JPG, PNG, WEBP',
+    'profile.coverDimensions': 'Рекомендуемый размер: 960×479 пикселей',
+    'profile.coverTooLarge': 'Размер обложки не должен превышать 5МБ',
+    'profile.coverTooLargeTitle': 'Ошибка загрузки обложки',
+    'profile.unsupportedCoverFormat': 'Неподдерживаемый формат. Поддерживаемые: JPG, PNG, WEBP',
+    'profile.unsupportedCoverFormatTitle': 'Ошибка формата обложки',
+    'profile.invalidCoverDimensions': 'Размеры обложки не оптимальны. Рекомендуемый размер: 960×479 пикселей',
+    'profile.invalidCoverDimensionsTitle': 'Предупреждение о размерах обложки',
   },
 };
 
