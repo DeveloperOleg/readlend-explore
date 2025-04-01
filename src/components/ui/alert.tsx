@@ -27,12 +27,14 @@ export type AlertVariant = 'default' | 'destructive' | 'info';
 
 const Alert = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>
->(({ className, variant, ...props }, ref) => (
+  React.HTMLAttributes<HTMLDivElement> & {
+    variant?: AlertVariant;
+  }
+>(({ className, variant = "default", ...props }, ref) => (
   <div
     ref={ref}
     role="alert"
-    className={cn(alertVariants({ variant }), className)}
+    className={cn(alertVariants({ variant: variant as "default" | "destructive" | "info" }), className)}
     {...props}
   />
 ))
