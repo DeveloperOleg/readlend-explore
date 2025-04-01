@@ -22,6 +22,9 @@ const alertVariants = cva(
   }
 )
 
+// This type definition explicitly includes 'info' in the variant type
+export type AlertVariant = 'default' | 'destructive' | 'info';
+
 const Alert = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>
