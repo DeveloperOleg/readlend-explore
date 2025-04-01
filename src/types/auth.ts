@@ -19,6 +19,7 @@ export interface User {
   subscribers?: string[]; // IDs of users subscribed to this user
   blockedUsers?: string[]; // IDs of users this user has blocked
   publishedBooks?: string[]; // IDs of books published by this user
+  isTestAccount?: boolean; // Flag to identify test accounts
   banStatus?: {
     /**
      * Defiance System (Система Неповиновения) - Ban levels
@@ -65,6 +66,7 @@ export interface ProfileUpdateData {
 export interface AuthContextType {
   user: User | null;
   login: (username: string, password: string) => Promise<boolean>;
+  register: (username: string, password: string) => Promise<boolean>; // New method for registering real accounts
   logout: () => void;
   updateProfile: (data: ProfileUpdateData) => Promise<boolean>;
   isAuthenticated: boolean;

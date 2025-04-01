@@ -22,7 +22,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (username: string, password: string): Promise<boolean> => {
-    // For demo, just check against hardcoded credentials
+    // For demo, check against hardcoded credentials for test account
     if (username === 'tester111' && password === 'tester111') {
       // Ensure we have a fixed test displayId for the demo account
       const testDisplayId = '123456'; // Fixed 6-digit ID for test account
@@ -35,6 +35,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         subscribers: [],
         blockedUsers: [],
         publishedBooks: [],
+        isTestAccount: true, // Mark as test account
         banStatus: undefined, // User is not banned
         privacy: {
           hideSubscriptions: false,
@@ -62,14 +63,99 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       
       return true;
-    } else {
+    }
+
+    // Check for stored real accounts
+    const storedAccounts = localStorage.getItem('readnest-accounts') || '{}';
+    const accounts = JSON.parse(storedAccounts);
+    
+    if (accounts[username] && accounts[username].password === password) {
+      const userData = accounts[username].userData;
+      setUser(userData);
+      setIsAuthenticated(true);
+      localStorage.setItem('readnest-user', JSON.stringify(userData));
+      
       toast({
-        title: "Ошибка входа",
-        description: "Неверный логин или пароль. Попробуйте снова.",
+        title: "Успешный вход",
+        description: "Вы успешно вошли в свой аккаунт.",
+      });
+      
+      return true;
+    }
+    
+    toast({
+      title: "Ошибка входа",
+      description: "Неверный логин или пароль. Попробуйте снова.",
+      variant: "destructive",
+    });
+    return false;
+  };
+
+  const register = async (username: string, password: string): Promise<boolean> => {
+    // Validate username and password
+    if (username.length < 3 || password.length < 6) {
+      toast({
+        title: "Ошибка регистрации",
+        description: "Имя пользователя должно содержать не менее 3 символов, а пароль - не менее 6 символов.",
         variant: "destructive",
       });
       return false;
     }
+    
+    // Check if username already exists
+    const storedAccounts = localStorage.getItem('readnest-accounts') || '{}';
+    const accounts = JSON.parse(storedAccounts);
+    
+    if (accounts[username] || username === 'tester111') {
+      toast({
+        title: "Ошибка регистрации",
+        description: "Пользователь с таким именем уже существует.",
+        variant: "destructive",
+      });
+      return false;
+    }
+    
+    // Create new user
+    const userId = `user-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    const displayId = generateDisplayId();
+    
+    const userData: User = {
+      id: userId,
+      username,
+      displayId,
+      subscriptions: [],
+      subscribers: [],
+      blockedUsers: [],
+      publishedBooks: [],
+      isTestAccount: false, // Regular account, not a test one
+      privacy: {
+        hideSubscriptions: false,
+        commentSettings: {
+          global: true,
+          perBook: {}
+        }
+      }
+    };
+    
+    // Store account
+    accounts[username] = {
+      password,
+      userData
+    };
+    
+    localStorage.setItem('readnest-accounts', JSON.stringify(accounts));
+    
+    // Auto login
+    setUser(userData);
+    setIsAuthenticated(true);
+    localStorage.setItem('readnest-user', JSON.stringify(userData));
+    
+    toast({
+      title: "Регистрация успешна",
+      description: "Ваш аккаунт успешно создан. Добро пожаловать!",
+    });
+    
+    return true;
   };
 
   const logout = () => {
@@ -83,7 +169,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   return (
     <AuthContext.Provider value={{ 
       user, 
-      login, 
+      login,
+      register, 
       logout, 
       isAuthenticated,
       ...authFunctions

@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { User, ProfileUpdateData } from '@/types/auth';
 import { canViewSubscriptions, canCommentOnBook } from '@/utils/authUtils';
-import { getTestUserById } from '@/utils/testData';
+import { getTestUserById, searchTestAuthors, searchTestBooks } from '@/utils/testData';
 
 export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<React.SetStateAction<User | null>>) => {
 
@@ -41,6 +41,18 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
       };
       
       setUser(updatedUser);
+      
+      // Если это не тестовый аккаунт, обновляем данные пользователя в хранилище аккаунтов
+      if (!user.isTestAccount) {
+        const storedAccounts = localStorage.getItem('readnest-accounts') || '{}';
+        const accounts = JSON.parse(storedAccounts);
+        
+        if (accounts[user.username]) {
+          accounts[user.username].userData = updatedUser;
+          localStorage.setItem('readnest-accounts', JSON.stringify(accounts));
+        }
+      }
+      
       localStorage.setItem('readnest-user', JSON.stringify(updatedUser));
       return true;
     } catch (error) {
@@ -65,6 +77,18 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
       };
       
       setUser(updatedUser);
+      
+      // Если это не тестовый аккаунт, обновляем данные пользователя в хранилище аккаунтов
+      if (!user.isTestAccount) {
+        const storedAccounts = localStorage.getItem('readnest-accounts') || '{}';
+        const accounts = JSON.parse(storedAccounts);
+        
+        if (accounts[user.username]) {
+          accounts[user.username].userData = updatedUser;
+          localStorage.setItem('readnest-accounts', JSON.stringify(accounts));
+        }
+      }
+      
       localStorage.setItem('readnest-user', JSON.stringify(updatedUser));
       return true;
     } catch (error) {
@@ -83,6 +107,18 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
       };
       
       setUser(updatedUser);
+      
+      // Если это не тестовый аккаунт, обновляем данные пользователя в хранилище аккаунтов
+      if (!user.isTestAccount) {
+        const storedAccounts = localStorage.getItem('readnest-accounts') || '{}';
+        const accounts = JSON.parse(storedAccounts);
+        
+        if (accounts[user.username]) {
+          accounts[user.username].userData = updatedUser;
+          localStorage.setItem('readnest-accounts', JSON.stringify(accounts));
+        }
+      }
+      
       localStorage.setItem('readnest-user', JSON.stringify(updatedUser));
       return true;
     } catch (error) {
@@ -113,6 +149,18 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
       };
       
       setUser(updatedUser);
+      
+      // Если это не тестовый аккаунт, обновляем данные пользователя в хранилище аккаунтов
+      if (!user.isTestAccount) {
+        const storedAccounts = localStorage.getItem('readnest-accounts') || '{}';
+        const accounts = JSON.parse(storedAccounts);
+        
+        if (accounts[user.username]) {
+          accounts[user.username].userData = updatedUser;
+          localStorage.setItem('readnest-accounts', JSON.stringify(accounts));
+        }
+      }
+      
       localStorage.setItem('readnest-user', JSON.stringify(updatedUser));
       return true;
     } catch (error) {
@@ -131,6 +179,18 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
       };
       
       setUser(updatedUser);
+      
+      // Если это не тестовый аккаунт, обновляем данные пользователя в хранилище аккаунтов
+      if (!user.isTestAccount) {
+        const storedAccounts = localStorage.getItem('readnest-accounts') || '{}';
+        const accounts = JSON.parse(storedAccounts);
+        
+        if (accounts[user.username]) {
+          accounts[user.username].userData = updatedUser;
+          localStorage.setItem('readnest-accounts', JSON.stringify(accounts));
+        }
+      }
+      
       localStorage.setItem('readnest-user', JSON.stringify(updatedUser));
       return true;
     } catch (error) {
@@ -176,10 +236,25 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
   };
 
   const getUserById = (userId: string): User | null => {
-    // If the current user is tester111, return test user for demo purposes
-    if (user?.username === 'tester111') {
+    // Если пользователь не авторизован, возвращаем null
+    if (!user) return null;
+    
+    // Для тестового аккаунта или когда запрашиваем тестовый аккаунт
+    if (user.isTestAccount || userId.startsWith('author')) {
       return getTestUserById(userId);
     }
+    
+    // Для реальных аккаунтов
+    const storedAccounts = localStorage.getItem('readnest-accounts') || '{}';
+    const accounts = JSON.parse(storedAccounts);
+    
+    // Ищем по ID среди всех аккаунтов
+    for (const username in accounts) {
+      if (accounts[username].userData.id === userId) {
+        return accounts[username].userData;
+      }
+    }
+    
     return null;
   };
 
