@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Heart, BookMarked, Plus } from 'lucide-react';
+import { Home, Heart, BookMarked, Plus, Flame } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import PublishBookDialog from './PublishBookDialog';
@@ -38,13 +38,23 @@ const BottomNav: React.FC = () => {
         <div className="flex justify-center items-center">
           <button 
             type="button"
-            className="neon-button"
+            className="neon-button flex items-center justify-center"
             aria-label="Add new book"
             onClick={() => setPublishDialogOpen(true)}
           >
             <Plus className="h-5 w-5" strokeWidth={2.5} />
           </button>
         </div>
+        
+        <NavLink 
+          to="/top-reads" 
+          className={({ isActive }) => 
+            `nav-item ${isActive ? 'active' : ''} ${isMobile ? 'px-2' : 'px-4'}`
+          }
+        >
+          <Flame className="h-5 w-5" />
+          <span className="text-[10px]">{t('nav.topReads') || 'Топ'}</span>
+        </NavLink>
         
         <NavLink 
           to="/saved" 

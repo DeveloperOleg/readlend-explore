@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
 import Favorites from "./pages/Favorites";
 import SavedBooks from "./pages/SavedBooks";
+import TopReads from "./pages/TopReads";
 import Profile from "./pages/Profile";
 import Layout from "./components/Layout";
 
@@ -33,6 +34,7 @@ const App = () => (
                   <Route path="/home" element={<Home />} />
                   <Route path="/favorites" element={<Favorites />} />
                   <Route path="/saved" element={<SavedBooks />} />
+                  <Route path="/top-reads" element={<TopReads />} />
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/profile/:userId" element={<Profile />} />
                 </Route>
