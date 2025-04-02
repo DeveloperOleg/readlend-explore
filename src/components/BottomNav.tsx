@@ -13,7 +13,7 @@ const BottomNav: React.FC = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-40 glass border-t border-border/50 backdrop-blur-lg">
-      <nav className="container flex items-center justify-around h-14">
+      <nav className="container flex items-center justify-around h-14 relative">
         <NavLink 
           to="/" 
           className={({ isActive }) => 
@@ -35,10 +35,10 @@ const BottomNav: React.FC = () => {
           <span className="text-[10px]">{t('nav.favorites')}</span>
         </NavLink>
         
-        <div className="flex justify-center -mt-5">
+        <div className="flex justify-center items-center">
           <button 
             type="button"
-            className="neon-button"
+            className="neon-button absolute -top-4 transform translate-y-0"
             aria-label="Add new book"
             onClick={() => setPublishDialogOpen(true)}
           >
