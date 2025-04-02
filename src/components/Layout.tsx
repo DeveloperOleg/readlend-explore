@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import { 
   Menu, 
@@ -13,6 +13,7 @@ import {
 import { useTheme } from '@/context/ThemeContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 import BottomNav from './BottomNav';
 import SearchBar from './SearchBar';
 import SettingsDialog from './SettingsDialog';
@@ -32,10 +33,13 @@ const Layout: React.FC = () => {
   const { language, toggleLanguage, t } = useLanguage();
   const { isAuthenticated, logout, user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   if (!isAuthenticated) {
     return <Outlet />;
   }
+
+  const sheetWidth = isMobile ? 'w-[280px]' : 'w-[280px] sm:w-[350px]';
 
   return (
     <div className="relative min-h-screen pb-16 overflow-hidden">
@@ -45,16 +49,16 @@ const Layout: React.FC = () => {
           <Button 
             variant="ghost" 
             size="icon" 
-            className="absolute top-4 left-4 z-50"
+            className="absolute top-2 left-2 z-50"
           >
             <Menu className="h-5 w-5" />
             <span className="sr-only">Open menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-[280px] sm:w-[350px] bg-sidebar backdrop-blur-lg border-sidebar-border">
+        <SheetContent side="left" className={`${sheetWidth} bg-sidebar backdrop-blur-lg border-sidebar-border`}>
           <div className="flex flex-col h-full text-sidebar-foreground">
             <SheetClose asChild>
-              <Link to="/profile" className="py-6 px-4 flex items-center gap-3 hover:bg-sidebar-accent/10 rounded-lg transition-colors">
+              <Link to="/profile" className="py-4 px-4 flex items-center gap-3 hover:bg-sidebar-accent/10 rounded-lg transition-colors">
                 <Avatar className="h-10 w-10">
                   <AvatarImage src={user?.avatarUrl} alt={user?.username} />
                   <AvatarFallback className="text-lg">
@@ -74,7 +78,7 @@ const Layout: React.FC = () => {
             
             <Separator className="bg-sidebar-border" />
             
-            <div className="flex-1 py-6 space-y-6">
+            <div className="flex-1 py-4 space-y-5">
               {/* Theme toggle */}
               <div className="flex items-center justify-between px-4">
                 <div className="flex items-center gap-2">
@@ -142,7 +146,7 @@ const Layout: React.FC = () => {
             <SheetClose asChild>
               <Button 
                 variant="ghost" 
-                className="flex items-center gap-2 justify-start py-6 px-4 w-full hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-none"
+                className="flex items-center gap-2 justify-start py-4 px-4 w-full hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-none"
                 onClick={logout}
               >
                 <LogOut className="h-5 w-5" />
@@ -157,7 +161,7 @@ const Layout: React.FC = () => {
       <SearchBar />
       
       {/* Main content */}
-      <main className="container px-4 pt-16 pb-4 animate-fade-in">
+      <main className="container px-2 pt-12 pb-2 animate-fade-in">
         <Outlet />
       </main>
       

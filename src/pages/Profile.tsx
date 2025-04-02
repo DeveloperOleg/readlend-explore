@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -22,6 +23,7 @@ const Profile: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [profileUser, setProfileUser] = useState<User | null>(null);
+  const isMobile = useIsMobile();
   
   useEffect(() => {
     // If userId is provided, try to fetch that user's data
@@ -84,10 +86,10 @@ const Profile: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="container mx-auto px-2">
       {/* Cover Image */}
-      <div className="mb-6 rounded-md overflow-hidden">
-        <AspectRatio ratio={960/479} className="bg-muted">
+      <div className="rounded-md overflow-hidden mb-4">
+        <AspectRatio ratio={isMobile ? 16/9 : 960/479} className="bg-muted">
           {profileUser.coverImageUrl ? (
             <img 
               src={profileUser.coverImageUrl} 
@@ -96,28 +98,28 @@ const Profile: React.FC = () => {
             />
           ) : (
             <div className="flex items-center justify-center w-full h-full bg-muted">
-              <ImageIcon className="h-12 w-12 text-muted-foreground opacity-20" />
+              <ImageIcon className="h-10 w-10 text-muted-foreground opacity-20" />
             </div>
           )}
         </AspectRatio>
       </div>
       
       {/* Profile Header - Instagram Style */}
-      <div className="flex flex-col md:flex-row gap-8 items-center md:items-start mb-8">
+      <div className="flex flex-col md:flex-row gap-4 items-center md:items-start mb-6">
         {/* Avatar */}
-        <Avatar className="h-24 w-24 md:h-36 md:w-36 border-2 border-muted">
+        <Avatar className="h-20 w-20 md:h-36 md:w-36 border-2 border-muted">
           <AvatarImage src={profileUser.avatarUrl || ''} alt={profileUser.username} />
-          <AvatarFallback className="text-4xl">
+          <AvatarFallback className="text-2xl md:text-4xl">
             {profileUser.username ? profileUser.username.charAt(0).toUpperCase() : 'U'}
           </AvatarFallback>
         </Avatar>
         
         {/* Profile Info */}
         <div className="flex-1 flex flex-col items-center md:items-start">
-          <div className="flex flex-col md:flex-row md:items-center gap-3 mb-4">
+          <div className="flex flex-col md:flex-row md:items-center gap-2 mb-3">
             <div className="flex items-center gap-2">
               <h1 
-                className="text-xl font-medium cursor-pointer" 
+                className="text-lg font-medium cursor-pointer" 
                 onClick={handleCopyUsername}
               >
                 {profileUser.username ? `@${profileUser.username}` : 'Имя пользователя не указано'}
@@ -133,36 +135,36 @@ const Profile: React.FC = () => {
             
             {isCurrentUser && (
               <ProfileEditDialog>
-                <Button variant="outline" size="sm" className="h-8">
-                  <Edit className="h-4 w-4 mr-2" />
-                  {t('profile.editProfile') || 'Редактировать профиль'}
+                <Button variant="outline" size="sm" className="h-8 mt-1 md:mt-0">
+                  <Edit className="h-3 w-3 mr-1" />
+                  {t('profile.editProfile') || 'Редактировать'}
                 </Button>
               </ProfileEditDialog>
             )}
           </div>
           
           {/* Stats */}
-          <div className="flex justify-center md:justify-start gap-6 mb-4">
+          <div className="flex justify-center md:justify-start gap-4 md:gap-6 mb-3">
             <div className="flex flex-col items-center md:items-start">
               <span className="font-bold">{profileUser.publishedBooks?.length || 0}</span>
-              <span className="text-sm text-muted-foreground">{getBookLabel(profileUser.publishedBooks?.length || 0)}</span>
+              <span className="text-xs md:text-sm text-muted-foreground">{getBookLabel(profileUser.publishedBooks?.length || 0)}</span>
             </div>
             
             <div className="flex flex-col items-center md:items-start">
               <span className="font-bold">{profileUser.subscribers?.length || 0}</span>
-              <span className="text-sm text-muted-foreground">{getSubscribersLabel(profileUser.subscribers?.length || 0)}</span>
+              <span className="text-xs md:text-sm text-muted-foreground">{getSubscribersLabel(profileUser.subscribers?.length || 0)}</span>
             </div>
             
             <div className="flex flex-col items-center md:items-start">
               <span className="font-bold">{profileUser.subscriptions?.length || 0}</span>
-              <span className="text-sm text-muted-foreground">{getSubscriptionsLabel(profileUser.subscriptions?.length || 0)}</span>
+              <span className="text-xs md:text-sm text-muted-foreground">{getSubscriptionsLabel(profileUser.subscriptions?.length || 0)}</span>
             </div>
           </div>
           
           {/* Display Name and Bio */}
           <div className="text-center md:text-left">
             <h2 className="font-semibold">{displayName}</h2>
-            <p className="text-sm text-muted-foreground">ID: {profileUser.displayId}</p>
+            <p className="text-xs md:text-sm text-muted-foreground">ID: {profileUser.displayId}</p>
             
             {/* Display bio if it exists */}
             {profileUser.bio && (
@@ -172,37 +174,37 @@ const Profile: React.FC = () => {
         </div>
       </div>
       
-      <Separator className="my-6" />
+      <Separator className="my-4" />
       
       {/* Content Tabs */}
       <Tabs defaultValue="grid" className="w-full">
-        <TabsList className="mb-6 justify-center">
-          <TabsTrigger value="grid">
-            <Grid className="h-5 w-5" />
+        <TabsList className="mb-4 justify-center w-full">
+          <TabsTrigger value="grid" className="flex-1">
+            <Grid className="h-4 w-4 md:h-5 md:w-5 mx-auto" />
             <span className="sr-only">{t('profile.grid') || 'Сетка'}</span>
           </TabsTrigger>
-          <TabsTrigger value="books">
-            <Book className="h-5 w-5" />
+          <TabsTrigger value="books" className="flex-1">
+            <Book className="h-4 w-4 md:h-5 md:w-5 mx-auto" />
             <span className="sr-only">{t('profile.books') || 'Книги'}</span>
           </TabsTrigger>
-          <TabsTrigger value="subscriptions">
-            <Users className="h-5 w-5" />
+          <TabsTrigger value="subscriptions" className="flex-1">
+            <Users className="h-4 w-4 md:h-5 md:w-5 mx-auto" />
             <span className="sr-only">{t('profile.subscriptions') || 'Подписки'}</span>
           </TabsTrigger>
         </TabsList>
         
         <TabsContent value="grid">
           <Card>
-            <CardContent className="p-6 text-center">
-              <p className="text-muted-foreground">{t('profile.noPublishedBooks') || 'У вас пока нет опубликованных книг'}</p>
+            <CardContent className="p-4 text-center">
+              <p className="text-muted-foreground text-sm">{t('profile.noPublishedBooks') || 'У вас пока нет опубликованных книг'}</p>
             </CardContent>
           </Card>
         </TabsContent>
         
         <TabsContent value="books">
           <Card>
-            <CardContent className="p-6 text-center">
-              <p className="text-muted-foreground">{t('profile.noPublishedBooks') || 'У вас пока нет опубликованных книг'}</p>
+            <CardContent className="p-4 text-center">
+              <p className="text-muted-foreground text-sm">{t('profile.noPublishedBooks') || 'У вас пока нет опубликованных книг'}</p>
             </CardContent>
           </Card>
         </TabsContent>
