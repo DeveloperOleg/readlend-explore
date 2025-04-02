@@ -38,7 +38,7 @@ const BottomNav: React.FC = () => {
         <div className="flex justify-center items-center">
           <button 
             type="button"
-            className="neon-button absolute -top-4 transform translate-y-0"
+            className="neon-button"
             aria-label="Add new book"
             onClick={() => setPublishDialogOpen(true)}
           >
