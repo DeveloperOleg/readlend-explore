@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
@@ -11,7 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Camera, Trash2, AlertCircle, Info, Image as ImageIcon } from 'lucide-react';
+import { Camera, Trash2, AlertCircle, Info, Image as ImageIcon, Hash } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -47,15 +46,15 @@ const ProfileEditor: React.FC = () => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   
-  // Avatar state
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.avatarUrl || null);
   const [avatarError, setAvatarError] = useState<string | null>(null);
   
-  // Cover image state
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(user?.coverImageUrl || null);
   const [coverError, setCoverError] = useState<string | null>(null);
+
+  const bioTextareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -102,7 +101,6 @@ const ProfileEditor: React.FC = () => {
         const height = img.height;
         URL.revokeObjectURL(img.src);
         
-        // We'll allow any size but warn if not optimal
         const isOptimal = width === RECOMMENDED_COVER_WIDTH && height === RECOMMENDED_COVER_HEIGHT;
         if (!isOptimal) {
           setCoverError(t('profile.invalidCoverDimensions'));
@@ -129,7 +127,6 @@ const ProfileEditor: React.FC = () => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       
-      // Проверка размера файла
       if (file.size > MAX_AVATAR_SIZE) {
         setAvatarError(t('profile.imageTooLarge') || 'Размер аватара не должен превышать 10МБ');
         toast({
@@ -140,7 +137,6 @@ const ProfileEditor: React.FC = () => {
         return;
       }
       
-      // Проверка формата файла
       if (!ALLOWED_AVATAR_FILE_TYPES.includes(file.type)) {
         setAvatarError(t('profile.unsupportedFormat') || 'Неподдерживаемый формат файла. Поддерживаются только JPEG, PNG и GIF');
         toast({
@@ -151,7 +147,6 @@ const ProfileEditor: React.FC = () => {
         return;
       }
       
-      // Проверка размеров изображения
       const isValidDimensions = await validateImageDimensions(file, MIN_IMAGE_DIMENSION, MIN_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION);
       if (!isValidDimensions) {
         toast({
@@ -177,7 +172,6 @@ const ProfileEditor: React.FC = () => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       
-      // Проверка размера файла
       if (file.size > MAX_COVER_SIZE) {
         setCoverError(t('profile.coverTooLarge'));
         toast({
@@ -188,7 +182,6 @@ const ProfileEditor: React.FC = () => {
         return;
       }
       
-      // Проверка формата файла
       if (!ALLOWED_COVER_FILE_TYPES.includes(file.type)) {
         setCoverError(t('profile.unsupportedCoverFormat'));
         toast({
@@ -199,7 +192,6 @@ const ProfileEditor: React.FC = () => {
         return;
       }
       
-      // Проверка/предупреждение о размерах изображения
       await validateCoverDimensions(file);
       
       setCoverFile(file);
@@ -295,6 +287,37 @@ const ProfileEditor: React.FC = () => {
     }
   };
 
+  const addHashtag = () => {
+    const bioField = form.getValues('bio') || '';
+    const textarea = bioTextareaRef.current;
+    
+    if (textarea) {
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      
+      if (start === end) {
+        const newBio = `${bioField.slice(0, start)}# ${bioField.slice(end)}`;
+        form.setValue('bio', newBio);
+        
+        setTimeout(() => {
+          textarea.focus();
+          textarea.setSelectionRange(start + 2, start + 2);
+        }, 0);
+      } else {
+        const selectedText = bioField.slice(start, end);
+        const newBio = `${bioField.slice(0, start)}#${selectedText}${bioField.slice(end)}`;
+        form.setValue('bio', newBio);
+        
+        setTimeout(() => {
+          textarea.focus();
+          textarea.setSelectionRange(end + 1, end + 1);
+        }, 0);
+      }
+    } else {
+      form.setValue('bio', `${bioField} #`);
+    }
+  };
+
   return (
     <Tabs defaultValue="info" className="w-full">
       <TabsList>
@@ -305,7 +328,6 @@ const ProfileEditor: React.FC = () => {
       <TabsContent value="info">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* Cover Image Section */}
             <div className="mb-6">
               <h3 className="text-sm font-medium mb-2">{t('profile.coverImage')}</h3>
               <div className="relative group rounded-md overflow-hidden border-2 border-border">
@@ -375,7 +397,6 @@ const ProfileEditor: React.FC = () => {
               </Alert>
             </div>
             
-            {/* Avatar Section */}
             <div className="flex flex-col items-center mb-6">
               <div className="relative group">
                 <Avatar className="h-24 w-24 border-2 border-border">
@@ -447,7 +468,6 @@ const ProfileEditor: React.FC = () => {
               )}
             </div>
           
-            {/* Form fields */}
             <FormField
               control={form.control}
               name="username"
@@ -493,20 +513,40 @@ const ProfileEditor: React.FC = () => {
               )}
             />
             
-            {/* Добавляем поле "О себе" */}
             <FormField
               control={form.control}
               name="bio"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('profile.bio') || 'О себе'}</FormLabel>
+                  <div className="flex items-center justify-between">
+                    <FormLabel>{t('profile.bio') || 'О себе'}</FormLabel>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="h-8 px-2 text-xs flex items-center gap-1"
+                      onClick={addHashtag}
+                    >
+                      <Hash className="h-3 w-3" style={{ color: "#3B426E" }} />
+                      <span>{t('editor.hashtag') || 'Хэштег'}</span>
+                    </Button>
+                  </div>
                   <FormControl>
                     <Textarea 
                       placeholder={t('profile.bioPlaceholder') || 'Расскажите что-нибудь о себе...'}
                       className="min-h-[120px]"
-                      {...field} 
+                      {...field}
+                      ref={(e) => {
+                        field.ref(e);
+                        bioTextareaRef.current = e;
+                      }}
                     />
                   </FormControl>
+                  <div className="mt-1 text-xs text-muted-foreground">
+                    <span>{t('profile.bioUseTips') || 'Совет:'} </span>
+                    <span style={{ color: "#3B426E" }}>#хэштеги</span> 
+                    {t('profile.bioUseHashtags') || ' можно использовать для выделения важных тем'}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
