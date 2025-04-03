@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Bold, Italic, Underline, Strikethrough, Palette } from 'lucide-react';
+import { Bold, Italic, Underline, Strikethrough, Palette, Hash } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Textarea } from '@/components/ui/textarea';
@@ -25,23 +25,32 @@ const TextEditor: React.FC<TextEditorProps> = ({ content, onChange }) => {
       selection = window.getSelection()?.toString();
     }
     
-    if (!selection) return;
+    if (!selection && format !== 'hashtag') return;
     
     switch (format) {
       case 'bold':
-        formattedText = content.replace(selection, `**${selection}**`);
+        formattedText = content.replace(selection!, `**${selection}**`);
         break;
       case 'italic':
-        formattedText = content.replace(selection, `*${selection}*`);
+        formattedText = content.replace(selection!, `*${selection}*`);
         break;
       case 'underline':
-        formattedText = content.replace(selection, `__${selection}__`);
+        formattedText = content.replace(selection!, `__${selection}__`);
         break;
       case 'strikethrough':
-        formattedText = content.replace(selection, `~~${selection}~~`);
+        formattedText = content.replace(selection!, `~~${selection}~~`);
         break;
       case 'color':
-        formattedText = content.replace(selection, `[color=${selectedColor}]${selection}[/color]`);
+        formattedText = content.replace(selection!, `[color=${selectedColor}]${selection}[/color]`);
+        break;
+      case 'hashtag':
+        // If no selection, insert a hashtag at cursor position (approximated by appending)
+        if (!selection) {
+          formattedText = `${content} #`;
+        } else {
+          // If text is selected, make it a hashtag
+          formattedText = content.replace(selection!, `#${selection}`);
+        }
         break;
       default:
         break;
@@ -52,7 +61,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ content, onChange }) => {
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center gap-2 p-2 border rounded-md bg-muted/30">
+      <div className="flex items-center gap-2 p-2 border rounded-md bg-muted/30 flex-wrap">
         <ToggleGroup type="multiple" className="flex flex-wrap gap-1">
           <ToggleGroupItem value="bold" onClick={() => formatText('bold')} aria-label={t('editor.bold') || 'Жирный'}>
             <Bold className="h-4 w-4" />
@@ -93,6 +102,16 @@ const TextEditor: React.FC<TextEditorProps> = ({ content, onChange }) => {
             </div>
           </PopoverContent>
         </Popover>
+        
+        <Button 
+          variant="outline" 
+          size="icon" 
+          className="h-8 w-8 border-dashed"
+          onClick={() => formatText('hashtag')}
+        >
+          <Hash className="h-4 w-4" style={{ color: "#3B426E" }} />
+          <span className="sr-only">{t('editor.hashtag') || 'Хэштег'}</span>
+        </Button>
       </div>
       
       <Textarea 
@@ -119,6 +138,9 @@ const TextEditor: React.FC<TextEditorProps> = ({ content, onChange }) => {
           </li>
           <li>
             <span style={{ color: "#ff5555" }}>{t('editor.color') || 'Цветной текст'}</span>: [color=#ff5555]текст[/color]
+          </li>
+          <li>
+            <span style={{ color: "#3B426E" }}>{t('editor.hashtag') || 'Хэштег'}</span>: #тег
           </li>
         </ul>
       </div>
