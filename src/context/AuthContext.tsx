@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useToast } from "@/hooks/use-toast";
 import { User, ProfileUpdateData, AuthContextType } from '@/types/auth';
 import { generateDisplayId } from '@/utils/authUtils';

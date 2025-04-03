@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
@@ -36,6 +36,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ detectVpn = () => false, vp
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
 
+  // Мониторим изменения vpnDetected
+  useEffect(() => {
+    if (vpnDetected) {
+      console.log("RegisterForm: VPN detected");
+    }
+  }, [vpnDetected]);
+
   const form = useForm<UserFormValues>({
     resolver: zodResolver(userFormSchema),
     defaultValues: {
@@ -47,9 +54,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ detectVpn = () => false, vp
   const onSubmit = async (values: UserFormValues) => {
     setIsLoading(true);
     try {
-      // Check if VPN is detected and not already verified
-      if (!vpnDetected && detectVpn()) {
-        // VPN detection logic is handled in LoginScreen component
+      // Проверяем, если VPN уже обнаружен и еще не прошел проверку
+      if (vpnDetected) {
+        // VPN обнаружен, логика обрабатывается в LoginScreen компоненте
+        console.log("VPN is detected during form submission");
+        detectVpn(); // Вызываем для показа капчи
         setIsLoading(false);
         return;
       }
@@ -89,9 +98,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ detectVpn = () => false, vp
   const handleDemo = async () => {
     setIsLoading(true);
     
-    // Check VPN for demo login too
-    if (!vpnDetected && detectVpn()) {
-      // VPN detection logic is handled in LoginScreen component
+    // Проверяем VPN и для демо-входа тоже
+    if (vpnDetected) {
+      console.log("VPN is detected during demo login");
+      detectVpn(); // Вызываем для показа капчи
       setIsLoading(false);
       return;
     }

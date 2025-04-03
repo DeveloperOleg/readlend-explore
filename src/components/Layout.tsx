@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { 
   Menu, 
   Moon, 
@@ -34,10 +34,17 @@ const Layout: React.FC = () => {
   const { isAuthenticated, logout, user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
 
   if (!isAuthenticated) {
     return <Outlet />;
   }
+
+  const handleLogout = () => {
+    logout();
+    // Перенаправляем на главную страницу после выхода
+    navigate('/');
+  };
 
   const sheetWidth = isMobile ? 'w-[280px]' : 'w-[280px] sm:w-[350px]';
 
@@ -147,7 +154,7 @@ const Layout: React.FC = () => {
               <Button 
                 variant="ghost" 
                 className="flex items-center gap-2 justify-start py-4 px-4 w-full hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-none"
-                onClick={logout}
+                onClick={handleLogout}
               >
                 <LogOut className="h-5 w-5" />
                 <span>{t('sidebar.logout')}</span>
