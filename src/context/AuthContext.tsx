@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useToast } from "@/hooks/use-toast";
 import { User, ProfileUpdateData, AuthContextType } from '@/types/auth';
 import { generateDisplayId } from '@/utils/authUtils';
@@ -12,6 +12,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     // Check for existing user in localStorage
@@ -163,6 +165,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
     setIsAuthenticated(false);
     localStorage.removeItem('readnest-user');
+    
+    // После выхода перенаправляем на страницу входа
+    navigate('/', { replace: true });
   };
 
   const authFunctions = useAuthFunctions(user, setUser);

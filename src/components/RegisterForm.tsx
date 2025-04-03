@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -54,13 +53,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ detectVpn = () => false, vp
   const onSubmit = async (values: UserFormValues) => {
     setIsLoading(true);
     try {
-      // Проверяем, если VPN уже обнаружен и еще не прошел проверку
-      if (vpnDetected) {
-        // VPN обнаружен, логика обрабатывается в LoginScreen компоненте
-        console.log("VPN is detected during form submission");
-        detectVpn(); // Вызываем для показа капчи
+      // Проверяем VPN перед продолжением
+      const vpnCheck = detectVpn();
+      if (vpnCheck) {
+        console.log("VPN detected during form submission");
         setIsLoading(false);
-        return;
+        return; // Останавливаем процесс входа/регистрации, капча будет показана в родительском компоненте
       }
       
       let success: boolean;
@@ -98,12 +96,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ detectVpn = () => false, vp
   const handleDemo = async () => {
     setIsLoading(true);
     
-    // Проверяем VPN и для демо-входа тоже
-    if (vpnDetected) {
-      console.log("VPN is detected during demo login");
-      detectVpn(); // Вызываем для показа капчи
+    // Проверяем VPN перед демо-входом
+    const vpnCheck = detectVpn();
+    if (vpnCheck) {
+      console.log("VPN detected during demo login");
       setIsLoading(false);
-      return;
+      return; // Останавливаем процесс входа, капча будет показана в родительском компоненте
     }
     
     await login('tester111', 'tester111');

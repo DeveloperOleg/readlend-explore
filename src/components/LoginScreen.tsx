@@ -11,12 +11,15 @@ export default function LoginScreen() {
   const [showCaptcha, setShowCaptcha] = useState(false);
   const [vpnDetected, setVpnDetected] = useState(false);
   
-  // Улучшенная симуляция обнаружения VPN - теперь выполняется при загрузке компонента
+  // Исправленная симуляция обнаружения VPN - теперь выполняется при загрузке компонента
   useEffect(() => {
-    // Для демо, с вероятностью 60% обнаружим VPN
+    // Для демо, с вероятностью 60% обнаружим VPN когда он действительно включен
     const checkVpn = () => {
+      // Симулируем проверку VPN. В реальном приложении здесь был бы API запрос
       const isVpn = Math.random() < 0.6;
       console.log("VPN check result:", isVpn);
+      
+      // Если VPN обнаружен, показываем капчу
       setVpnDetected(isVpn);
       if (isVpn) {
         setShowCaptcha(true);
@@ -29,17 +32,16 @@ export default function LoginScreen() {
   
   // Метод для внешних компонентов, чтобы запросить проверку VPN
   const detectVpn = () => {
-    // Если VPN уже обнаружен, просто возвращаем текущее значение
-    if (vpnDetected) {
-      setShowCaptcha(true);
-      return true;
-    }
-    
-    // Иначе выполняем новую проверку
+    // Симулируем новую проверку VPN. В реальном приложении здесь был бы API запрос
     const isVpn = Math.random() < 0.6;
     console.log("Manual VPN check result:", isVpn);
+    
+    // Если VPN обнаружен, показываем капчу
     setVpnDetected(isVpn);
-    setShowCaptcha(isVpn);
+    if (isVpn) {
+      setShowCaptcha(true);
+    }
+    
     return isVpn;
   };
   
