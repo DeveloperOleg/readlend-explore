@@ -11,6 +11,11 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
+interface RegisterFormProps {
+  detectVpn?: () => boolean;
+  vpnDetected?: boolean;
+}
+
 const userFormSchema = z.object({
   username: z.string()
     .min(3, { message: 'Имя пользователя должно содержать не менее 3 символов' })
@@ -24,7 +29,7 @@ const userFormSchema = z.object({
 
 type UserFormValues = z.infer<typeof userFormSchema>;
 
-const RegisterForm: React.FC = () => {
+const RegisterForm: React.FC<RegisterFormProps> = ({ detectVpn = () => false, vpnDetected = false }) => {
   const { login, register } = useAuth();
   const { t } = useLanguage();
   const { toast } = useToast();
@@ -42,6 +47,13 @@ const RegisterForm: React.FC = () => {
   const onSubmit = async (values: UserFormValues) => {
     setIsLoading(true);
     try {
+      // Check if VPN is detected and not already verified
+      if (!vpnDetected && detectVpn()) {
+        // VPN detection logic is handled in LoginScreen component
+        setIsLoading(false);
+        return;
+      }
+      
       let success: boolean;
       
       if (activeTab === 'login') {
@@ -76,6 +88,14 @@ const RegisterForm: React.FC = () => {
 
   const handleDemo = async () => {
     setIsLoading(true);
+    
+    // Check VPN for demo login too
+    if (!vpnDetected && detectVpn()) {
+      // VPN detection logic is handled in LoginScreen component
+      setIsLoading(false);
+      return;
+    }
+    
     await login('tester111', 'tester111');
     setIsLoading(false);
   };
