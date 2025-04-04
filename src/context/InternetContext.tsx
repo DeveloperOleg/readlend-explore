@@ -1,8 +1,8 @@
 
 import React, { createContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { useToast } from "@/hooks/use-toast";
+import { toast } from 'sonner';
 import { Button } from "@/components/ui/button";
-import { AlertCircle, Check } from "lucide-react";
+import { AlertCircle, Check, RotateCw } from "lucide-react";
 
 interface InternetContextType {
   isOnline: boolean;
@@ -25,7 +25,6 @@ interface InternetProviderProps {
 export const InternetProvider: React.FC<InternetProviderProps> = ({ children }) => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [lastChecked, setLastChecked] = useState<Date | null>(null);
-  const { toast } = useToast();
 
   const checkConnection = useCallback(async (): Promise<boolean> => {
     try {
@@ -55,36 +54,24 @@ export const InternetProvider: React.FC<InternetProviderProps> = ({ children }) 
       
       if (currentState) {
         // Connection restored
-        toast({
-          title: "Соединение восстановлено",
+        toast.success("Соединение восстановлено", {
           description: "Приложение снова в сети",
-          variant: "default",
-          action: (
-            <Button size="sm" variant="outline" className="gap-1 items-center">
-              <Check className="h-4 w-4" />
-            </Button>
-          ),
+          position: "bottom-center",
         });
       } else {
         // Connection lost
-        toast({
-          title: "Наше приложение скучает по интернету...🥺",
+        toast.error("Наше приложение скучает по интернету...🥺", {
           description: "Пожалуйста, проверьте ваше подключение и дайте нам снова соединиться.",
-          variant: "destructive",
+          position: "bottom-center",
           duration: 10000,
-          action: (
-            <Button 
-              size="sm" 
-              onClick={() => checkConnection()}
-              className="gap-1 items-center"
-            >
-              Повторить попытку
-            </Button>
-          ),
+          action: {
+            label: "Повторить попытку",
+            onClick: () => checkConnection(),
+          },
         });
       }
     }
-  }, [isOnline, toast, checkConnection]);
+  }, [isOnline, checkConnection]);
 
   useEffect(() => {
     // Initial connection check

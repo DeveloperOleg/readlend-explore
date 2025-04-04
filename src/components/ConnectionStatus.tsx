@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useInternet } from '@/context/InternetContext';
-import { useToast } from "@/hooks/use-toast";
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, Wifi, WifiOff, RotateCw } from 'lucide-react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -13,7 +13,6 @@ interface ConnectionStatusProps {
 const ConnectionStatus: React.FC<ConnectionStatusProps> = ({ showAlert = true }) => {
   const { isOnline, checkConnection, lastChecked } = useInternet();
   const [isChecking, setIsChecking] = useState(false);
-  const { toast } = useToast();
 
   const handleRetry = async () => {
     setIsChecking(true);
@@ -21,9 +20,9 @@ const ConnectionStatus: React.FC<ConnectionStatusProps> = ({ showAlert = true })
     setIsChecking(false);
     
     if (online) {
-      toast({
-        title: "Соединение восстановлено",
+      toast.success("Соединение восстановлено", {
         description: "Приложение снова в сети",
+        position: "bottom-center",
       });
     }
   };

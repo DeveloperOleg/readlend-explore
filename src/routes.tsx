@@ -26,6 +26,7 @@ const AppRoutes = () => {
             <Route path="favorites" element={<Favorites />} />
             <Route path="saved" element={<SavedBooks />} />
             <Route path="top" element={<TopReads />} />
+            <Route path="top-reads" element={<TopReads />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

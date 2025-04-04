@@ -18,7 +18,7 @@ const App = () => (
         <InternetProvider>
           <TooltipProvider>
             <Toaster />
-            <Sonner />
+            <Sonner position="bottom-center" />
             <AppRoutes />
           </TooltipProvider>
         </InternetProvider>

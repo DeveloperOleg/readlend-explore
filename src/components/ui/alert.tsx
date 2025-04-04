@@ -13,7 +13,6 @@ const alertVariants = cva(
         default: "bg-background text-foreground",
         destructive:
           "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
-        info: "border-blue-200 bg-blue-50 text-blue-800 dark:border-blue-700 dark:bg-blue-900/50 dark:text-blue-200 [&>svg]:text-blue-600 dark:[&>svg]:text-blue-400"
       },
     },
     defaultVariants: {
@@ -22,17 +21,10 @@ const alertVariants = cva(
   }
 )
 
-// This type definition explicitly includes 'info' in the variant type
-export type AlertVariant = 'default' | 'destructive' | 'info';
-
-// Update the interface to use the AlertVariant type
-interface AlertProps extends React.HTMLAttributes<HTMLDivElement>,
-  Omit<VariantProps<typeof alertVariants>, "variant"> {
-  variant?: AlertVariant;
-}
-
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
-  ({ className, variant = "default", ...props }, ref) => (
+const Alert = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement> &
+  VariantProps<typeof alertVariants>
+>(
+  ({ className, variant, ...props }, ref) => (
     <div
       ref={ref}
       role="alert"

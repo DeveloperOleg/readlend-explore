@@ -158,6 +158,9 @@ const translations: Record<Language, Record<string, string>> = {
     'profile.unsupportedCoverFormatTitle': 'Cover format error',
     'profile.invalidCoverDimensions': 'Cover image dimensions not optimal. Recommended: 960×479 pixels',
     'profile.invalidCoverDimensionsTitle': 'Cover dimensions warning',
+    'nav.topReads': 'Top Reads',
+    'pages.topReads': 'Top Reads',
+    'pages.topReadsDescription': 'Books that users read most often',
   },
   ru: {
     'greeting.morning': 'Доброе утро',
@@ -306,6 +309,9 @@ const translations: Record<Language, Record<string, string>> = {
     'profile.unsupportedCoverFormatTitle': 'Ошибка формата обложки',
     'profile.invalidCoverDimensions': 'Размеры обложки не оптимальны. Рекомендуемый размер: 960×479 пикселей',
     'profile.invalidCoverDimensionsTitle': 'Предупреждение о размерах обложки',
+    'nav.topReads': 'Топ читаемых',
+    'pages.topReads': 'Топ читаемых',
+    'pages.topReadsDescription': 'Книги, которые пользователи читают чаще всего',
   },
 };
 

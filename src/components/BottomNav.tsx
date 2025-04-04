@@ -47,13 +47,13 @@ const BottomNav: React.FC = () => {
         </div>
         
         <NavLink 
-          to="/top-reads" 
+          to="/top" 
           className={({ isActive }) => 
             `nav-item ${isActive ? 'active' : ''} ${isMobile ? 'px-2' : 'px-4'}`
           }
         >
           <Flame className="h-5 w-5" />
-          <span className="text-[10px]">{t('nav.topReads') || 'Топ'}</span>
+          <span className="text-[10px]">{t('nav.topReads')}</span>
         </NavLink>
         
         <NavLink 
