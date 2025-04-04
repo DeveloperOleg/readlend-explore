@@ -11,38 +11,38 @@ export default function LoginScreen() {
   const [showCaptcha, setShowCaptcha] = useState(false);
   const [vpnDetected, setVpnDetected] = useState(false);
   
-  // Исправленная симуляция обнаружения VPN - теперь выполняется при загрузке компонента
+  // Simulate VPN detection when component loads
   useEffect(() => {
-    // Для демо, с вероятностью 60% обнаружим VPN когда он действительно включен
-    const checkVpn = () => {
-      // Симулируем проверку VPN. В реальном приложении здесь был бы API запрос
-      const isVpn = Math.random() < 0.6;
-      console.log("VPN check result:", isVpn);
+    // This is a simulation for demo purposes only
+    const simulateVpnCheck = () => {
+      // In a real application, this would be an API call to check for VPN
+      // Here we're using a random number to simulate VPN detection
+      const hasVpn = Math.random() < 0.6; // 60% chance of detecting VPN
+      console.log("Initial VPN check:", hasVpn);
       
-      // Если VPN обнаружен, показываем капчу
-      setVpnDetected(isVpn);
-      if (isVpn) {
+      if (hasVpn) {
+        setVpnDetected(true);
         setShowCaptcha(true);
+      } else {
+        setVpnDetected(false);
       }
     };
     
-    // Проверяем VPN при монтировании компонента
-    checkVpn();
+    // Run the check when component mounts
+    simulateVpnCheck();
   }, []);
   
-  // Метод для внешних компонентов, чтобы запросить проверку VPN
+  // Method for external components to request a VPN check
   const detectVpn = () => {
-    // Симулируем новую проверку VPN. В реальном приложении здесь был бы API запрос
-    const isVpn = Math.random() < 0.6;
-    console.log("Manual VPN check result:", isVpn);
+    const hasVpn = Math.random() < 0.6; // 60% chance of detecting VPN
+    console.log("Manual VPN check result:", hasVpn);
     
-    // Если VPN обнаружен, показываем капчу
-    setVpnDetected(isVpn);
-    if (isVpn) {
+    setVpnDetected(hasVpn);
+    if (hasVpn) {
       setShowCaptcha(true);
     }
     
-    return isVpn;
+    return hasVpn;
   };
   
   const handleCaptchaVerify = (verified: boolean) => {
