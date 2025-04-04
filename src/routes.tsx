@@ -2,13 +2,16 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 
+// Pages
 import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
+import NotFound from "./pages/NotFound";
+import Profile from "./pages/Profile";
 import Favorites from "./pages/Favorites";
 import SavedBooks from "./pages/SavedBooks";
 import TopReads from "./pages/TopReads";
-import Profile from "./pages/Profile";
+
+// Layouts
 import Layout from "./components/Layout";
 
 const AppRoutes = () => {
@@ -17,13 +20,12 @@ const AppRoutes = () => {
       <AuthProvider>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route element={<Layout />}>
-            <Route path="/home" element={<Home />} />
-            <Route path="/favorites" element={<Favorites />} />
-            <Route path="/saved" element={<SavedBooks />} />
-            <Route path="/top-reads" element={<TopReads />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/profile/:userId" element={<Profile />} />
+          <Route path="/" element={<Layout />}>
+            <Route path="home" element={<Home />} />
+            <Route path="profile/:username?" element={<Profile />} />
+            <Route path="favorites" element={<Favorites />} />
+            <Route path="saved" element={<SavedBooks />} />
+            <Route path="top" element={<TopReads />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

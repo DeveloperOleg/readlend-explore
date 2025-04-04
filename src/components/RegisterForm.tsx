@@ -35,11 +35,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ detectVpn = () => false, vp
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
 
-  // Мониторим изменения vpnDetected
+  // Log VPN status when it changes
   useEffect(() => {
-    if (vpnDetected) {
-      console.log("RegisterForm: VPN detected");
-    }
+    console.log("RegisterForm received vpnDetected prop:", vpnDetected);
   }, [vpnDetected]);
 
   const form = useForm<UserFormValues>({
@@ -53,12 +51,14 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ detectVpn = () => false, vp
   const onSubmit = async (values: UserFormValues) => {
     setIsLoading(true);
     try {
-      // Проверяем VPN перед продолжением
+      // Always check VPN before proceeding
       const vpnCheck = detectVpn();
+      console.log("VPN check result during form submission:", vpnCheck);
+      
       if (vpnCheck) {
-        console.log("VPN detected during form submission");
+        console.log("VPN detected during form submission, stopping auth process");
         setIsLoading(false);
-        return; // Останавливаем процесс входа/регистрации, капча будет показана в родительском компоненте
+        return; // Stop the auth process, captcha will be shown by parent component
       }
       
       let success: boolean;
@@ -96,12 +96,14 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ detectVpn = () => false, vp
   const handleDemo = async () => {
     setIsLoading(true);
     
-    // Проверяем VPN перед демо-входом
+    // Always check VPN before proceeding with demo login
     const vpnCheck = detectVpn();
+    console.log("VPN check result during demo login:", vpnCheck);
+    
     if (vpnCheck) {
-      console.log("VPN detected during demo login");
+      console.log("VPN detected during demo login, stopping auth process");
       setIsLoading(false);
-      return; // Останавливаем процесс входа, капча будет показана в родительском компоненте
+      return; // Stop the auth process, captcha will be shown by parent component
     }
     
     await login('tester111', 'tester111');

@@ -17,13 +17,15 @@ export default function LoginScreen() {
     const simulateVpnCheck = () => {
       // In a real application, this would be an API call to check for VPN
       // Here we're using a random number to simulate VPN detection
-      const hasVpn = Math.random() < 0.6; // 60% chance of detecting VPN
+      const hasVpn = Math.random() < 0.3; // Reduce chance to 30% for testing
       console.log("Initial VPN check:", hasVpn);
       
       if (hasVpn) {
+        console.log("VPN detected on initial check, showing captcha");
         setVpnDetected(true);
         setShowCaptcha(true);
       } else {
+        console.log("No VPN detected on initial check");
         setVpnDetected(false);
         setShowCaptcha(false); // Make sure captcha is hidden when no VPN
       }
@@ -35,14 +37,17 @@ export default function LoginScreen() {
   
   // Method for external components to request a VPN check
   const detectVpn = () => {
-    const hasVpn = Math.random() < 0.6; // 60% chance of detecting VPN
+    const hasVpn = Math.random() < 0.3; // Reduce chance to 30% for testing
     console.log("Manual VPN check result:", hasVpn);
     
-    setVpnDetected(hasVpn);
     if (hasVpn) {
+      console.log("VPN detected in manual check, showing captcha");
+      setVpnDetected(true);
       setShowCaptcha(true);
       return true; // Return true if VPN detected
     } else {
+      console.log("No VPN detected in manual check");
+      setVpnDetected(false);
       setShowCaptcha(false); // Explicitly hide captcha when no VPN
       return false;
     }
@@ -50,6 +55,7 @@ export default function LoginScreen() {
   
   const handleCaptchaVerify = (verified: boolean) => {
     if (verified) {
+      console.log("Captcha verified, hiding captcha");
       setShowCaptcha(false);
     }
   };
