@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
@@ -9,11 +10,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
-interface RegisterFormProps {
-  detectVpn?: () => boolean;
-  vpnDetected?: boolean;
-}
 
 const userFormSchema = z.object({
   username: z.string()
@@ -28,17 +24,12 @@ const userFormSchema = z.object({
 
 type UserFormValues = z.infer<typeof userFormSchema>;
 
-const RegisterForm: React.FC<RegisterFormProps> = ({ detectVpn = () => false, vpnDetected = false }) => {
+const RegisterForm: React.FC = () => {
   const { login, register } = useAuth();
   const { t } = useLanguage();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
-
-  // Log VPN status when it changes
-  useEffect(() => {
-    console.log("RegisterForm received vpnDetected prop:", vpnDetected);
-  }, [vpnDetected]);
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(userFormSchema),
@@ -51,16 +42,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ detectVpn = () => false, vp
   const onSubmit = async (values: UserFormValues) => {
     setIsLoading(true);
     try {
-      // Always check VPN before proceeding
-      const vpnCheck = detectVpn();
-      console.log("VPN check result during form submission:", vpnCheck);
-      
-      if (vpnCheck) {
-        console.log("VPN detected during form submission, stopping auth process");
-        setIsLoading(false);
-        return; // Stop the auth process, captcha will be shown by parent component
-      }
-      
       let success: boolean;
       
       if (activeTab === 'login') {
@@ -95,17 +76,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ detectVpn = () => false, vp
 
   const handleDemo = async () => {
     setIsLoading(true);
-    
-    // Always check VPN before proceeding with demo login
-    const vpnCheck = detectVpn();
-    console.log("VPN check result during demo login:", vpnCheck);
-    
-    if (vpnCheck) {
-      console.log("VPN detected during demo login, stopping auth process");
-      setIsLoading(false);
-      return; // Stop the auth process, captcha will be shown by parent component
-    }
-    
     await login('tester111', 'tester111');
     setIsLoading(false);
   };

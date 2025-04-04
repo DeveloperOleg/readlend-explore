@@ -1,64 +1,12 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import RegisterForm from './RegisterForm';
-import Captcha from './Captcha';
 
 export default function LoginScreen() {
   const { t } = useLanguage();
   const isMobile = useIsMobile();
-  const [showCaptcha, setShowCaptcha] = useState(false);
-  const [vpnDetected, setVpnDetected] = useState(false);
-  
-  // Simulate VPN detection when component loads
-  useEffect(() => {
-    // This is a simulation for demo purposes only
-    const simulateVpnCheck = () => {
-      // In a real application, this would be an API call to check for VPN
-      // Here we're using a random number to simulate VPN detection
-      const hasVpn = Math.random() < 0.3; // Reduce chance to 30% for testing
-      console.log("Initial VPN check:", hasVpn);
-      
-      if (hasVpn) {
-        console.log("VPN detected on initial check, showing captcha");
-        setVpnDetected(true);
-        setShowCaptcha(true);
-      } else {
-        console.log("No VPN detected on initial check");
-        setVpnDetected(false);
-        setShowCaptcha(false); // Make sure captcha is hidden when no VPN
-      }
-    };
-    
-    // Run the check when component mounts
-    simulateVpnCheck();
-  }, []);
-  
-  // Method for external components to request a VPN check
-  const detectVpn = () => {
-    const hasVpn = Math.random() < 0.3; // Reduce chance to 30% for testing
-    console.log("Manual VPN check result:", hasVpn);
-    
-    if (hasVpn) {
-      console.log("VPN detected in manual check, showing captcha");
-      setVpnDetected(true);
-      setShowCaptcha(true);
-      return true; // Return true if VPN detected
-    } else {
-      console.log("No VPN detected in manual check");
-      setVpnDetected(false);
-      setShowCaptcha(false); // Explicitly hide captcha when no VPN
-      return false;
-    }
-  };
-  
-  const handleCaptchaVerify = (verified: boolean) => {
-    if (verified) {
-      console.log("Captcha verified, hiding captcha");
-      setShowCaptcha(false);
-    }
-  };
   
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
@@ -67,14 +15,7 @@ export default function LoginScreen() {
         {t('auth.welcome') || 'Добро пожаловать в ReadNest - платформу для писателей и читателей'}
       </p>
       
-      {showCaptcha ? (
-        <Captcha 
-          onVerify={handleCaptchaVerify} 
-          onCancel={() => setShowCaptcha(false)} 
-        />
-      ) : (
-        <RegisterForm detectVpn={detectVpn} vpnDetected={vpnDetected} />
-      )}
+      <RegisterForm />
       
       <div className="text-xs text-muted-foreground mt-6 text-center">
         <p>© 2024 ReadNest. Все права защищены.</p>
