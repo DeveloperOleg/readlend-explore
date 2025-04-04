@@ -65,6 +65,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         duration: 10000,
       });
       
+      navigate('/home');
       return true;
     }
 
@@ -83,6 +84,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         description: "Вы успешно вошли в свой аккаунт.",
       });
       
+      navigate('/home');
       return true;
     }
     
@@ -158,6 +160,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       description: "Ваш аккаунт успешно создан. Добро пожаловать!",
     });
     
+    navigate('/home');
     return true;
   };
 

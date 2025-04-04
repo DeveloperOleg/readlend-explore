@@ -25,6 +25,7 @@ export default function LoginScreen() {
         setShowCaptcha(true);
       } else {
         setVpnDetected(false);
+        setShowCaptcha(false); // Make sure captcha is hidden when no VPN
       }
     };
     
@@ -40,9 +41,11 @@ export default function LoginScreen() {
     setVpnDetected(hasVpn);
     if (hasVpn) {
       setShowCaptcha(true);
+      return true; // Return true if VPN detected
+    } else {
+      setShowCaptcha(false); // Explicitly hide captcha when no VPN
+      return false;
     }
-    
-    return hasVpn;
   };
   
   const handleCaptchaVerify = (verified: boolean) => {
