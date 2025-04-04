@@ -17,6 +17,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import BottomNav from './BottomNav';
 import SearchBar from './SearchBar';
 import SettingsDialog from './SettingsDialog';
+import ConnectionStatus from './ConnectionStatus';
 import { 
   Sheet, 
   SheetContent, 
@@ -166,6 +167,11 @@ const Layout: React.FC = () => {
       
       {/* Search bar */}
       <SearchBar />
+      
+      {/* Connection status alert */}
+      <div className="container px-2">
+        <ConnectionStatus />
+      </div>
       
       {/* Main content */}
       <main className="container px-2 pt-12 pb-2 animate-fade-in">

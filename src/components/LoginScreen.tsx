@@ -2,11 +2,14 @@
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useInternet } from '@/context/InternetContext';
 import RegisterForm from './RegisterForm';
+import ConnectionStatus from './ConnectionStatus';
 
 export default function LoginScreen() {
   const { t } = useLanguage();
   const isMobile = useIsMobile();
+  const { isOnline } = useInternet();
   
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
@@ -14,6 +17,8 @@ export default function LoginScreen() {
       <p className="text-muted-foreground mb-6 text-center text-sm">
         {t('auth.welcome') || 'Добро пожаловать в ReadNest - платформу для писателей и читателей'}
       </p>
+      
+      <ConnectionStatus showAlert={!isOnline} />
       
       <RegisterForm />
       
