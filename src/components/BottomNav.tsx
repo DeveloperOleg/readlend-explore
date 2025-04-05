@@ -15,7 +15,7 @@ const BottomNav: React.FC = () => {
     <div className="fixed bottom-0 left-0 right-0 z-40 glass border-t border-border/50 backdrop-blur-lg">
       <nav className="container flex items-center justify-around h-14 relative">
         <NavLink 
-          to="/" 
+          to="/home" 
           className={({ isActive }) => 
             `nav-item ${isActive ? 'active' : ''} ${isMobile ? 'px-2' : 'px-4'}`
           }
@@ -47,7 +47,7 @@ const BottomNav: React.FC = () => {
         </div>
         
         <NavLink 
-          to="/top" 
+          to="/top-reads" 
           className={({ isActive }) => 
             `nav-item ${isActive ? 'active' : ''} ${isMobile ? 'px-2' : 'px-4'}`
           }
