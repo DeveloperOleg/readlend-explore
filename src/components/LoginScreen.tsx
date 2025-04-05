@@ -23,7 +23,7 @@ export default function LoginScreen() {
       <RegisterForm />
       
       <div className="text-xs text-muted-foreground mt-6 text-center">
-        <p>© 2025 ReadNest. Все права защищены.</p>
+        <p>© 2024 ReadNest. Все права защищены.</p>
         <p className="mt-1">
           {t('auth.terms') || 'Используя это приложение, вы соглашаетесь с нашими условиями использования и политикой конфиденциальности.'}
         </p>
