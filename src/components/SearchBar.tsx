@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, X, Book, User } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -26,7 +25,6 @@ const SearchBar: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  // Handle clicks outside the search bar to collapse it
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node) && expanded) {
@@ -42,7 +40,6 @@ const SearchBar: React.FC = () => {
     };
   }, [expanded]);
 
-  // Focus input when expanded
   useEffect(() => {
     if (expanded && inputRef.current) {
       inputRef.current.focus();
@@ -58,24 +55,20 @@ const SearchBar: React.FC = () => {
     
     setSearching(true);
     
-    // Simulate search delay
     setTimeout(() => {
       setSearching(false);
       
       if (isTestAccount) {
         if (searchType === 'authors') {
-          // Use the search function from testData
           const results = searchTestAuthors(query);
           setAuthorResults(results);
           setShowEmpty(results.length === 0);
         } else {
-          // Use the search function from testData
           const results = searchTestBooks(query);
           setBookResults(results);
           setShowEmpty(results.length === 0);
         }
       } else {
-        // For non-test users, show empty state
         setShowEmpty(true);
       }
     }, 800);
@@ -105,7 +98,6 @@ const SearchBar: React.FC = () => {
   };
 
   const handleBookClick = (bookId: string) => {
-    // Здесь будет навигация к странице книги, когда она будет реализована
     console.log(`Navigate to book ${bookId}`);
     setBookResults([]);
     setExpanded(false);
@@ -126,11 +118,11 @@ const SearchBar: React.FC = () => {
                 <TabsList className="h-8">
                   <TabsTrigger value="books" className="text-xs px-3 py-1 h-6">
                     <Book className="h-3 w-3 mr-1" />
-                    {t('search.books')}
+                    Книги
                   </TabsTrigger>
                   <TabsTrigger value="authors" className="text-xs px-3 py-1 h-6">
                     <User className="h-3 w-3 mr-1" />
-                    {t('search.authors')}
+                    Авторы
                   </TabsTrigger>
                 </TabsList>
                 
@@ -166,8 +158,8 @@ const SearchBar: React.FC = () => {
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder={
                     searchType === 'books' 
-                      ? t('search.booksPlaceholder')
-                      : t('search.authorsPlaceholder')
+                      ? "Поиск книг..."
+                      : "Поиск авторов..."
                   }
                   className="border-0 bg-transparent focus-visible:ring-0 h-10"
                 />
@@ -194,7 +186,7 @@ const SearchBar: React.FC = () => {
         <div className="fixed inset-0 z-40 flex items-start justify-center bg-background/95 px-4 py-16 animate-fade-in">
           <div className="w-full max-w-md bg-card rounded-lg shadow-lg overflow-hidden">
             <div className="p-4">
-              <h3 className="text-lg font-semibold mb-2">{t('search.authorsFound')}</h3>
+              <h3 className="text-lg font-semibold mb-2">Найденные авторы</h3>
               <div className="space-y-2">
                 {authorResults.map(author => (
                   <div 
@@ -221,7 +213,7 @@ const SearchBar: React.FC = () => {
                   setExpanded(false);
                 }}
               >
-                {t('search.close') || 'Закрыть'}
+                Закрыть
               </Button>
             </div>
           </div>
@@ -232,7 +224,7 @@ const SearchBar: React.FC = () => {
         <div className="fixed inset-0 z-40 flex items-start justify-center bg-background/95 px-4 py-16 animate-fade-in">
           <div className="w-full max-w-md bg-card rounded-lg shadow-lg overflow-hidden">
             <div className="p-4">
-              <h3 className="text-lg font-semibold mb-2">{t('search.books') || 'Книги'}</h3>
+              <h3 className="text-lg font-semibold mb-2">Книги</h3>
               <div className="space-y-2">
                 {bookResults.map(book => (
                   <div 
@@ -259,7 +251,7 @@ const SearchBar: React.FC = () => {
                   setExpanded(false);
                 }}
               >
-                {t('search.close') || 'Закрыть'}
+                Закрыть
               </Button>
             </div>
           </div>
@@ -291,8 +283,8 @@ const SearchBar: React.FC = () => {
             <div className="h-10 w-10 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
             <p className="mt-4 text-muted-foreground">
               {searchType === 'books' 
-                ? t('search.booksSearching') || 'Ищем книги...'
-                : t('search.authorsSearching') || 'Ищем авторов...'}
+                ? "Ищем книги..."
+                : "Ищем авторов..."}
             </p>
           </div>
         </div>

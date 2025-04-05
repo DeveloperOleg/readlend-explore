@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Heart, BookMarked, Plus, Search } from 'lucide-react';
+import { Home, Heart, BookMarked, Plus, Search, Bell } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import PublishBookDialog from './PublishBookDialog';
@@ -26,13 +26,13 @@ const BottomNav: React.FC = () => {
         </NavLink>
         
         <NavLink 
-          to="/search" 
+          to="/notifications" 
           className={({ isActive }) => 
             `nav-item ${isActive ? 'active' : ''} ${isMobile ? 'px-2' : 'px-4'}`
           }
         >
-          <Search className="h-5 w-5" />
-          <span className="text-[10px]">{t('nav.search') || 'Поиск'}</span>
+          <Bell className="h-5 w-5" />
+          <span className="text-[10px]">Уведомления</span>
         </NavLink>
         
         <div className="flex justify-center items-center">
@@ -57,13 +57,13 @@ const BottomNav: React.FC = () => {
         </NavLink>
         
         <NavLink 
-          to="/saved" 
+          to="/search" 
           className={({ isActive }) => 
             `nav-item ${isActive ? 'active' : ''} ${isMobile ? 'px-2' : 'px-4'}`
           }
         >
-          <BookMarked className="h-5 w-5" />
-          <span className="text-[10px]">{t('nav.saved')}</span>
+          <Search className="h-5 w-5" />
+          <span className="text-[10px]">Поиск</span>
         </NavLink>
       </nav>
       
