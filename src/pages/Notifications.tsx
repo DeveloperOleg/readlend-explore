@@ -15,7 +15,7 @@ const Notifications: React.FC = () => {
         <EmptyState 
           title="Уведомлений пока нет" 
           description="Когда появятся новые уведомления, они будут отображаться здесь" 
-          icon="bell"
+          icon="book"
         />
       </div>
     </div>
