@@ -89,27 +89,45 @@ const Profile: React.FC = () => {
     if (!bio) return null;
     
     // Replace hashtags with clickable links
-    return bio.split(/(\s+)/).map((part, index) => {
-      if (part.startsWith('#')) {
-        return (
-          <a 
-            key={index} 
-            href={`/tag/${part.substring(1)}`}
-            className="text-primary hover:underline"
-            onClick={(e) => {
-              e.preventDefault();
-              toast({
-                title: t('common.comingSoon') || 'Скоро будет доступно',
-                description: `${part}`,
-              });
-            }}
-          >
-            {part}
-          </a>
-        );
+    const parts = [];
+    let lastIndex = 0;
+    const hashtagRegex = /#\w+/g;
+    let match;
+    
+    while ((match = hashtagRegex.exec(bio)) !== null) {
+      // Add text before hashtag
+      if (match.index > lastIndex) {
+        parts.push(bio.slice(lastIndex, match.index));
       }
-      return part;
-    });
+      
+      // Add clickable hashtag
+      const hashtag = match[0];
+      parts.push(
+        <a 
+          key={`hashtag-${match.index}`}
+          href={`/tag/${hashtag.substring(1)}`}
+          className="text-primary hover:underline"
+          onClick={(e) => {
+            e.preventDefault();
+            toast({
+              title: t('common.comingSoon') || 'Скоро будет доступно',
+              description: `${hashtag}`,
+            });
+          }}
+        >
+          {hashtag}
+        </a>
+      );
+      
+      lastIndex = match.index + hashtag.length;
+    }
+    
+    // Add remaining text
+    if (lastIndex < bio.length) {
+      parts.push(bio.slice(lastIndex));
+    }
+    
+    return parts;
   };
 
   return (
