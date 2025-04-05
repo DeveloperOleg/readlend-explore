@@ -29,8 +29,8 @@ const TopReads: React.FC = () => {
       <InternetRequired 
         fallback={
           <EmptyState
-            title="Нет подключения к интернету"
-            description="Для просмотра топ читаемых книг необходимо подключение к интернету"
+            title={t('internet.noConnection') || "Нет подключения к интернету"}
+            description={t('internet.topReadsNeedsInternet') || "Для просмотра топ читаемых книг необходимо подключение к интернету"}
             icon="ban"
             onClose={() => checkConnection()}
           />
@@ -50,7 +50,7 @@ const TopReads: React.FC = () => {
                     className="w-full h-full object-cover rounded-md" 
                   />
                 ) : (
-                  <span className="text-muted-foreground">Нет обложки</span>
+                  <span className="text-muted-foreground">{t('common.noCover') || 'Нет обложки'}</span>
                 )}
               </div>
               <h3 className="font-medium line-clamp-2 mt-2">{book.title}</h3>

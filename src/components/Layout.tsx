@@ -9,6 +9,7 @@ import {
   LogOut,
   MessageCircle,
   User,
+  Flame,
 } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -113,6 +114,19 @@ const Layout: React.FC = () => {
                 />
               </div>
               
+              {/* Top Reads link */}
+              <div className="flex items-center px-4">
+                <SheetClose asChild>
+                  <Link 
+                    to="/top-reads" 
+                    className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
+                  >
+                    <Flame className="h-5 w-5" />
+                    <span>{t('nav.topReads') || 'Топ читаемых'}</span>
+                  </Link>
+                </SheetClose>
+              </div>
+              
               {/* Telegram chat link */}
               <div className="flex items-center px-4">
                 <a 
@@ -164,9 +178,6 @@ const Layout: React.FC = () => {
           </div>
         </SheetContent>
       </Sheet>
-      
-      {/* Search bar */}
-      <SearchBar />
       
       {/* Connection status alert */}
       <div className="container px-2">

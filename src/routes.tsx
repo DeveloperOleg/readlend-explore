@@ -10,6 +10,7 @@ import Profile from "./pages/Profile";
 import Favorites from "./pages/Favorites";
 import SavedBooks from "./pages/SavedBooks";
 import TopReads from "./pages/TopReads";
+import Search from "./pages/Search";
 
 // Layouts
 import Layout from "./components/Layout";
@@ -25,8 +26,8 @@ const AppRoutes = () => {
             <Route path="profile/:username?" element={<Profile />} />
             <Route path="favorites" element={<Favorites />} />
             <Route path="saved" element={<SavedBooks />} />
-            <Route path="top" element={<TopReads />} />
             <Route path="top-reads" element={<TopReads />} />
+            <Route path="search" element={<Search />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

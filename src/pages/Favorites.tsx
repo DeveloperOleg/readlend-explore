@@ -1,7 +1,10 @@
 
 import React from 'react';
+import { useLanguage } from '@/context/LanguageContext';
 
 const Favorites: React.FC = () => {
+  const { t } = useLanguage();
+  
   // Mock favorites for demonstration
   const favorites = [
     { id: 1, title: 'Гарри Поттер и философский камень', author: 'Дж. К. Роулинг' },
@@ -10,7 +13,7 @@ const Favorites: React.FC = () => {
 
   return (
     <div className="animate-fade-in">
-      <h1 className="text-2xl font-bold mb-6">Избранное</h1>
+      <h1 className="text-2xl font-bold mb-6">{t('pages.favorites') || 'Избранное'}</h1>
       
       {favorites.length > 0 ? (
         <div className="grid gap-4">
@@ -30,7 +33,7 @@ const Favorites: React.FC = () => {
         </div>
       ) : (
         <div className="text-center py-12">
-          <p className="text-muted-foreground">У вас пока нет избранных книг</p>
+          <p className="text-muted-foreground">{t('pages.noFavorites') || 'У вас пока нет избранных книг'}</p>
         </div>
       )}
     </div>

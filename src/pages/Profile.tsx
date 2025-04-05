@@ -10,11 +10,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import UserSubscriptions from '@/components/UserSubscriptions';
-import { Grid, Book, Users, Edit, Copy, Image as ImageIcon } from 'lucide-react';
+import { Grid, Book, Users, Edit, Copy } from 'lucide-react';
 import ProfileEditDialog from '@/components/ProfileEditDialog';
 import { useToast } from '@/hooks/use-toast';
 import { User } from '@/types/auth';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 const Profile: React.FC = () => {
   const { user, getUserById } = useAuth();
@@ -85,27 +84,38 @@ const Profile: React.FC = () => {
     });
   };
 
+  // Make hashtag clickable
+  const renderBio = (bio: string | undefined) => {
+    if (!bio) return null;
+    
+    // Replace hashtags with clickable links
+    return bio.split(/(\s+)/).map((part, index) => {
+      if (part.startsWith('#')) {
+        return (
+          <a 
+            key={index} 
+            href={`/tag/${part.substring(1)}`}
+            className="text-primary hover:underline"
+            onClick={(e) => {
+              e.preventDefault();
+              toast({
+                title: t('common.comingSoon') || 'Скоро будет доступно',
+                description: `${part}`,
+              });
+            }}
+          >
+            {part}
+          </a>
+        );
+      }
+      return part;
+    });
+  };
+
   return (
     <div className="container mx-auto px-2">
-      {/* Cover Image */}
-      <div className="rounded-md overflow-hidden mb-4">
-        <AspectRatio ratio={isMobile ? 16/9 : 960/479} className="bg-muted">
-          {profileUser.coverImageUrl ? (
-            <img 
-              src={profileUser.coverImageUrl} 
-              alt="Cover" 
-              className="object-cover w-full h-full"
-            />
-          ) : (
-            <div className="flex items-center justify-center w-full h-full bg-muted">
-              <ImageIcon className="h-10 w-10 text-muted-foreground opacity-20" />
-            </div>
-          )}
-        </AspectRatio>
-      </div>
-      
       {/* Profile Header - Instagram Style */}
-      <div className="flex flex-col md:flex-row gap-4 items-center md:items-start mb-6">
+      <div className="flex flex-col md:flex-row gap-4 items-center md:items-start mb-6 mt-4">
         {/* Avatar */}
         <Avatar className="h-20 w-20 md:h-36 md:w-36 border-2 border-muted">
           <AvatarImage src={profileUser.avatarUrl || ''} alt={profileUser.username} />
@@ -166,9 +176,9 @@ const Profile: React.FC = () => {
             <h2 className="font-semibold">{displayName}</h2>
             <p className="text-xs md:text-sm text-muted-foreground">ID: {profileUser.displayId}</p>
             
-            {/* Display bio if it exists */}
+            {/* Display bio with clickable hashtags if it exists */}
             {profileUser.bio && (
-              <p className="mt-2 text-sm max-w-md whitespace-pre-wrap">{profileUser.bio}</p>
+              <p className="mt-2 text-sm max-w-md whitespace-pre-wrap">{renderBio(profileUser.bio)}</p>
             )}
           </div>
         </div>
