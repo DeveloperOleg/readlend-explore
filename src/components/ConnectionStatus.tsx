@@ -21,7 +21,12 @@ const ConnectionStatus: React.FC<ConnectionStatusProps> = ({ showAlert = true })
     
     if (online) {
       toast.success("Соединение восстановлено", {
-        description: "Приложение снова в сети",
+        description: "Приложение снова в сети. Теперь вы можете использовать все функции.",
+        position: "bottom-center",
+      });
+    } else {
+      toast.error("Соединение не восстановлено", {
+        description: "Пожалуйста, проверьте ваше подключение к интернету.",
         position: "bottom-center",
       });
     }
@@ -39,7 +44,13 @@ const ConnectionStatus: React.FC<ConnectionStatusProps> = ({ showAlert = true })
       </AlertTitle>
       <AlertDescription>
         <div className="mt-2">
-          Пожалуйста, проверьте ваше подключение и дайте нам снова соединиться.
+          Некоторые функции приложения недоступны без подключения к интернету:
+          <ul className="list-disc ml-5 mt-1 text-sm">
+            <li>Авторизация и регистрация</li>
+            <li>Редактирование профиля</li>
+            <li>Публикация книг</li>
+            <li>Выход из аккаунта</li>
+          </ul>
         </div>
         <Button
           size="sm"

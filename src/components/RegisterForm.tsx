@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
+import { useInternet } from '@/context/InternetContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -10,6 +11,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AlertCircle, WifiOff } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const userFormSchema = z.object({
   username: z.string()
@@ -28,6 +31,7 @@ const RegisterForm: React.FC = () => {
   const { login, register } = useAuth();
   const { t } = useLanguage();
   const { toast } = useToast();
+  const { isOnline } = useInternet();
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
 
@@ -40,6 +44,15 @@ const RegisterForm: React.FC = () => {
   });
 
   const onSubmit = async (values: UserFormValues) => {
+    if (!isOnline) {
+      toast({
+        title: "Ошибка подключения",
+        description: "Для авторизации требуется подключение к интернету",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsLoading(true);
     try {
       let success: boolean;
@@ -75,10 +88,99 @@ const RegisterForm: React.FC = () => {
   };
 
   const handleDemo = async () => {
+    if (!isOnline) {
+      toast({
+        title: "Ошибка подключения",
+        description: "Для авторизации требуется подключение к интернету",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsLoading(true);
     await login('tester111', 'tester111');
     setIsLoading(false);
   };
+
+  // Если нет интернета, показываем предупреждение
+  if (!isOnline) {
+    return (
+      <div className="w-full max-w-md mx-auto space-y-4">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Нет подключения к интернету</AlertTitle>
+          <AlertDescription>
+            Для входа в аккаунт требуется подключение к интернету.
+            Пожалуйста, проверьте ваше соединение и попробуйте снова.
+          </AlertDescription>
+        </Alert>
+        
+        <div className="w-full max-w-md mx-auto">
+          <Tabs defaultValue="login" onValueChange={handleTabChange}>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="login">Вход</TabsTrigger>
+              <TabsTrigger value="register">Регистрация</TabsTrigger>
+            </TabsList>
+            
+            <div className="mt-6">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="username"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Имя пользователя</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Введите имя пользователя" {...field} disabled />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Пароль</FormLabel>
+                        <FormControl>
+                          <Input type="password" placeholder="Введите пароль" {...field} disabled />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <Button type="submit" className="w-full" disabled>
+                    {activeTab === 'login' ? 'Войти' : 'Зарегистрироваться'}
+                  </Button>
+                </form>
+              </Form>
+              
+              <div className="mt-6">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                      или
+                    </span>
+                  </div>
+                </div>
+                
+                <Button variant="outline" className="w-full mt-4" disabled>
+                  Использовать демо-аккаунт
+                </Button>
+              </div>
+            </div>
+          </Tabs>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-md mx-auto">

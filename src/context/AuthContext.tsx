@@ -2,18 +2,22 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useToast } from "@/hooks/use-toast";
+import { toast } from 'sonner';
 import { User, ProfileUpdateData, AuthContextType } from '@/types/auth';
 import { generateDisplayId } from '@/utils/authUtils';
 import useAuthFunctions from '@/hooks/useAuthFunctions';
+import { useInternet } from '@/context/InternetContext';
+import { WifiOff } from 'lucide-react';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { toast } = useToast();
+  const { toast: uiToast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
+  const { isOnline } = useInternet();
 
   useEffect(() => {
     // Check for existing user in localStorage
@@ -25,6 +29,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (username: string, password: string): Promise<boolean> => {
+    if (!isOnline) {
+      toast.error("Вход невозможен", {
+        description: "Для входа в аккаунт требуется подключение к интернету",
+        icon: <WifiOff className="h-4 w-4" />,
+      });
+      return false;
+    }
+
     // For demo, check against hardcoded credentials for test account
     if (username === 'tester111' && password === 'tester111') {
       // Ensure we have a fixed test displayId for the demo account
@@ -52,7 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setIsAuthenticated(true);
       localStorage.setItem('readnest-user', JSON.stringify(userData));
       
-      toast({
+      uiToast({
         title: "Успешный вход",
         description: (
           <div className="mt-2 leading-normal">
@@ -79,7 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setIsAuthenticated(true);
       localStorage.setItem('readnest-user', JSON.stringify(userData));
       
-      toast({
+      uiToast({
         title: "Успешный вход",
         description: "Вы успешно вошли в свой аккаунт.",
       });
@@ -88,7 +100,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return true;
     }
     
-    toast({
+    uiToast({
       title: "Ошибка входа",
       description: "Неверный логин или пароль. Попробуйте снова.",
       variant: "destructive",
@@ -97,9 +109,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const register = async (username: string, password: string): Promise<boolean> => {
+    if (!isOnline) {
+      toast.error("Регистрация невозможна", {
+        description: "Для регистрации требуется подключение к интернету",
+        icon: <WifiOff className="h-4 w-4" />,
+      });
+      return false;
+    }
+
     // Validate username and password
     if (username.length < 3 || password.length < 6) {
-      toast({
+      uiToast({
         title: "Ошибка регистрации",
         description: "Имя пользователя должно содержать не менее 3 символов, а пароль - не менее 6 символов.",
         variant: "destructive",
@@ -112,7 +132,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const accounts = JSON.parse(storedAccounts);
     
     if (accounts[username] || username === 'tester111') {
-      toast({
+      uiToast({
         title: "Ошибка регистрации",
         description: "Пользователь с таким именем уже существует.",
         variant: "destructive",
@@ -155,7 +175,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsAuthenticated(true);
     localStorage.setItem('readnest-user', JSON.stringify(userData));
     
-    toast({
+    uiToast({
       title: "Регистрация успешна",
       description: "Ваш аккаунт успешно создан. Добро пожаловать!",
     });
@@ -165,6 +185,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
+    if (!isOnline) {
+      toast.error("Выход из аккаунта невозможен", {
+        description: "Для выхода из аккаунта требуется подключение к интернету",
+        icon: <WifiOff className="h-4 w-4" />,
+      });
+      return;
+    }
+
     setUser(null);
     setIsAuthenticated(false);
     localStorage.removeItem('readnest-user');
