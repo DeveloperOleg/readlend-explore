@@ -32,7 +32,7 @@ const BottomNav: React.FC = () => {
           <NavLink 
             to="/home" 
             className={({ isActive }) => 
-              `nav-item ${isActive ? 'active' : ''} ${isMobile ? 'px-2' : 'px-4'}`
+              `nav-item ${isActive ? 'active' : ''} px-4`
             }
             end
           >
@@ -43,7 +43,7 @@ const BottomNav: React.FC = () => {
           <NavLink 
             to="/search" 
             className={({ isActive }) => 
-              `nav-item ${isActive ? 'active' : ''} ${isMobile ? 'px-2' : 'px-4'}`
+              `nav-item ${isActive ? 'active' : ''} px-4`
             }
           >
             <Search className="h-5 w-5" />
@@ -66,7 +66,7 @@ const BottomNav: React.FC = () => {
           <NavLink 
             to="/favorites" 
             className={({ isActive }) => 
-              `nav-item ${isActive ? 'active' : ''} ${isMobile ? 'px-2' : 'px-4'}`
+              `nav-item ${isActive ? 'active' : ''} px-4`
             }
           >
             <Heart className="h-5 w-5" />
@@ -76,7 +76,7 @@ const BottomNav: React.FC = () => {
           <NavLink 
             to="/saved" 
             className={({ isActive }) => 
-              `nav-item ${isActive ? 'active' : ''} ${isMobile ? 'px-2' : 'px-4'}`
+              `nav-item ${isActive ? 'active' : ''} px-4`
             }
           >
             <BookMarked className="h-5 w-5" />

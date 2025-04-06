@@ -5,16 +5,15 @@ import { useTheme } from '@/context/ThemeContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 const ThemeSettings: React.FC = () => {
   const { baseTheme, toggleBaseTheme, themeMode, toggleThemeMode } = useTheme();
   const { t } = useLanguage();
 
   return (
-    <div className="space-y-6">
-      <div>
-        <div className="flex items-center justify-between mb-2">
+    <div className="space-y-2">
+      <div className="rounded-lg border p-3">
+        <div className="flex items-center justify-between mb-1">
           <div className="flex items-center gap-2">
             <SmartphoneCharging className="h-5 w-5" />
             <span>{t('settings.systemTheme') || 'Системная тема'}</span>
@@ -33,10 +32,8 @@ const ThemeSettings: React.FC = () => {
         </div>
       </div>
       
-      <Separator />
-      
-      <div>
-        <div className="flex items-center justify-between mb-2">
+      <div className="rounded-lg border p-3">
+        <div className="flex items-center justify-between mb-1">
           <div className="flex items-center gap-2">
             {baseTheme === 'dark' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
             <span>{t('settings.darkMode') || 'Темная тема'}</span>

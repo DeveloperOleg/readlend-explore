@@ -11,6 +11,7 @@ import {
   User,
   Flame,
   Bell,
+  Settings as SettingsIcon,
 } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -18,7 +19,6 @@ import { useAuth } from '@/context/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import BottomNav from './BottomNav';
 import SearchBar from './SearchBar';
-import SettingsDialog from './SettingsDialog';
 import ConnectionStatus from './ConnectionStatus';
 import { 
   Sheet, 
@@ -51,6 +51,11 @@ const Layout: React.FC = () => {
 
   const navigateToNotifications = () => {
     navigate('/notifications');
+  };
+
+  const navigateToSettings = () => {
+    navigate('/settings');
+    setSidebarOpen(false);
   };
 
   const sheetWidth = isMobile ? 'w-[280px]' : 'w-[280px] sm:w-[350px]';
@@ -159,11 +164,14 @@ const Layout: React.FC = () => {
               </div>
               
               {/* Settings button */}
-              <div className="flex items-center justify-between px-4">
-                <div className="flex items-center gap-2">
+              <div className="flex items-center px-4">
+                <button
+                  onClick={navigateToSettings}
+                  className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
+                >
+                  <SettingsIcon className="h-5 w-5" />
                   <span>{t('sidebar.settings')}</span>
-                </div>
-                <SettingsDialog />
+                </button>
               </div>
             </div>
             
