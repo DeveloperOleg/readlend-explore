@@ -46,10 +46,8 @@ const RegisterForm: React.FC = () => {
 
   const onSubmit = async (values: UserFormValues) => {
     if (!isOnline) {
-      toast({
-        title: "Ошибка подключения",
-        description: "Для авторизации требуется подключение к интернету",
-        variant: "destructive",
+      toast.error("Ошибка подключения", {
+        description: "Для авторизации требуется подключение к интернету"
       });
       return;
     }
@@ -71,10 +69,8 @@ const RegisterForm: React.FC = () => {
       }
     } catch (error) {
       console.error('Auth error:', error);
-      toast({
-        title: "Ошибка",
-        description: "Произошла ошибка при обработке запроса",
-        variant: "destructive",
+      toast.error("Ошибка", {
+        description: "Произошла ошибка при обработке запроса"
       });
     } finally {
       setIsLoading(false);
@@ -88,10 +84,8 @@ const RegisterForm: React.FC = () => {
 
   const handleDemo = async () => {
     if (!isOnline) {
-      toast({
-        title: "Ошибка подключения",
-        description: "Для авторизации требуется подключение к интернету",
-        variant: "destructive",
+      toast.error("Ошибка подключения", {
+        description: "Для авторизации требуется подключение к интернету"
       });
       return;
     }
@@ -202,7 +196,7 @@ const RegisterForm: React.FC = () => {
         
         <div className="mt-6">
           {activeTab === 'register' && (
-            <Alert variant="info" className="mb-4">
+            <Alert variant="default" className="mb-4">
               <Info className="h-4 w-4" />
               <AlertTitle>Регистрация временно недоступна</AlertTitle>
               <AlertDescription>
