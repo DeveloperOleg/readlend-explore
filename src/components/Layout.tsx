@@ -10,6 +10,7 @@ import {
   MessageCircle,
   User,
   Flame,
+  Bell,
 } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -46,6 +47,10 @@ const Layout: React.FC = () => {
     logout();
     // Перенаправляем на главную страницу после выхода
     navigate('/');
+  };
+
+  const navigateToNotifications = () => {
+    navigate('/notifications');
   };
 
   const sheetWidth = isMobile ? 'w-[280px]' : 'w-[280px] sm:w-[350px]';
@@ -178,6 +183,17 @@ const Layout: React.FC = () => {
           </div>
         </SheetContent>
       </Sheet>
+      
+      {/* Notifications button (top right) */}
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="absolute top-2 right-2 z-50"
+        onClick={navigateToNotifications}
+      >
+        <Bell className="h-5 w-5" />
+        <span className="sr-only">Уведомления</span>
+      </Button>
       
       {/* Connection status alert */}
       <div className="container px-2">

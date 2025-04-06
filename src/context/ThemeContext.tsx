@@ -4,12 +4,15 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 // Theme types
 type BaseTheme = 'light' | 'dark';
 type UIStyle = 'standard' | 'gradient';
+type ThemeMode = 'manual' | 'system';
 
 interface ThemeContextType {
   baseTheme: BaseTheme;
   uiStyle: UIStyle;
+  themeMode: ThemeMode;
   toggleBaseTheme: () => void;
   toggleUIStyle: () => void;
+  toggleThemeMode: () => void;
   setBaseTheme: (theme: BaseTheme) => void;
 }
 
@@ -28,6 +31,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     // Initialize UI style from localStorage
     const savedStyle = localStorage.getItem('readnest-ui-style') as UIStyle | null;
     return savedStyle || 'standard';
+  });
+
+  const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
+    // Initialize theme mode from localStorage
+    const savedMode = localStorage.getItem('readnest-theme-mode') as ThemeMode | null;
+    return savedMode || 'manual';
   });
   
   // Update CSS variables based on selected theme
@@ -48,16 +57,57 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
+  // Function to update theme based on system preference
+  const updateThemeBasedOnSystemPreference = () => {
+    if (themeMode === 'system') {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setBaseTheme(prefersDark ? 'dark' : 'light');
+    }
+  };
+
+  // Listen for system preference changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = () => {
+      updateThemeBasedOnSystemPreference();
+    };
+
+    // Modern browsers
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }
+    // Legacy browsers
+    else if ('addListener' in mediaQuery) {
+      // @ts-ignore for legacy browsers
+      mediaQuery.addListener(handleChange);
+      return () => {
+        // @ts-ignore for legacy browsers
+        mediaQuery.removeListener(handleChange);
+      };
+    }
+  }, [themeMode]);
+
+  // Apply theme changes when themeMode changes
+  useEffect(() => {
+    updateThemeBasedOnSystemPreference();
+  }, [themeMode]);
+
   useEffect(() => {
     // Update localStorage
     localStorage.setItem('readnest-theme', baseTheme);
     localStorage.setItem('readnest-ui-style', uiStyle);
+    localStorage.setItem('readnest-theme-mode', themeMode);
     
     // Apply theme
     applyTheme();
-  }, [baseTheme, uiStyle]);
+  }, [baseTheme, uiStyle, themeMode]);
 
   const toggleBaseTheme = () => {
+    if (themeMode === 'system') {
+      // Если включен автоматический режим, переключаемся на ручной
+      setThemeMode('manual');
+    }
     setBaseTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
   };
   
@@ -65,13 +115,28 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setUIStyle(prevStyle => (prevStyle === 'standard' ? 'gradient' : 'standard'));
   };
 
+  const toggleThemeMode = () => {
+    setThemeMode(prevMode => {
+      const newMode = prevMode === 'manual' ? 'system' : 'manual';
+      
+      // Если переключились на системный режим, сразу применяем системную тему
+      if (newMode === 'system') {
+        updateThemeBasedOnSystemPreference();
+      }
+      
+      return newMode;
+    });
+  };
+
   return (
     <ThemeContext.Provider 
       value={{ 
         baseTheme,
         uiStyle,
+        themeMode,
         toggleBaseTheme,
         toggleUIStyle,
+        toggleThemeMode,
         setBaseTheme
       }}
     >

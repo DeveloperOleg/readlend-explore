@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
@@ -11,8 +11,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AlertCircle, WifiOff } from 'lucide-react';
+import { AlertCircle, WifiOff, Info } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { toast } from 'sonner';
 
 const userFormSchema = z.object({
   username: z.string()
@@ -30,7 +31,7 @@ type UserFormValues = z.infer<typeof userFormSchema>;
 const RegisterForm: React.FC = () => {
   const { login, register } = useAuth();
   const { t } = useLanguage();
-  const { toast } = useToast();
+  const { toast: uiToast } = useToast();
   const { isOnline } = useInternet();
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
@@ -55,19 +56,17 @@ const RegisterForm: React.FC = () => {
     
     setIsLoading(true);
     try {
-      let success: boolean;
-      
       if (activeTab === 'login') {
-        success = await login(values.username, values.password);
+        const success = await login(values.username, values.password);
+        
+        if (!success) {
+          form.setError('root', { message: 'Неверное имя пользователя или пароль' });
+        }
       } else {
-        success = await register(values.username, values.password);
-      }
-      
-      if (!success) {
-        form.setError('root', { 
-          message: activeTab === 'login' 
-            ? 'Неверное имя пользователя или пароль' 
-            : 'Ошибка при регистрации'
+        // Блокируем регистрацию в тестовой версии
+        toast.error("Регистрация временно недоступна", {
+          description: "В тестовой версии приложения регистрация отключена. Используйте демо-аккаунт для входа.",
+          duration: 5000,
         });
       }
     } catch (error) {
@@ -101,6 +100,17 @@ const RegisterForm: React.FC = () => {
     await login('tester111', 'tester111');
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    // Предупреждение о регистрации, если пользователь переключается на вкладку регистрации
+    if (activeTab === 'register') {
+      toast.info("Информация о регистрации", {
+        description: "В тестовой версии приложения регистрация отключена. Используйте демо-аккаунт для входа.",
+        icon: <Info className="h-4 w-4" />,
+        duration: 5000,
+      });
+    }
+  }, [activeTab]);
 
   // Если нет интернета, показываем предупреждение
   if (!isOnline) {
@@ -191,6 +201,16 @@ const RegisterForm: React.FC = () => {
         </TabsList>
         
         <div className="mt-6">
+          {activeTab === 'register' && (
+            <Alert variant="info" className="mb-4">
+              <Info className="h-4 w-4" />
+              <AlertTitle>Регистрация временно недоступна</AlertTitle>
+              <AlertDescription>
+                В тестовой версии приложения регистрация отключена. Используйте демо-аккаунт для входа.
+              </AlertDescription>
+            </Alert>
+          )}
+          
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
@@ -227,7 +247,7 @@ const RegisterForm: React.FC = () => {
                 </p>
               )}
               
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full" disabled={isLoading || (activeTab === 'register')}>
                 {isLoading ? (
                   <div className="flex items-center justify-center gap-2">
                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
