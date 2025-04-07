@@ -49,7 +49,6 @@ const ConnectionStatus: React.FC<ConnectionStatusProps> = ({ showAlert = true })
             <li>Авторизация и регистрация</li>
             <li>Редактирование профиля</li>
             <li>Публикация книг</li>
-            <li>Выход из аккаунта</li>
           </ul>
         </div>
         <Button
