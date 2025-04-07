@@ -19,11 +19,11 @@ const Favorites: React.FC = () => {
   };
 
   return (
-    <div className="animate-fade-in pb-20">
+    <div className="animate-fade-in pb-20 pr-2">
       <h1 className="text-2xl font-bold mb-6">{t('pages.favorites') || 'Избранное'}</h1>
       
       {favorites.length > 0 ? (
-        <div className="grid gap-4">
+        <div className="grid gap-4 mx-1">
           {favorites.map((book) => (
             <div 
               key={book.id} 
