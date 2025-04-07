@@ -19,7 +19,7 @@ const Favorites: React.FC = () => {
   };
 
   return (
-    <div className="animate-fade-in pb-20 pr-2">
+    <div className="animate-fade-in pb-20 pr-2 ml-4">
       <h1 className="text-2xl font-bold mb-6">{t('pages.favorites') || 'Избранное'}</h1>
       
       {favorites.length > 0 ? (
