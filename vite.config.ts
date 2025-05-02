@@ -24,6 +24,14 @@ export default defineConfig(({ mode }) => ({
       'X-Content-Type-Options': 'nosniff',
       'X-Frame-Options': 'DENY',
     },
+    fs: {
+      // Add strict security to prevent path traversal attacks
+      strict: true,
+      // Define allowed paths explicitly
+      allow: [path.resolve(__dirname, ".")],
+      // Deny access to sensitive directories
+      deny: ['.git', '.github', 'node_modules/.cache'],
+    },
   },
   plugins: [
     react(),
