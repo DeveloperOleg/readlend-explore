@@ -12,6 +12,7 @@ import {
   Flame,
   Bell,
   Settings as SettingsIcon,
+  Trophy
 } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -133,6 +134,19 @@ const Layout: React.FC = () => {
                   >
                     <Flame className="h-5 w-5" />
                     <span>{t('nav.topReads') || 'Топ читаемых'}</span>
+                  </Link>
+                </SheetClose>
+              </div>
+              
+              {/* Achievements link */}
+              <div className="flex items-center px-4">
+                <SheetClose asChild>
+                  <Link 
+                    to="/achievements" 
+                    className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
+                  >
+                    <Trophy className="h-5 w-5" />
+                    <span>Достижения</span>
                   </Link>
                 </SheetClose>
               </div>

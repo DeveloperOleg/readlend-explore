@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import { Home, Heart, BookMarked, Plus, Search } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -13,6 +13,9 @@ const BottomNav: React.FC = () => {
   const [publishDialogOpen, setPublishDialogOpen] = useState(false);
   const isMobile = useIsMobile();
   const { isOnline } = useInternet();
+  const location = useLocation();
+  const homeClickTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const [homeClickCount, setHomeClickCount] = useState(0);
 
   const handlePublishClick = () => {
     if (!isOnline) {
@@ -25,6 +28,41 @@ const BottomNav: React.FC = () => {
     setPublishDialogOpen(true);
   };
 
+  const handleHomeClick = () => {
+    // Only activate double-click behavior when already on home page
+    if (location.pathname === '/home') {
+      setHomeClickCount(prev => prev + 1);
+      
+      if (homeClickTimerRef.current) {
+        clearTimeout(homeClickTimerRef.current);
+      }
+      
+      homeClickTimerRef.current = setTimeout(() => {
+        if (homeClickCount === 1) {
+          // Double click detected
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+          toast.success("Прокручено вверх", { 
+            duration: 2000,
+            position: "bottom-center"
+          });
+        }
+        setHomeClickCount(0);
+      }, 300);
+    }
+  };
+  
+  // Clean up timer on unmount
+  useEffect(() => {
+    return () => {
+      if (homeClickTimerRef.current) {
+        clearTimeout(homeClickTimerRef.current);
+      }
+    };
+  }, []);
+
   return (
     <div className="fixed bottom-0 left-0 right-0 z-40 glass border-t border-border/50 backdrop-blur-lg">
       <nav className="container flex items-center justify-between h-14 relative px-0 sm:px-4">
@@ -34,6 +72,7 @@ const BottomNav: React.FC = () => {
             className={({ isActive }) => 
               `nav-item ${isActive ? 'active' : ''} px-4`
             }
+            onClick={handleHomeClick}
             end
           >
             <Home className="h-5 w-5" />

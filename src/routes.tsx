@@ -13,6 +13,7 @@ import TopReads from "./pages/TopReads";
 import Search from "./pages/Search";
 import Notifications from "./pages/Notifications";
 import Settings from "./pages/Settings";
+import Achievements from "./pages/Achievements";
 
 // Layouts
 import Layout from "./components/Layout";
@@ -32,6 +33,7 @@ const AppRoutes = () => {
             <Route path="search" element={<Search />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="achievements" element={<Achievements />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
