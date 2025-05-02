@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Palette, Shield, Info, Bell, Ban } from 'lucide-react';
+import { ArrowLeft, Palette, Shield, Info, Bell, Ban, Database } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ThemeSettings from '@/components/ThemeSettings';
 import UserBlocked from '@/components/UserBlocked';
+import StorageSettings from '@/components/StorageSettings';
 
 const SettingsPage: React.FC = () => {
   const { t } = useLanguage();
@@ -51,6 +52,16 @@ const SettingsPage: React.FC = () => {
                   <h3 className="font-medium">{t('settings.appearance') || 'Внешний вид'}</h3>
                   <p className="text-sm text-muted-foreground">
                     {t('settings.appearanceDesc') || 'Настройки темы и отображения'}
+                  </p>
+                </div>
+              </TabsTrigger>
+
+              <TabsTrigger value="storage" className="flex items-center gap-2 p-3 rounded-lg border w-full">
+                <Database className="h-5 w-5 text-primary" />
+                <div className="flex-1 text-left">
+                  <h3 className="font-medium">{t('settings.storage') || 'Данные и память'}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {t('settings.storageDesc') || 'Управление кэшем и хранилищем'}
                   </p>
                 </div>
               </TabsTrigger>
@@ -100,6 +111,10 @@ const SettingsPage: React.FC = () => {
 
             <TabsContent value="appearance">
               <ThemeSettings />
+            </TabsContent>
+
+            <TabsContent value="storage">
+              <StorageSettings />
             </TabsContent>
 
             {user && (
