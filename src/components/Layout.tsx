@@ -5,7 +5,7 @@ import {
   Menu, 
   Moon, 
   Sun, 
-  Languages, 
+  Languages,
   LogOut,
   MessageCircle,
   User,
@@ -77,41 +77,43 @@ const Layout: React.FC = () => {
         </SheetTrigger>
         <SheetContent side="left" className={`${sheetWidth} bg-sidebar backdrop-blur-lg border-sidebar-border`}>
           <div className="flex flex-col h-full text-sidebar-foreground">
-            <SheetClose asChild>
-              <Link to="/profile" className="py-4 px-4 flex items-center gap-3 hover:bg-sidebar-accent/10 rounded-lg transition-colors">
-                <Avatar className="h-10 w-10">
-                  <AvatarImage src={user?.avatarUrl} alt={user?.username} />
-                  <AvatarFallback className="text-lg">
-                    {user?.username ? user.username.charAt(0).toUpperCase() : 'U'}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <h2 className="text-lg font-semibold tracking-tight">
-                    {user?.username ? `@${user.username}` : 'Имя пользователя не указано'}
-                  </h2>
-                  <span className="text-sm text-muted-foreground hover:text-sidebar-foreground transition-colors">
-                    {t('sidebar.viewProfile') || 'Посмотреть профиль'}
-                  </span>
-                </div>
-              </Link>
-            </SheetClose>
+            <div className="py-4 px-4 flex items-center justify-between">
+              <SheetClose asChild>
+                <Link to="/profile" className="flex items-center gap-3 hover:bg-sidebar-accent/10 rounded-lg transition-colors">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={user?.avatarUrl} alt={user?.username} />
+                    <AvatarFallback className="text-lg">
+                      {user?.username ? user.username.charAt(0).toUpperCase() : 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <h2 className="text-lg font-semibold tracking-tight">
+                      {user?.username ? `@${user.username}` : 'Имя пользователя не указано'}
+                    </h2>
+                    <span className="text-sm text-muted-foreground hover:text-sidebar-foreground transition-colors">
+                      {t('sidebar.viewProfile') || 'Посмотреть профиль'}
+                    </span>
+                  </div>
+                </Link>
+              </SheetClose>
+              
+              {/* Theme Toggle Button */}
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={toggleBaseTheme}
+                className="rounded-full h-9 w-9 flex items-center justify-center"
+              >
+                {baseTheme === 'dark' ? 
+                  <Moon className="h-5 w-5" /> : 
+                  <Sun className="h-5 w-5" />
+                }
+              </Button>
+            </div>
             
             <Separator className="bg-sidebar-border" />
             
             <div className="flex-1 py-4 space-y-5">
-              {/* Theme toggle */}
-              <div className="flex items-center justify-between px-4">
-                <div className="flex items-center gap-2">
-                  {baseTheme === 'dark' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
-                  <span>{t('sidebar.theme')}</span>
-                </div>
-                <Switch 
-                  id="theme-mode"
-                  checked={baseTheme === 'dark'}
-                  onCheckedChange={toggleBaseTheme}
-                />
-              </div>
-              
               {/* Language toggle */}
               <div className="flex items-center justify-between px-4">
                 <div className="flex items-center gap-2">

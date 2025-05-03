@@ -105,7 +105,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const toggleBaseTheme = () => {
     if (themeMode === 'system') {
-      // Если включен автоматический режим, переключаемся на ручной
+      // If system mode is enabled, switch to manual mode
       setThemeMode('manual');
     }
     setBaseTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
@@ -119,7 +119,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setThemeMode(prevMode => {
       const newMode = prevMode === 'manual' ? 'system' : 'manual';
       
-      // Если переключились на системный режим, сразу применяем системную тему
+      // If switched to system mode, immediately apply system theme
       if (newMode === 'system') {
         updateThemeBasedOnSystemPreference();
       }
