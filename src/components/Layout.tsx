@@ -89,9 +89,7 @@ const Layout: React.FC = () => {
                     </Avatar>
                     <div className="flex flex-col">
                       <h2 className="text-xl font-semibold tracking-tight">
-                        {user?.firstName && user?.lastName 
-                          ? `${user.firstName} ${user.lastName}`
-                          : user?.username || 'Имя пользователя'}
+                        {user?.firstName || user?.username || 'Имя пользователя'}
                       </h2>
                       <span className="text-sm text-muted-foreground">
                         {user?.username ? `@${user.username}` : '@username'}
