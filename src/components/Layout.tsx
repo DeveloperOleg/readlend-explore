@@ -46,7 +46,6 @@ const Layout: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    // Перенаправляем на главную страницу после выхода
     navigate('/');
   };
 
@@ -77,38 +76,41 @@ const Layout: React.FC = () => {
         </SheetTrigger>
         <SheetContent side="left" className={`${sheetWidth} bg-sidebar backdrop-blur-lg border-sidebar-border`}>
           <div className="flex flex-col h-full text-sidebar-foreground">
-            <div className="py-4 px-4 flex items-center justify-between">
-              <SheetClose asChild>
-                <Link to="/profile" className="flex items-center gap-3 hover:bg-sidebar-accent/10 rounded-lg transition-colors">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={user?.avatarUrl} alt={user?.username} />
-                    <AvatarFallback className="text-lg">
-                      {user?.username ? user.username.charAt(0).toUpperCase() : 'U'}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h2 className="text-lg font-semibold tracking-tight">
-                      {user?.username ? `@${user.username}` : 'Имя пользователя не указано'}
-                    </h2>
-                    <span className="text-sm text-muted-foreground hover:text-sidebar-foreground transition-colors">
-                      {t('sidebar.viewProfile') || 'Посмотреть профиль'}
-                    </span>
-                  </div>
-                </Link>
-              </SheetClose>
-              
-              {/* Theme Toggle Button */}
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={toggleBaseTheme}
-                className="rounded-full h-9 w-9 flex items-center justify-center"
-              >
-                {baseTheme === 'dark' ? 
-                  <Moon className="h-5 w-5" /> : 
-                  <Sun className="h-5 w-5" />
-                }
-              </Button>
+            {/* User profile section with improved spacing */}
+            <div className="py-6 px-4">
+              <div className="flex items-center justify-between">
+                <SheetClose asChild>
+                  <Link to="/profile" className="flex items-center gap-4 hover:bg-sidebar-accent/10 rounded-lg transition-colors">
+                    <Avatar className="h-14 w-14 border-2 border-sidebar-accent">
+                      <AvatarImage src={user?.avatarUrl} alt={user?.username} />
+                      <AvatarFallback className="text-xl">
+                        {user?.username ? user.username.charAt(0).toUpperCase() : 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                      <h2 className="text-xl font-semibold tracking-tight">
+                        {user?.displayName || 'Имя пользователя'}
+                      </h2>
+                      <span className="text-sm text-muted-foreground">
+                        {user?.username ? `@${user.username}` : '@username'}
+                      </span>
+                    </div>
+                  </Link>
+                </SheetClose>
+                
+                {/* Theme Toggle Button with better spacing */}
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={toggleBaseTheme}
+                  className="rounded-full h-10 w-10 flex items-center justify-center ml-4"
+                >
+                  {baseTheme === 'dark' ? 
+                    <Moon className="h-5 w-5" /> : 
+                    <Sun className="h-5 w-5" />
+                  }
+                </Button>
+              </div>
             </div>
             
             <Separator className="bg-sidebar-border" />
