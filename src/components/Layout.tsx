@@ -5,10 +5,7 @@ import {
   Menu, 
   Moon, 
   Sun, 
-  Languages,
   LogOut,
-  MessageCircle,
-  User,
   Flame,
   Bell,
   Settings as SettingsIcon,
@@ -28,13 +25,12 @@ import {
   SheetClose
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const Layout: React.FC = () => {
   const { baseTheme, toggleBaseTheme } = useTheme();
-  const { language, toggleLanguage, t } = useLanguage();
+  const { t } = useLanguage();
   const { isAuthenticated, logout, user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
@@ -116,19 +112,6 @@ const Layout: React.FC = () => {
             <Separator className="bg-sidebar-border" />
             
             <div className="flex-1 py-4 space-y-5">
-              {/* Language toggle */}
-              <div className="flex items-center justify-between px-4">
-                <div className="flex items-center gap-2">
-                  <Languages className="h-5 w-5" />
-                  <span>{t('sidebar.language')}</span>
-                </div>
-                <Switch 
-                  id="language-toggle"
-                  checked={language === 'en'}
-                  onCheckedChange={toggleLanguage}
-                />
-              </div>
-              
               {/* Top Reads link */}
               <div className="flex items-center px-4">
                 <SheetClose asChild>
@@ -151,32 +134,6 @@ const Layout: React.FC = () => {
                   >
                     <Trophy className="h-5 w-5" />
                     <span>Достижения</span>
-                  </Link>
-                </SheetClose>
-              </div>
-              
-              {/* Telegram chat link */}
-              <div className="flex items-center px-4">
-                <a 
-                  href="https://t.me/+LeR5l4MeHVE4NjBi" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
-                >
-                  <MessageCircle className="h-5 w-5" />
-                  <span>Telegram чат</span>
-                </a>
-              </div>
-              
-              {/* Profile link */}
-              <div className="flex items-center px-4">
-                <SheetClose asChild>
-                  <Link 
-                    to="/profile" 
-                    className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
-                  >
-                    <User className="h-5 w-5" />
-                    <span>{t('sidebar.profile') || 'Профиль'}</span>
                   </Link>
                 </SheetClose>
               </div>
