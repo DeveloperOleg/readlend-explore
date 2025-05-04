@@ -136,111 +136,111 @@ const Profile: React.FC = () => {
   const subscriptionsCount = profileUser.subscriptions?.length || 0;
 
   return (
-    <div className="container mx-auto px-0 md:px-4 pb-16">
+    <div className="container mx-auto px-0 md:px-4 pb-16 max-w-screen-sm">
       {/* Instagram Style Profile Header */}
-      <div className="flex flex-col space-y-6">
+      <div className="flex flex-col space-y-4">
         {/* Profile Header Section */}
-        <div className="flex flex-col px-4">
+        <div className="flex flex-col px-3 sm:px-4">
           {/* Avatar and Stats Row */}
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 sm:gap-6">
             {/* Avatar with Story Ring */}
             <div className="relative">
               <div className="rounded-full p-0.5 bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
-                <Avatar className="h-20 w-20 md:h-24 md:w-24 border-2 border-background">
+                <Avatar className="h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 border-2 border-background">
                   <AvatarImage src={profileUser.avatarUrl || ''} alt={displayName} />
-                  <AvatarFallback className="text-2xl">
+                  <AvatarFallback className="text-lg sm:text-2xl">
                     {displayName.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </div>
               {isCurrentUser && (
                 <button 
-                  className="absolute bottom-0 right-0 rounded-full bg-primary text-white p-1 shadow-md"
+                  className="absolute bottom-0 right-0 rounded-full bg-primary text-white p-0.5 sm:p-1 shadow-md"
                   aria-label={t('profile.changePhoto') || 'Изменить фото'}
                 >
-                  <Edit className="h-3 w-3" />
+                  <Edit className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                 </button>
               )}
             </div>
 
             {/* User Stats */}
-            <div className="flex-1 grid grid-cols-3 text-center gap-2 py-2">
+            <div className="flex-1 grid grid-cols-3 text-center gap-1 sm:gap-2 py-1 sm:py-2">
               <div className="flex flex-col">
-                <span className="font-bold text-lg">{booksCount}</span>
-                <span className="text-xs text-muted-foreground">{getBookLabel(booksCount)}</span>
+                <span className="font-bold text-base sm:text-lg">{booksCount}</span>
+                <span className="text-[10px] sm:text-xs text-muted-foreground">{getBookLabel(booksCount)}</span>
               </div>
               <div className="flex flex-col">
-                <span className="font-bold text-lg">{subscribersCount}</span>
-                <span className="text-xs text-muted-foreground">{getSubscribersLabel(subscribersCount)}</span>
+                <span className="font-bold text-base sm:text-lg">{subscribersCount}</span>
+                <span className="text-[10px] sm:text-xs text-muted-foreground">{getSubscribersLabel(subscribersCount)}</span>
               </div>
               <div className="flex flex-col">
-                <span className="font-bold text-lg">{subscriptionsCount}</span>
-                <span className="text-xs text-muted-foreground">{getSubscriptionsLabel(subscriptionsCount)}</span>
+                <span className="font-bold text-base sm:text-lg">{subscriptionsCount}</span>
+                <span className="text-[10px] sm:text-xs text-muted-foreground">{getSubscriptionsLabel(subscriptionsCount)}</span>
               </div>
             </div>
           </div>
           
           {/* Username and Bio */}
-          <div className="mt-4">
-            <h1 className="font-semibold text-lg">{displayName}</h1>
-            <p className="text-sm text-muted-foreground">@{profileUser.username}</p>
+          <div className="mt-2 sm:mt-4">
+            <h1 className="font-semibold text-base sm:text-lg">{displayName}</h1>
+            <p className="text-xs sm:text-sm text-muted-foreground">@{profileUser.username}</p>
             
             {profileUser.bio && (
-              <p className="mt-2 text-sm whitespace-pre-wrap">{renderBio(profileUser.bio)}</p>
+              <p className="mt-1 sm:mt-2 text-xs sm:text-sm whitespace-pre-wrap">{renderBio(profileUser.bio)}</p>
             )}
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-2 mt-4">
+          <div className="flex gap-1.5 sm:gap-2 mt-3 sm:mt-4">
             {isCurrentUser ? (
               <>
                 <ProfileEditDialog>
-                  <Button variant="outline" className="flex-1">
+                  <Button variant="outline" className="flex-1 text-xs sm:text-sm h-8 sm:h-10">
                     {t('profile.editProfile') || 'Редактировать профиль'}
                   </Button>
                 </ProfileEditDialog>
-                <Button variant="outline" size="icon">
-                  <Share2 className="h-4 w-4" />
+                <Button variant="outline" size="icon" className="h-8 w-8 sm:h-10 sm:w-10">
+                  <Share2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </Button>
               </>
             ) : (
               <>
-                <Button variant="default" className="flex-1">
-                  <UserPlus className="h-4 w-4 mr-2" />
+                <Button variant="default" className="flex-1 text-xs sm:text-sm h-8 sm:h-10">
+                  <UserPlus className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                   {t('profile.follow') || 'Подписаться'}
                 </Button>
-                <Button variant="outline" className="flex-1">
+                <Button variant="outline" className="flex-1 text-xs sm:text-sm h-8 sm:h-10">
                   {t('profile.message') || 'Сообщение'}
                 </Button>
-                <Button variant="outline" size="icon">
-                  <Share2 className="h-4 w-4" />
+                <Button variant="outline" size="icon" className="h-8 w-8 sm:h-10 sm:w-10">
+                  <Share2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </Button>
               </>
             )}
           </div>
         </div>
 
-        <Separator className="my-2" />
+        <Separator className="my-1 sm:my-2" />
         
         {/* Content Tabs */}
         <Tabs defaultValue="grid" className="w-full">
-          <TabsList className="w-full flex justify-around border-t border-b border-border bg-transparent h-12">
+          <TabsList className="w-full flex justify-around border-t border-b border-border bg-transparent h-10 sm:h-12">
             <TabsTrigger value="grid" className="flex-1 data-[state=active]:border-t-2 data-[state=active]:border-primary data-[state=active]:rounded-none bg-transparent">
-              <Grid className="h-5 w-5" />
+              <Grid className="h-4 w-4 sm:h-5 sm:w-5" />
             </TabsTrigger>
             <TabsTrigger value="books" className="flex-1 data-[state=active]:border-t-2 data-[state=active]:border-primary data-[state=active]:rounded-none bg-transparent">
-              <Book className="h-5 w-5" />
+              <Book className="h-4 w-4 sm:h-5 sm:w-5" />
             </TabsTrigger>
             <TabsTrigger value="subscriptions" className="flex-1 data-[state=active]:border-t-2 data-[state=active]:border-primary data-[state=active]:rounded-none bg-transparent">
-              <Users className="h-5 w-5" />
+              <Users className="h-4 w-4 sm:h-5 sm:w-5" />
             </TabsTrigger>
           </TabsList>
           
           <TabsContent value="grid" className="mt-0">
-            <div className="grid grid-cols-3 gap-1">
+            <div className="grid grid-cols-3 gap-0.5 sm:gap-1">
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="aspect-square bg-muted flex items-center justify-center">
-                  <p className="text-muted-foreground text-xs">Пусто</p>
+                  <p className="text-muted-foreground text-[10px] sm:text-xs">Пусто</p>
                 </div>
               ))}
             </div>
@@ -248,8 +248,8 @@ const Profile: React.FC = () => {
           
           <TabsContent value="books" className="mt-0">
             <Card className="border-0 shadow-none">
-              <CardContent className="p-4 text-center">
-                <p className="text-muted-foreground text-sm">{t('profile.noPublishedBooks') || 'У вас пока нет опубликованных книг'}</p>
+              <CardContent className="p-3 sm:p-4 text-center">
+                <p className="text-muted-foreground text-xs sm:text-sm">{t('profile.noPublishedBooks') || 'У вас пока нет опубликованных книг'}</p>
               </CardContent>
             </Card>
           </TabsContent>
