@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { 
   Menu, 
@@ -16,7 +16,6 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import BottomNav from './BottomNav';
-import SearchBar from './SearchBar';
 import ConnectionStatus from './ConnectionStatus';
 import { 
   Sheet, 
@@ -55,6 +54,9 @@ const Layout: React.FC = () => {
   };
 
   const sheetWidth = isMobile ? 'w-[280px]' : 'w-[280px] sm:w-[350px]';
+  
+  // Format display name
+  const displayName = user?.firstName || user?.username || 'Пользователь';
 
   return (
     <div className="relative min-h-screen pb-16 overflow-hidden">
@@ -72,20 +74,20 @@ const Layout: React.FC = () => {
         </SheetTrigger>
         <SheetContent side="left" className={`${sheetWidth} bg-sidebar backdrop-blur-lg border-sidebar-border`}>
           <div className="flex flex-col h-full text-sidebar-foreground">
-            {/* User profile section with improved spacing */}
+            {/* User profile section */}
             <div className="py-6 px-4">
               <div className="flex items-center justify-between">
                 <SheetClose asChild>
                   <Link to="/profile" className="flex items-center gap-4 hover:bg-sidebar-accent/10 rounded-lg transition-colors">
                     <Avatar className="h-14 w-14 border-2 border-sidebar-accent">
-                      <AvatarImage src={user?.avatarUrl} alt={user?.username} />
+                      <AvatarImage src={user?.avatarUrl} alt={displayName} />
                       <AvatarFallback className="text-xl">
-                        {user?.username ? user.username.charAt(0).toUpperCase() : 'U'}
+                        {displayName.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
                       <h2 className="text-xl font-semibold tracking-tight">
-                        {user?.firstName || user?.username || 'Имя пользователя'}
+                        {displayName}
                       </h2>
                       <span className="text-sm text-muted-foreground">
                         {user?.username ? `@${user.username}` : '@username'}
@@ -94,7 +96,7 @@ const Layout: React.FC = () => {
                   </Link>
                 </SheetClose>
                 
-                {/* Theme Toggle Button with better spacing */}
+                {/* Theme Toggle Button */}
                 <Button 
                   variant="ghost" 
                   size="icon" 
@@ -184,7 +186,7 @@ const Layout: React.FC = () => {
       </div>
       
       {/* Main content */}
-      <main className="container px-2 pt-12 pb-2 animate-fade-in">
+      <main className="animate-fade-in">
         <Outlet />
       </main>
       

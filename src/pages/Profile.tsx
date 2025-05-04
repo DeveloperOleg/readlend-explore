@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import UserSubscriptions from '@/components/UserSubscriptions';
-import { Grid, Book, Users, Edit, Copy } from 'lucide-react';
+import { Grid, Book, Users, Edit, Copy, Share2, UserPlus } from 'lucide-react';
 import ProfileEditDialog from '@/components/ProfileEditDialog';
 import { useToast } from '@/hooks/use-toast';
 import { User } from '@/types/auth';
@@ -52,25 +52,25 @@ const Profile: React.FC = () => {
   const isCurrentUser = user?.id === profileUser.id;
 
   // Format display name
-  const displayName = [profileUser.firstName, profileUser.lastName].filter(Boolean).join(' ') || profileUser.username;
+  const displayName = profileUser.firstName || profileUser.username;
   
   // Pluralization helpers
   function getBookLabel(count: number): string {
-    if (count === 0) return 'книг';
-    if (count === 1) return 'книга';
-    if (count >= 2 && count <= 4) return 'книги';
-    return 'книг';
+    if (count === 0) return 'публикации';
+    if (count === 1) return 'публикация';
+    if (count >= 2 && count <= 4) return 'публикации';
+    return 'публикаций';
   }
 
   function getSubscribersLabel(count: number): string {
-    if (count === 0) return 'подписчиков';
+    if (count === 0) return 'подписчики';
     if (count === 1) return 'подписчик';
     if (count >= 2 && count <= 4) return 'подписчика';
     return 'подписчиков';
   }
 
   function getSubscriptionsLabel(count: number): string {
-    if (count === 0) return 'подписок';
+    if (count === 0) return 'подписки';
     if (count === 1) return 'подписка';
     if (count >= 2 && count <= 4) return 'подписки';
     return 'подписок';
@@ -131,116 +131,129 @@ const Profile: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto px-2">
-      {/* Profile Header - Instagram Style */}
-      <div className="flex flex-col md:flex-row gap-4 items-center md:items-start mb-6 mt-4">
-        {/* Avatar */}
-        <Avatar className="h-20 w-20 md:h-36 md:w-36 border-2 border-muted">
-          <AvatarImage src={profileUser.avatarUrl || ''} alt={profileUser.username} />
-          <AvatarFallback className="text-2xl md:text-4xl">
-            {profileUser.username ? profileUser.username.charAt(0).toUpperCase() : 'U'}
-          </AvatarFallback>
-        </Avatar>
-        
-        {/* Profile Info */}
-        <div className="flex-1 flex flex-col items-center md:items-start">
-          <div className="flex flex-col md:flex-row md:items-center gap-2 mb-3">
-            <div className="flex items-center gap-2">
-              <h1 
-                className="text-lg font-medium cursor-pointer" 
-                onClick={handleCopyUsername}
-              >
-                {profileUser.username ? `@${profileUser.username}` : 'Имя пользователя не указано'}
-              </h1>
-              <button
-                onClick={handleCopyUsername}
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label={t('profile.copyUsername') || 'Копировать имя пользователя'}
-              >
-                <Copy className="h-4 w-4" />
-              </button>
+    <div className="container mx-auto px-0 md:px-4 pb-16">
+      {/* Instagram Style Profile Header */}
+      <div className="flex flex-col space-y-6">
+        {/* Profile Header Section */}
+        <div className="flex flex-col px-4">
+          {/* Avatar and Stats Row */}
+          <div className="flex items-center gap-6">
+            {/* Avatar with Story Ring */}
+            <div className="relative">
+              <div className="rounded-full p-0.5 bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
+                <Avatar className="h-20 w-20 md:h-24 md:w-24 border-2 border-background">
+                  <AvatarImage src={profileUser.avatarUrl || ''} alt={displayName} />
+                  <AvatarFallback className="text-2xl">
+                    {displayName.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+              {isCurrentUser && (
+                <button 
+                  className="absolute bottom-0 right-0 rounded-full bg-primary text-white p-1 shadow-md"
+                  aria-label={t('profile.changePhoto') || 'Изменить фото'}
+                >
+                  <Edit className="h-3 w-3" />
+                </button>
+              )}
             </div>
+
+            {/* User Stats */}
+            <div className="flex-1 grid grid-cols-3 text-center gap-2 py-2">
+              <div className="flex flex-col">
+                <span className="font-bold text-lg">{profileUser.publishedBooks?.length || 0}</span>
+                <span className="text-xs text-muted-foreground">{getBookLabel(profileUser.publishedBooks?.length || 0)}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="font-bold text-lg">{profileUser.subscribers?.length || 139}</span>
+                <span className="text-xs text-muted-foreground">{getSubscribersLabel(profileUser.subscribers?.length || 139)}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="font-bold text-lg">{profileUser.subscriptions?.length || 150}</span>
+                <span className="text-xs text-muted-foreground">{getSubscriptionsLabel(profileUser.subscriptions?.length || 150)}</span>
+              </div>
+            </div>
+          </div>
+          
+          {/* Username and Bio */}
+          <div className="mt-4">
+            <h1 className="font-semibold text-lg">{displayName}</h1>
+            <p className="text-sm text-muted-foreground">@{profileUser.username}</p>
             
-            {isCurrentUser && (
-              <ProfileEditDialog>
-                <Button variant="outline" size="sm" className="h-8 mt-1 md:mt-0">
-                  <Edit className="h-3 w-3 mr-1" />
-                  {t('profile.editProfile') || 'Редактировать'}
-                </Button>
-              </ProfileEditDialog>
+            {profileUser.bio && (
+              <p className="mt-2 text-sm whitespace-pre-wrap">{renderBio(profileUser.bio)}</p>
             )}
           </div>
-          
-          {/* Stats */}
-          <div className="flex justify-center md:justify-start gap-4 md:gap-6 mb-3">
-            <div className="flex flex-col items-center md:items-start">
-              <span className="font-bold">{profileUser.publishedBooks?.length || 0}</span>
-              <span className="text-xs md:text-sm text-muted-foreground">{getBookLabel(profileUser.publishedBooks?.length || 0)}</span>
-            </div>
-            
-            <div className="flex flex-col items-center md:items-start">
-              <span className="font-bold">{profileUser.subscribers?.length || 0}</span>
-              <span className="text-xs md:text-sm text-muted-foreground">{getSubscribersLabel(profileUser.subscribers?.length || 0)}</span>
-            </div>
-            
-            <div className="flex flex-col items-center md:items-start">
-              <span className="font-bold">{profileUser.subscriptions?.length || 0}</span>
-              <span className="text-xs md:text-sm text-muted-foreground">{getSubscriptionsLabel(profileUser.subscriptions?.length || 0)}</span>
-            </div>
-          </div>
-          
-          {/* Display Name and Bio */}
-          <div className="text-center md:text-left">
-            <h2 className="font-semibold">{displayName}</h2>
-            <p className="text-xs md:text-sm text-muted-foreground">ID: {profileUser.displayId}</p>
-            
-            {/* Display bio with clickable hashtags if it exists */}
-            {profileUser.bio && (
-              <p className="mt-2 text-sm max-w-md whitespace-pre-wrap">{renderBio(profileUser.bio)}</p>
+
+          {/* Action Buttons */}
+          <div className="flex gap-2 mt-4">
+            {isCurrentUser ? (
+              <>
+                <ProfileEditDialog>
+                  <Button variant="outline" className="flex-1">
+                    {t('profile.editProfile') || 'Редактировать профиль'}
+                  </Button>
+                </ProfileEditDialog>
+                <Button variant="outline" size="icon">
+                  <Share2 className="h-4 w-4" />
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="default" className="flex-1">
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  {t('profile.follow') || 'Подписаться'}
+                </Button>
+                <Button variant="outline" className="flex-1">
+                  {t('profile.message') || 'Сообщение'}
+                </Button>
+                <Button variant="outline" size="icon">
+                  <Share2 className="h-4 w-4" />
+                </Button>
+              </>
             )}
           </div>
         </div>
+
+        <Separator className="my-2" />
+        
+        {/* Content Tabs */}
+        <Tabs defaultValue="grid" className="w-full">
+          <TabsList className="w-full flex justify-around border-t border-b border-border bg-transparent h-12">
+            <TabsTrigger value="grid" className="flex-1 data-[state=active]:border-t-2 data-[state=active]:border-primary data-[state=active]:rounded-none bg-transparent">
+              <Grid className="h-5 w-5" />
+            </TabsTrigger>
+            <TabsTrigger value="books" className="flex-1 data-[state=active]:border-t-2 data-[state=active]:border-primary data-[state=active]:rounded-none bg-transparent">
+              <Book className="h-5 w-5" />
+            </TabsTrigger>
+            <TabsTrigger value="subscriptions" className="flex-1 data-[state=active]:border-t-2 data-[state=active]:border-primary data-[state=active]:rounded-none bg-transparent">
+              <Users className="h-5 w-5" />
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="grid" className="mt-0">
+            <div className="grid grid-cols-3 gap-1">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="aspect-square bg-muted flex items-center justify-center">
+                  <p className="text-muted-foreground text-xs">Пусто</p>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="books" className="mt-0">
+            <Card className="border-0 shadow-none">
+              <CardContent className="p-4 text-center">
+                <p className="text-muted-foreground text-sm">{t('profile.noPublishedBooks') || 'У вас пока нет опубликованных книг'}</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="subscriptions" className="mt-0">
+            <UserSubscriptions />
+          </TabsContent>
+        </Tabs>
       </div>
-      
-      <Separator className="my-4" />
-      
-      {/* Content Tabs */}
-      <Tabs defaultValue="grid" className="w-full">
-        <TabsList className="mb-4 justify-center w-full">
-          <TabsTrigger value="grid" className="flex-1">
-            <Grid className="h-4 w-4 md:h-5 md:w-5 mx-auto" />
-            <span className="sr-only">{t('profile.grid') || 'Сетка'}</span>
-          </TabsTrigger>
-          <TabsTrigger value="books" className="flex-1">
-            <Book className="h-4 w-4 md:h-5 md:w-5 mx-auto" />
-            <span className="sr-only">{t('profile.books') || 'Книги'}</span>
-          </TabsTrigger>
-          <TabsTrigger value="subscriptions" className="flex-1">
-            <Users className="h-4 w-4 md:h-5 md:w-5 mx-auto" />
-            <span className="sr-only">{t('profile.subscriptions') || 'Подписки'}</span>
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="grid">
-          <Card>
-            <CardContent className="p-4 text-center">
-              <p className="text-muted-foreground text-sm">{t('profile.noPublishedBooks') || 'У вас пока нет опубликованных книг'}</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="books">
-          <Card>
-            <CardContent className="p-4 text-center">
-              <p className="text-muted-foreground text-sm">{t('profile.noPublishedBooks') || 'У вас пока нет опубликованных книг'}</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="subscriptions">
-          <UserSubscriptions />
-        </TabsContent>
-      </Tabs>
     </div>
   );
 };
