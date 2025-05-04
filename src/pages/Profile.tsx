@@ -54,23 +54,23 @@ const Profile: React.FC = () => {
   // Format display name
   const displayName = profileUser.firstName || profileUser.username;
   
-  // Pluralization helpers
+  // Pluralization helpers for books, subscribers, and subscriptions
   function getBookLabel(count: number): string {
-    if (count === 0) return 'публикации';
-    if (count === 1) return 'публикация';
-    if (count >= 2 && count <= 4) return 'публикации';
-    return 'публикаций';
+    if (count === 0) return 'книг';
+    if (count === 1) return 'книга';
+    if (count >= 2 && count <= 4) return 'книги';
+    return 'книг';
   }
 
   function getSubscribersLabel(count: number): string {
-    if (count === 0) return 'подписчики';
+    if (count === 0) return 'подписчиков';
     if (count === 1) return 'подписчик';
     if (count >= 2 && count <= 4) return 'подписчика';
     return 'подписчиков';
   }
 
   function getSubscriptionsLabel(count: number): string {
-    if (count === 0) return 'подписки';
+    if (count === 0) return 'подписок';
     if (count === 1) return 'подписка';
     if (count >= 2 && count <= 4) return 'подписки';
     return 'подписок';
@@ -130,6 +130,11 @@ const Profile: React.FC = () => {
     return parts;
   };
 
+  // Get the actual counts or default to 0
+  const booksCount = profileUser.publishedBooks?.length || 0;
+  const subscribersCount = profileUser.subscribers?.length || 0;
+  const subscriptionsCount = profileUser.subscriptions?.length || 0;
+
   return (
     <div className="container mx-auto px-0 md:px-4 pb-16">
       {/* Instagram Style Profile Header */}
@@ -161,16 +166,16 @@ const Profile: React.FC = () => {
             {/* User Stats */}
             <div className="flex-1 grid grid-cols-3 text-center gap-2 py-2">
               <div className="flex flex-col">
-                <span className="font-bold text-lg">{profileUser.publishedBooks?.length || 0}</span>
-                <span className="text-xs text-muted-foreground">{getBookLabel(profileUser.publishedBooks?.length || 0)}</span>
+                <span className="font-bold text-lg">{booksCount}</span>
+                <span className="text-xs text-muted-foreground">{getBookLabel(booksCount)}</span>
               </div>
               <div className="flex flex-col">
-                <span className="font-bold text-lg">{profileUser.subscribers?.length || 139}</span>
-                <span className="text-xs text-muted-foreground">{getSubscribersLabel(profileUser.subscribers?.length || 139)}</span>
+                <span className="font-bold text-lg">{subscribersCount}</span>
+                <span className="text-xs text-muted-foreground">{getSubscribersLabel(subscribersCount)}</span>
               </div>
               <div className="flex flex-col">
-                <span className="font-bold text-lg">{profileUser.subscriptions?.length || 150}</span>
-                <span className="text-xs text-muted-foreground">{getSubscriptionsLabel(profileUser.subscriptions?.length || 150)}</span>
+                <span className="font-bold text-lg">{subscriptionsCount}</span>
+                <span className="text-xs text-muted-foreground">{getSubscriptionsLabel(subscriptionsCount)}</span>
               </div>
             </div>
           </div>
