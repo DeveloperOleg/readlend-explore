@@ -122,7 +122,7 @@ const Layout: React.FC = () => {
                     className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
                   >
                     <Flame className="h-5 w-5" />
-                    <span>{t('nav.topReads') || 'Топ читаемых'}</span>
+                    <span>{t('nav.topReads')}</span>
                   </Link>
                 </SheetClose>
               </div>
@@ -135,7 +135,7 @@ const Layout: React.FC = () => {
                     className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
                   >
                     <Trophy className="h-5 w-5" />
-                    <span>Достижения</span>
+                    <span>{t('pages.achievements')}</span>
                   </Link>
                 </SheetClose>
               </div>

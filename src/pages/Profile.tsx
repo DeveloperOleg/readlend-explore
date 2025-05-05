@@ -9,8 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import UserSubscriptions from '@/components/UserSubscriptions';
-import { Grid, Book, Users, Edit, Copy, Share2, UserPlus } from 'lucide-react';
+import { Grid, Book, Edit, Copy, Share2, UserPlus } from 'lucide-react';
 import ProfileEditDialog from '@/components/ProfileEditDialog';
 import { useToast } from '@/hooks/use-toast';
 import { User } from '@/types/auth';
@@ -204,26 +203,13 @@ const Profile: React.FC = () => {
 
         <Separator className="my-1 sm:my-2" />
         
-        {/* Content Tabs - Removed the subscriptions tab as requested */}
-        <Tabs defaultValue="grid" className="w-full">
+        {/* Content Tabs */}
+        <Tabs defaultValue="books" className="w-full">
           <TabsList className="w-full flex justify-around border-t border-b border-border bg-transparent h-10 sm:h-12">
-            <TabsTrigger value="grid" className="flex-1 data-[state=active]:border-t-2 data-[state=active]:border-primary data-[state=active]:rounded-none bg-transparent">
-              <Grid className="h-4 w-4 sm:h-5 sm:w-5" />
-            </TabsTrigger>
             <TabsTrigger value="books" className="flex-1 data-[state=active]:border-t-2 data-[state=active]:border-primary data-[state=active]:rounded-none bg-transparent">
               <Book className="h-4 w-4 sm:h-5 sm:w-5" />
             </TabsTrigger>
           </TabsList>
-          
-          <TabsContent value="grid" className="mt-0">
-            <div className="grid grid-cols-3 gap-0.5 sm:gap-1">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="aspect-square bg-muted flex items-center justify-center">
-                  <p className="text-muted-foreground text-[10px] sm:text-xs">Пусто</p>
-                </div>
-              ))}
-            </div>
-          </TabsContent>
           
           <TabsContent value="books" className="mt-0">
             <Card className="border-0 shadow-none">
