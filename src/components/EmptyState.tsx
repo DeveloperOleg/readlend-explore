@@ -1,13 +1,12 @@
-
 import React from 'react';
-import { BookX, User, Ban } from 'lucide-react';
+import { BookX, User, Ban, Trophy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/LanguageContext';
 
 interface EmptyStateProps {
   title: string;
   description: string;
-  icon?: 'book' | 'user' | 'ban';
+  icon?: 'book' | 'user' | 'ban' | 'trophy';
   size?: 'sm' | 'md' | 'lg';
   onClose?: () => void;
 }
@@ -27,6 +26,8 @@ const EmptyState: React.FC<EmptyStateProps> = ({
         return <User className="h-10 w-10 text-muted-foreground" />;
       case 'ban':
         return <Ban className="h-10 w-10 text-muted-foreground" />;
+      case 'trophy':
+        return <Trophy className="h-10 w-10 text-muted-foreground" />;
       case 'book':
       default:
         return <BookX className="h-10 w-10 text-muted-foreground" />;
