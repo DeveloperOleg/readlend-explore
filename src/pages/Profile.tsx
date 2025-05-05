@@ -54,27 +54,14 @@ const Profile: React.FC = () => {
   // Format display name
   const displayName = profileUser.firstName || profileUser.username;
   
-  // Pluralization helpers for books, subscribers, and subscriptions
-  function getBookLabel(count: number): string {
-    if (count === 0) return 'книг';
-    if (count === 1) return 'книга';
-    if (count >= 2 && count <= 4) return 'книги';
-    return 'книг';
-  }
-
-  function getSubscribersLabel(count: number): string {
-    if (count === 0) return 'подписчиков';
-    if (count === 1) return 'подписчик';
-    if (count >= 2 && count <= 4) return 'подписчика';
-    return 'подписчиков';
-  }
-
-  function getSubscriptionsLabel(count: number): string {
-    if (count === 0) return 'подписок';
-    if (count === 1) return 'подписка';
-    if (count >= 2 && count <= 4) return 'подписки';
-    return 'подписок';
-  }
+  // Book count and label
+  const booksCount = profileUser.publishedBooks?.length || 0;
+  
+  // Subscriber count and label
+  const subscribersCount = profileUser.subscribers?.length || 0;
+  
+  // Subscription count and label
+  const subscriptionsCount = profileUser.subscriptions?.length || 0;
 
   const handleCopyUsername = () => {
     navigator.clipboard.writeText(profileUser.username);
@@ -130,11 +117,6 @@ const Profile: React.FC = () => {
     return parts;
   };
 
-  // Get the actual counts or default to 0
-  const booksCount = profileUser.publishedBooks?.length || 0;
-  const subscribersCount = profileUser.subscribers?.length || 0;
-  const subscriptionsCount = profileUser.subscriptions?.length || 0;
-
   return (
     <div className="container mx-auto px-0 md:px-4 pb-16 max-w-screen-sm">
       {/* Instagram Style Profile Header */}
@@ -167,15 +149,15 @@ const Profile: React.FC = () => {
             <div className="flex-1 grid grid-cols-3 text-center gap-1 sm:gap-2 py-1 sm:py-2">
               <div className="flex flex-col">
                 <span className="font-bold text-base sm:text-lg">{booksCount}</span>
-                <span className="text-[10px] sm:text-xs text-muted-foreground">{getBookLabel(booksCount)}</span>
+                <span className="text-[10px] sm:text-xs text-muted-foreground">{t('stats.books')}</span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold text-base sm:text-lg">{subscribersCount}</span>
-                <span className="text-[10px] sm:text-xs text-muted-foreground">{getSubscribersLabel(subscribersCount)}</span>
+                <span className="text-[10px] sm:text-xs text-muted-foreground">{t('stats.followers')}</span>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold text-base sm:text-lg">{subscriptionsCount}</span>
-                <span className="text-[10px] sm:text-xs text-muted-foreground">{getSubscriptionsLabel(subscriptionsCount)}</span>
+                <span className="text-[10px] sm:text-xs text-muted-foreground">{t('stats.following')}</span>
               </div>
             </div>
           </div>
@@ -222,7 +204,7 @@ const Profile: React.FC = () => {
 
         <Separator className="my-1 sm:my-2" />
         
-        {/* Content Tabs */}
+        {/* Content Tabs - Removed the subscriptions tab as requested */}
         <Tabs defaultValue="grid" className="w-full">
           <TabsList className="w-full flex justify-around border-t border-b border-border bg-transparent h-10 sm:h-12">
             <TabsTrigger value="grid" className="flex-1 data-[state=active]:border-t-2 data-[state=active]:border-primary data-[state=active]:rounded-none bg-transparent">
@@ -230,9 +212,6 @@ const Profile: React.FC = () => {
             </TabsTrigger>
             <TabsTrigger value="books" className="flex-1 data-[state=active]:border-t-2 data-[state=active]:border-primary data-[state=active]:rounded-none bg-transparent">
               <Book className="h-4 w-4 sm:h-5 sm:w-5" />
-            </TabsTrigger>
-            <TabsTrigger value="subscriptions" className="flex-1 data-[state=active]:border-t-2 data-[state=active]:border-primary data-[state=active]:rounded-none bg-transparent">
-              <Users className="h-4 w-4 sm:h-5 sm:w-5" />
             </TabsTrigger>
           </TabsList>
           
@@ -252,10 +231,6 @@ const Profile: React.FC = () => {
                 <p className="text-muted-foreground text-xs sm:text-sm">{t('profile.noPublishedBooks') || 'У вас пока нет опубликованных книг'}</p>
               </CardContent>
             </Card>
-          </TabsContent>
-          
-          <TabsContent value="subscriptions" className="mt-0">
-            <UserSubscriptions />
           </TabsContent>
         </Tabs>
       </div>

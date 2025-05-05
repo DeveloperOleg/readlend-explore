@@ -13,7 +13,7 @@ const Achievements: React.FC = () => {
       
       <div className="flex items-center justify-center py-12">
         <EmptyState 
-          icon="book"
+          icon="trophy"
           title={t('pages.achievementEmpty')}
           description={t('pages.achievementEmptyDescription')}
           size="lg"
