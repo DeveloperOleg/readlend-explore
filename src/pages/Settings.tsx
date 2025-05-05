@@ -12,6 +12,7 @@ import ThemeSettings from '@/components/ThemeSettings';
 import LanguageSettings from '@/components/LanguageSettings';
 import UserBlocked from '@/components/UserBlocked';
 import StorageSettings from '@/components/StorageSettings';
+import { Switch } from '@/components/ui/switch';
 
 const SettingsPage: React.FC = () => {
   const { t } = useLanguage();
@@ -60,9 +61,9 @@ const SettingsPage: React.FC = () => {
               <TabsTrigger value="language" className="flex items-center gap-2 p-3 rounded-lg border w-full">
                 <Globe className="h-5 w-5 text-primary" />
                 <div className="flex-1 text-left">
-                  <h3 className="font-medium">Язык</h3>
+                  <h3 className="font-medium">{t('sidebar.language')}</h3>
                   <p className="text-sm text-muted-foreground">
-                    Настройки языка приложения
+                    {t('settings.appearanceDesc')}
                   </p>
                 </div>
               </TabsTrigger>
@@ -138,22 +139,30 @@ const SettingsPage: React.FC = () => {
                   <div className="rounded-lg border p-3">
                     <div className="flex items-center justify-between">
                       <div className="space-y-0.5">
-                        <h3 className="text-sm font-medium">{t('profile.hideSubscriptions') || 'Скрыть мои подписки'}</h3>
+                        <h3 className="text-sm font-medium">{t('profile.hideSubscriptions')}</h3>
                         <p className="text-xs text-muted-foreground">
-                          {t('profile.hideSubscriptionsDescription') || 'Другие пользователи не смогут видеть, на кого вы подписаны'}
+                          {t('profile.hideSubscriptionsDescription')}
                         </p>
                       </div>
+                      <Switch
+                        checked={user?.hideSubscriptions}
+                        onCheckedChange={handleTogglePrivacy}
+                      />
                     </div>
                   </div>
                   
                   <div className="rounded-lg border p-3">
                     <div className="flex items-center justify-between">
                       <div className="space-y-0.5">
-                        <h3 className="text-sm font-medium">{t('profile.allowComments') || 'Разрешить комментарии к книгам'}</h3>
+                        <h3 className="text-sm font-medium">{t('profile.allowComments')}</h3>
                         <p className="text-xs text-muted-foreground">
-                          {t('profile.allowCommentsDescription') || 'Пользователи смогут оставлять комментарии к вашим книгам'}
+                          {t('profile.allowCommentsDescription')}
                         </p>
                       </div>
+                      <Switch
+                        checked={!user?.disableGlobalComments}
+                        onCheckedChange={handleToggleComments}
+                      />
                     </div>
                   </div>
                 </div>
@@ -167,7 +176,7 @@ const SettingsPage: React.FC = () => {
             <TabsContent value="notifications">
               <div className="rounded-lg border p-3">
                 <p className="text-sm text-muted-foreground">
-                  {t('settings.notificationsFeature') || 'Функция настройки уведомлений появится в будущих обновлениях'}
+                  {t('settings.notificationsFeature')}
                 </p>
               </div>
             </TabsContent>
@@ -175,11 +184,11 @@ const SettingsPage: React.FC = () => {
             <TabsContent value="about">
               <div className="rounded-lg border p-3">
                 <h3 className="font-medium text-base mb-2">
-                  {t('settings.version') || 'Версия'}
+                  {t('settings.version')}
                 </h3>
                 <div className="text-sm text-muted-foreground">
                   <p className="font-medium">1.0.0</p>
-                  <p className="italic mt-1">{t('settings.earlyVersion') || 'Это ранняя версия приложения'}</p>
+                  <p className="italic mt-1">{t('settings.earlyVersion')}</p>
                 </div>
               </div>
             </TabsContent>

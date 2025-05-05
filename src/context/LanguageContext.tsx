@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 type Language = 'ru' | 'en';
@@ -183,6 +184,7 @@ const translations: Record<Language, Record<string, string>> = {
     'profile.bioUseTips': 'Tip:',
     'profile.bioUseHashtags': ' can be used to highlight important topics',
     'common.comingSoon': 'Coming soon',
+    'settings.notificationsFeature': 'Notification settings will be available in future updates',
   },
   ru: {
     'greeting.morning': 'Доброе утро',
@@ -356,6 +358,7 @@ const translations: Record<Language, Record<string, string>> = {
     'profile.bioUseTips': 'Совет:',
     'profile.bioUseHashtags': ' можно использовать для выделения важных тем',
     'common.comingSoon': 'Скоро будет доступно',
+    'settings.notificationsFeature': 'Функция настройки уведомлений появится в будущих обновлениях',
   },
 };
 
