@@ -1,7 +1,10 @@
 
 import React from 'react';
+import { useLanguage } from '@/context/LanguageContext';
 
 const SavedBooks: React.FC = () => {
+  const { t } = useLanguage();
+  
   // Mock saved books for demonstration
   const savedBooks = [
     { id: 1, title: 'Три товарища', author: 'Эрих Мария Ремарк', progress: 72 },
@@ -11,7 +14,7 @@ const SavedBooks: React.FC = () => {
 
   return (
     <div className="animate-fade-in">
-      <h1 className="text-2xl font-bold mb-6">Сохраненные книги</h1>
+      <h1 className="text-2xl font-bold mb-6">{t('pages.saved')}</h1>
       
       {savedBooks.length > 0 ? (
         <div className="grid gap-4">
@@ -40,7 +43,7 @@ const SavedBooks: React.FC = () => {
         </div>
       ) : (
         <div className="text-center py-12">
-          <p className="text-muted-foreground">У вас пока нет сохраненных книг</p>
+          <p className="text-muted-foreground">{t('pages.noSaved')}</p>
         </div>
       )}
     </div>

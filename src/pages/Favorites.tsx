@@ -20,7 +20,7 @@ const Favorites: React.FC = () => {
 
   return (
     <div className="animate-fade-in pb-20 pr-2 ml-4">
-      <h1 className="text-2xl font-bold mb-6">{t('pages.favorites') || 'Избранное'}</h1>
+      <h1 className="text-2xl font-bold mb-6">{t('pages.favorites')}</h1>
       
       {favorites.length > 0 ? (
         <div className="grid gap-4 mx-1">
@@ -49,7 +49,7 @@ const Favorites: React.FC = () => {
         </div>
       ) : (
         <div className="text-center py-12">
-          <p className="text-muted-foreground">{t('pages.noFavorites') || 'У вас пока нет избранных книг'}</p>
+          <p className="text-muted-foreground">{t('pages.noFavorites')}</p>
         </div>
       )}
     </div>

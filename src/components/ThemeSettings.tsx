@@ -27,8 +27,8 @@ const ThemeSettings: React.FC = () => {
         
         <div className="text-xs text-muted-foreground">
           {themeMode === 'system' 
-            ? t('Тема будет автоматически меняться в соответствии с настройками вашего устройства.')
-            : t('Включите, чтобы тема автоматически менялась в зависимости от настроек вашего устройства.')}
+            ? t('settings.systemThemeEnabled')
+            : t('settings.systemThemeDisabled')}
         </div>
       </div>
       
@@ -48,7 +48,7 @@ const ThemeSettings: React.FC = () => {
         
         {themeMode === 'system' && (
           <div className="text-xs text-muted-foreground italic">
-            {t('Ручное переключение темы недоступно при включенной системной теме.')}
+            {t('Manual theme switching is not available when system theme is enabled.')}
           </div>
         )}
       </div>

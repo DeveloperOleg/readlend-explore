@@ -86,7 +86,7 @@ const BottomNav: React.FC = () => {
             }
           >
             <Search className="h-5 w-5" />
-            <span className="text-[10px]">Поиск</span>
+            <span className="text-[10px]">{t('nav.search')}</span>
           </NavLink>
         </div>
         
@@ -119,7 +119,7 @@ const BottomNav: React.FC = () => {
             }
           >
             <BookMarked className="h-5 w-5" />
-            <span className="text-[10px]">Сохраненные</span>
+            <span className="text-[10px]">{t('nav.saved')}</span>
           </NavLink>
         </div>
       </nav>

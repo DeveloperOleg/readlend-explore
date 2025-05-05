@@ -30,7 +30,7 @@ const Welcome: React.FC = () => {
         {greeting}, {user?.username || ''}
       </h1>
       <p className="mt-2 text-muted-foreground">
-        ReadNest - ваша уютная библиотека
+        {t('home.readingNest')}
       </p>
     </div>
   );

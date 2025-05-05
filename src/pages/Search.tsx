@@ -18,7 +18,7 @@ const Search: React.FC = () => {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center gap-2 mb-4">
         <SearchIcon className="h-5 w-5" />
-        <h1 className="text-2xl font-bold">Поиск</h1>
+        <h1 className="text-2xl font-bold">{t('pages.search')}</h1>
       </div>
       
       <form onSubmit={handleSearch} className="flex gap-2">
@@ -26,17 +26,17 @@ const Search: React.FC = () => {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Искать книги..."
+          placeholder={t('search.booksPlaceholder')}
           className="flex-1"
         />
         <Button type="submit">
           <SearchIcon className="h-4 w-4 mr-2" />
-          Искать
+          {t('search.search')}
         </Button>
       </form>
       
       <div className="text-center py-10">
-        <p className="text-muted-foreground">Начните вводить для поиска</p>
+        <p className="text-muted-foreground">{t('search.startTyping')}</p>
       </div>
     </div>
   );
