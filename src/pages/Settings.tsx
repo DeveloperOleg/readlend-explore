@@ -145,7 +145,7 @@ const SettingsPage: React.FC = () => {
                         </p>
                       </div>
                       <Switch
-                        checked={user?.hideSubscriptions}
+                        checked={user?.privacy?.hideSubscriptions}
                         onCheckedChange={handleTogglePrivacy}
                       />
                     </div>
@@ -160,7 +160,7 @@ const SettingsPage: React.FC = () => {
                         </p>
                       </div>
                       <Switch
-                        checked={!user?.disableGlobalComments}
+                        checked={user?.privacy?.commentSettings?.global}
                         onCheckedChange={handleToggleComments}
                       />
                     </div>

@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 type Language = 'ru' | 'en';
@@ -153,6 +152,7 @@ const translations: Record<Language, Record<string, string>> = {
     'subscriptions.blocked': 'User Blocked',
     'subscriptions.blockedMessage': 'This user has been added to your block list',
     'blocked.title': 'Blocked Users',
+    'blocked.desc': 'Manage blocked users',
     'blocked.noBlockedUsers': 'No Blocked Users',
     'blocked.noBlockedUsersDescription': 'You haven\'t blocked any users yet',
     'blocked.unblock': 'Unblock',
@@ -218,7 +218,7 @@ const translations: Record<Language, Record<string, string>> = {
     'login.username': 'Имя пользователя',
     'login.password': 'Пароль',
     'login.submit': 'Войти',
-    'login.welcome': 'Добро пожаловать в ReadNest',
+    'login.welcome': 'Д��бро пожаловать в ReadNest',
     'settings.title': 'Настройки приложения',
     'settings.appearance': 'Внешний вид',
     'settings.appearanceDesc': 'Настройки темы и отображения',
