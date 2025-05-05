@@ -39,9 +39,9 @@ const StorageSettings: React.FC = () => {
         cacheSize: '0 MB'
       }));
       
-      toast.success(t('storage.cacheCleared') || 'Кэш успешно очищен');
+      toast.success(t('storage.cacheCleared'));
     } catch (error) {
-      toast.error(t('storage.clearError') || 'Ошибка при очистке кэша');
+      toast.error(t('storage.clearError'));
     } finally {
       setIsClearing(false);
     }
@@ -49,10 +49,10 @@ const StorageSettings: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-medium">
-            {t('storage.appSize') || 'Размер приложения'}
+            {t('storage.appSize')}
           </CardTitle>
         </CardHeader>
         <CardContent className="pb-2">
@@ -63,13 +63,13 @@ const StorageSettings: React.FC = () => {
         </CardContent>
       </Card>
       
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-medium">
-            {t('storage.cacheSize') || 'Размер кэша'}
+            {t('storage.cacheSize')}
           </CardTitle>
           <CardDescription>
-            {t('storage.cacheDesc') || 'Временные файлы и данные приложения'}
+            {t('storage.cacheDesc')}
           </CardDescription>
         </CardHeader>
         <CardContent className="pb-2">
@@ -79,28 +79,30 @@ const StorageSettings: React.FC = () => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button 
-            variant="outline" 
-            className="w-full flex gap-2" 
-            onClick={handleClearCache}
-            disabled={isClearing || storageData.cacheSize === '0 MB'}
-          >
-            <Trash className="h-4 w-4" />
-            {t('storage.clearCache') || 'Очистить кэш'}
-          </Button>
-          <p className="text-xs text-muted-foreground mt-2">
-            {t('storage.restartRecommended') || 'После очистки кэша рекомендуется перезапустить приложение'}
-          </p>
+          <div className="w-full space-y-2">
+            <Button 
+              variant="outline" 
+              className="w-full flex gap-2" 
+              onClick={handleClearCache}
+              disabled={isClearing || storageData.cacheSize === '0 MB'}
+            >
+              <Trash className="h-4 w-4" />
+              {t('storage.clearCache')}
+            </Button>
+            <p className="text-xs text-muted-foreground">
+              {t('storage.restartRecommended')}
+            </p>
+          </div>
         </CardFooter>
       </Card>
       
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-medium">
-            {t('storage.offlineContent') || 'Загруженный контент'}
+            {t('storage.offlineContent')}
           </CardTitle>
           <CardDescription>
-            {t('storage.offlineDesc') || 'Контент, доступный без подключения к интернету'}
+            {t('storage.offlineDesc')}
           </CardDescription>
         </CardHeader>
         <CardContent>

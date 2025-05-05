@@ -47,151 +47,156 @@ const SettingsPage: React.FC = () => {
       <ScrollArea className="h-[calc(100vh-130px)]">
         <div className="pb-4">
           <Tabs defaultValue="appearance" className="w-full">
-            <TabsList className="mb-4 overflow-x-auto pb-1 justify-start h-auto flex-wrap gap-2">
-              <TabsTrigger value="appearance" className="flex items-center gap-2 p-3 rounded-lg border w-full">
-                <Palette className="h-5 w-5 text-primary" />
-                <div className="flex-1 text-left">
-                  <h3 className="font-medium">{t('settings.appearance')}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {t('settings.appearanceDesc')}
-                  </p>
-                </div>
-              </TabsTrigger>
-              
-              <TabsTrigger value="language" className="flex items-center gap-2 p-3 rounded-lg border w-full">
-                <Globe className="h-5 w-5 text-primary" />
-                <div className="flex-1 text-left">
-                  <h3 className="font-medium">{t('sidebar.language')}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {t('settings.appearanceDesc')}
-                  </p>
-                </div>
-              </TabsTrigger>
-
-              <TabsTrigger value="storage" className="flex items-center gap-2 p-3 rounded-lg border w-full">
-                <Database className="h-5 w-5 text-primary" />
-                <div className="flex-1 text-left">
-                  <h3 className="font-medium">{t('settings.storage')}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {t('settings.storageDesc')}
-                  </p>
-                </div>
-              </TabsTrigger>
-
-              {user && (
-                <TabsTrigger value="privacy" className="flex items-center gap-2 p-3 rounded-lg border w-full">
-                  <Shield className="h-5 w-5 text-primary" />
+            {/* Scrollable tabs container */}
+            <div className="overflow-x-auto pb-2">
+              <TabsList className="mb-2 justify-start h-auto flex w-full flex-col gap-2">
+                <TabsTrigger value="appearance" className="flex items-center gap-2 p-3 rounded-lg border w-full">
+                  <Palette className="h-5 w-5 text-primary" />
                   <div className="flex-1 text-left">
-                    <h3 className="font-medium">{t('profile.privacy')}</h3>
+                    <h3 className="font-medium">{t('settings.appearance')}</h3>
                     <p className="text-sm text-muted-foreground">
-                      {t('profile.privacyDesc')}
+                      {t('settings.appearanceDesc')}
                     </p>
                   </div>
                 </TabsTrigger>
-              )}
+                
+                <TabsTrigger value="language" className="flex items-center gap-2 p-3 rounded-lg border w-full">
+                  <Globe className="h-5 w-5 text-primary" />
+                  <div className="flex-1 text-left">
+                    <h3 className="font-medium">{t('sidebar.language')}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {t('settings.appearanceDesc')}
+                    </p>
+                  </div>
+                </TabsTrigger>
 
-              <TabsTrigger value="blocked" className="flex items-center gap-2 p-3 rounded-lg border w-full">
-                <Ban className="h-5 w-5 text-primary" />
-                <div className="flex-1 text-left">
-                  <h3 className="font-medium">{t('blocked.title')}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {t('blocked.desc')}
-                  </p>
-                </div>
-              </TabsTrigger>
+                <TabsTrigger value="storage" className="flex items-center gap-2 p-3 rounded-lg border w-full">
+                  <Database className="h-5 w-5 text-primary" />
+                  <div className="flex-1 text-left">
+                    <h3 className="font-medium">{t('settings.storage')}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {t('settings.storageDesc')}
+                    </p>
+                  </div>
+                </TabsTrigger>
 
-              <TabsTrigger value="notifications" className="flex items-center gap-2 p-3 rounded-lg border w-full">
-                <Bell className="h-5 w-5 text-primary" />
-                <div className="flex-1 text-left">
-                  <h3 className="font-medium">{t('settings.notifications')}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {t('settings.notificationsDesc')}
-                  </p>
-                </div>
-              </TabsTrigger>
+                {user && (
+                  <TabsTrigger value="privacy" className="flex items-center gap-2 p-3 rounded-lg border w-full">
+                    <Shield className="h-5 w-5 text-primary" />
+                    <div className="flex-1 text-left">
+                      <h3 className="font-medium">{t('profile.privacy')}</h3>
+                      <p className="text-sm text-muted-foreground">
+                        {t('profile.privacyDesc')}
+                      </p>
+                    </div>
+                  </TabsTrigger>
+                )}
 
-              <TabsTrigger value="about" className="flex items-center gap-2 p-3 rounded-lg border w-full">
-                <Info className="h-5 w-5 text-primary" />
-                <div className="flex-1 text-left">
-                  <h3 className="font-medium">{t('settings.about')}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {t('settings.aboutDesc')}
-                  </p>
-                </div>
-              </TabsTrigger>
-            </TabsList>
+                <TabsTrigger value="blocked" className="flex items-center gap-2 p-3 rounded-lg border w-full">
+                  <Ban className="h-5 w-5 text-primary" />
+                  <div className="flex-1 text-left">
+                    <h3 className="font-medium">{t('blocked.title')}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {t('blocked.desc')}
+                    </p>
+                  </div>
+                </TabsTrigger>
 
-            <TabsContent value="appearance">
-              <ThemeSettings />
-            </TabsContent>
-            
-            <TabsContent value="language">
-              <LanguageSettings />
-            </TabsContent>
+                <TabsTrigger value="notifications" className="flex items-center gap-2 p-3 rounded-lg border w-full">
+                  <Bell className="h-5 w-5 text-primary" />
+                  <div className="flex-1 text-left">
+                    <h3 className="font-medium">{t('settings.notifications')}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {t('settings.notificationsDesc')}
+                    </p>
+                  </div>
+                </TabsTrigger>
 
-            <TabsContent value="storage">
-              <StorageSettings />
-            </TabsContent>
+                <TabsTrigger value="about" className="flex items-center gap-2 p-3 rounded-lg border w-full">
+                  <Info className="h-5 w-5 text-primary" />
+                  <div className="flex-1 text-left">
+                    <h3 className="font-medium">{t('settings.about')}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {t('settings.aboutDesc')}
+                    </p>
+                  </div>
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
-            {user && (
-              <TabsContent value="privacy">
-                <div className="space-y-2">
-                  <div className="rounded-lg border p-3">
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-0.5">
-                        <h3 className="text-sm font-medium">{t('profile.hideSubscriptions')}</h3>
-                        <p className="text-xs text-muted-foreground">
-                          {t('profile.hideSubscriptionsDescription')}
-                        </p>
+            <div className="mt-4">
+              <TabsContent value="appearance">
+                <ThemeSettings />
+              </TabsContent>
+              
+              <TabsContent value="language">
+                <LanguageSettings />
+              </TabsContent>
+
+              <TabsContent value="storage">
+                <StorageSettings />
+              </TabsContent>
+
+              {user && (
+                <TabsContent value="privacy">
+                  <div className="space-y-2">
+                    <div className="rounded-lg border p-3">
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <h3 className="text-sm font-medium">{t('profile.hideSubscriptions')}</h3>
+                          <p className="text-xs text-muted-foreground">
+                            {t('profile.hideSubscriptionsDescription')}
+                          </p>
+                        </div>
+                        <Switch
+                          checked={user?.privacy?.hideSubscriptions}
+                          onCheckedChange={handleTogglePrivacy}
+                        />
                       </div>
-                      <Switch
-                        checked={user?.privacy?.hideSubscriptions}
-                        onCheckedChange={handleTogglePrivacy}
-                      />
+                    </div>
+                    
+                    <div className="rounded-lg border p-3">
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <h3 className="text-sm font-medium">{t('profile.allowComments')}</h3>
+                          <p className="text-xs text-muted-foreground">
+                            {t('profile.allowCommentsDescription')}
+                          </p>
+                        </div>
+                        <Switch
+                          checked={user?.privacy?.commentSettings?.global}
+                          onCheckedChange={handleToggleComments}
+                        />
+                      </div>
                     </div>
                   </div>
-                  
-                  <div className="rounded-lg border p-3">
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-0.5">
-                        <h3 className="text-sm font-medium">{t('profile.allowComments')}</h3>
-                        <p className="text-xs text-muted-foreground">
-                          {t('profile.allowCommentsDescription')}
-                        </p>
-                      </div>
-                      <Switch
-                        checked={user?.privacy?.commentSettings?.global}
-                        onCheckedChange={handleToggleComments}
-                      />
-                    </div>
+                </TabsContent>
+              )}
+
+              <TabsContent value="blocked">
+                <UserBlocked />
+              </TabsContent>
+
+              <TabsContent value="notifications">
+                <div className="rounded-lg border p-3">
+                  <p className="text-sm text-muted-foreground">
+                    {t('settings.notificationsFeature')}
+                  </p>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="about">
+                <div className="rounded-lg border p-3">
+                  <h3 className="font-medium text-base mb-2">
+                    {t('settings.version')}
+                  </h3>
+                  <div className="text-sm text-muted-foreground">
+                    <p className="font-medium">1.0.0</p>
+                    <p className="italic mt-1">{t('settings.earlyVersion')}</p>
                   </div>
                 </div>
               </TabsContent>
-            )}
-
-            <TabsContent value="blocked">
-              <UserBlocked />
-            </TabsContent>
-
-            <TabsContent value="notifications">
-              <div className="rounded-lg border p-3">
-                <p className="text-sm text-muted-foreground">
-                  {t('settings.notificationsFeature')}
-                </p>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="about">
-              <div className="rounded-lg border p-3">
-                <h3 className="font-medium text-base mb-2">
-                  {t('settings.version')}
-                </h3>
-                <div className="text-sm text-muted-foreground">
-                  <p className="font-medium">1.0.0</p>
-                  <p className="italic mt-1">{t('settings.earlyVersion')}</p>
-                </div>
-              </div>
-            </TabsContent>
+            </div>
           </Tabs>
         </div>
       </ScrollArea>

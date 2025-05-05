@@ -16,7 +16,7 @@ const LanguageSettings: React.FC = () => {
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <Languages className="h-5 w-5 text-primary" />
-        <h2 className="text-lg font-semibold">Язык</h2>
+        <h2 className="text-lg font-semibold">{t('sidebar.language')}</h2>
       </div>
 
       <RadioGroup 
@@ -24,17 +24,17 @@ const LanguageSettings: React.FC = () => {
         onValueChange={handleLanguageChange}
         className="space-y-3"
       >
-        <div className="flex items-start space-x-4 border p-4 rounded-lg">
+        <div className="flex items-start space-x-3 border p-3 rounded-lg">
           <RadioGroupItem value="ru" id="russian" className="mt-1" />
-          <div className="grid gap-1.5">
+          <div className="grid gap-1">
             <Label htmlFor="russian" className="text-lg font-medium">Русский</Label>
             <p className="text-sm text-muted-foreground">Russian</p>
           </div>
         </div>
 
-        <div className="flex items-start space-x-4 border p-4 rounded-lg">
+        <div className="flex items-start space-x-3 border p-3 rounded-lg">
           <RadioGroupItem value="en" id="english" className="mt-1" />
-          <div className="grid gap-1.5">
+          <div className="grid gap-1">
             <Label htmlFor="english" className="text-lg font-medium">English</Label>
             <p className="text-sm text-muted-foreground">English</p>
           </div>
