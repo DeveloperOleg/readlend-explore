@@ -40,7 +40,7 @@ const SettingsPage: React.FC = () => {
         <Button variant="ghost" size="icon" onClick={goBack}>
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <h1 className="text-xl font-bold">{t('settings.title') || 'Настройки'}</h1>
+        <h1 className="text-xl font-bold">{t('settings.title')}</h1>
       </div>
 
       <ScrollArea className="h-[calc(100vh-130px)]">
@@ -50,9 +50,9 @@ const SettingsPage: React.FC = () => {
               <TabsTrigger value="appearance" className="flex items-center gap-2 p-3 rounded-lg border w-full">
                 <Palette className="h-5 w-5 text-primary" />
                 <div className="flex-1 text-left">
-                  <h3 className="font-medium">{t('settings.appearance') || 'Внешний вид'}</h3>
+                  <h3 className="font-medium">{t('settings.appearance')}</h3>
                   <p className="text-sm text-muted-foreground">
-                    {t('settings.appearanceDesc') || 'Настройки темы и отображения'}
+                    {t('settings.appearanceDesc')}
                   </p>
                 </div>
               </TabsTrigger>
@@ -70,9 +70,9 @@ const SettingsPage: React.FC = () => {
               <TabsTrigger value="storage" className="flex items-center gap-2 p-3 rounded-lg border w-full">
                 <Database className="h-5 w-5 text-primary" />
                 <div className="flex-1 text-left">
-                  <h3 className="font-medium">{t('settings.storage') || 'Данные и память'}</h3>
+                  <h3 className="font-medium">{t('settings.storage')}</h3>
                   <p className="text-sm text-muted-foreground">
-                    {t('settings.storageDesc') || 'Управление кэшем и хранилищем'}
+                    {t('settings.storageDesc')}
                   </p>
                 </div>
               </TabsTrigger>
@@ -81,9 +81,9 @@ const SettingsPage: React.FC = () => {
                 <TabsTrigger value="privacy" className="flex items-center gap-2 p-3 rounded-lg border w-full">
                   <Shield className="h-5 w-5 text-primary" />
                   <div className="flex-1 text-left">
-                    <h3 className="font-medium">{t('profile.privacy') || 'Конфиденциальность'}</h3>
+                    <h3 className="font-medium">{t('profile.privacy')}</h3>
                     <p className="text-sm text-muted-foreground">
-                      {t('profile.privacyDesc') || 'Настройки приватности и видимости'}
+                      {t('profile.privacyDesc')}
                     </p>
                   </div>
                 </TabsTrigger>
@@ -92,9 +92,9 @@ const SettingsPage: React.FC = () => {
               <TabsTrigger value="blocked" className="flex items-center gap-2 p-3 rounded-lg border w-full">
                 <Ban className="h-5 w-5 text-primary" />
                 <div className="flex-1 text-left">
-                  <h3 className="font-medium">{t('blocked.title') || 'Черный список'}</h3>
+                  <h3 className="font-medium">{t('blocked.title')}</h3>
                   <p className="text-sm text-muted-foreground">
-                    {t('blocked.desc') || 'Управление заблокированными пользователями'}
+                    {t('blocked.desc')}
                   </p>
                 </div>
               </TabsTrigger>
@@ -102,9 +102,9 @@ const SettingsPage: React.FC = () => {
               <TabsTrigger value="notifications" className="flex items-center gap-2 p-3 rounded-lg border w-full">
                 <Bell className="h-5 w-5 text-primary" />
                 <div className="flex-1 text-left">
-                  <h3 className="font-medium">{t('settings.notifications') || 'Уведомления'}</h3>
+                  <h3 className="font-medium">{t('settings.notifications')}</h3>
                   <p className="text-sm text-muted-foreground">
-                    {t('settings.notificationsDesc') || 'Настройка уведомлений приложения'}
+                    {t('settings.notificationsDesc')}
                   </p>
                 </div>
               </TabsTrigger>
@@ -112,9 +112,9 @@ const SettingsPage: React.FC = () => {
               <TabsTrigger value="about" className="flex items-center gap-2 p-3 rounded-lg border w-full">
                 <Info className="h-5 w-5 text-primary" />
                 <div className="flex-1 text-left">
-                  <h3 className="font-medium">{t('settings.about') || 'О приложении'}</h3>
+                  <h3 className="font-medium">{t('settings.about')}</h3>
                   <p className="text-sm text-muted-foreground">
-                    {t('settings.aboutDesc') || 'Информация о версии и разработчиках'}
+                    {t('settings.aboutDesc')}
                   </p>
                 </div>
               </TabsTrigger>
