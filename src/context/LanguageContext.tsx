@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 type Language = 'ru' | 'en';
@@ -213,6 +212,7 @@ const translations: Record<Language, Record<string, string>> = {
     'welcome.telegram': 'Our closed Telegram chat for testing',
     'welcome.notice': 'Please note that some features may work unstably, and the interface may change. We appreciate your patience and support in this process!',
     'home.readingNest': 'ReadNest - your cozy library',
+    'profile.invalidDimensionsTitle': 'Image dimensions error',
   },
   ru: {
     'greeting.morning': 'Доброе утро',
@@ -415,6 +415,7 @@ const translations: Record<Language, Record<string, string>> = {
     'welcome.telegram': 'Наш закрытый телеграм чат для тестирования',
     'welcome.notice': 'Обратите внимание, что некоторые функции могут работать нестабильно, а интерфейс может измениться. Мы ценим ваше терпение и поддержку в этом процессе!',
     'home.readingNest': 'ReadNest - ваша уютная библиотека',
+    'profile.invalidDimensionsTitle': 'Ошибка размеров изображения',
   },
 };
 

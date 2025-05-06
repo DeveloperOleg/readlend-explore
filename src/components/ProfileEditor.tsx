@@ -86,7 +86,11 @@ const ProfileEditor: React.FC = () => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       
-      if (file.size > MAX_AVATAR_SIZE) {
+      // Fixed file size check to properly compare in bytes
+      const fileSizeInMB = file.size / (1024 * 1024);
+      console.log(`File size: ${fileSizeInMB.toFixed(2)} MB (${file.size} bytes)`);
+      
+      if (fileSizeInMB > 10) {
         setAvatarError(t('profile.imageTooLarge') || 'Размер аватара не должен превышать 10МБ');
         toast({
           title: t('profile.imageTooLargeTitle') || 'Ошибка загрузки аватара',
