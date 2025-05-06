@@ -1,3 +1,4 @@
+
 // Mock data for testing purposes
 export const categories = [
   { id: '1', name: 'Фантастика' },
@@ -221,6 +222,7 @@ export const getTestUserById = (userId: string) => {
       username: author.username,
       displayName: author.displayName,
       bio: author.bio,
+      displayId: author.id.substring(0, 6), // Adding the missing displayId property
       subscriptions: [],
       subscribers: [],
       blockedUsers: [],
@@ -239,3 +241,4 @@ export const getTestUserById = (userId: string) => {
   // If not found and userId starts with user-, we could implement some test users here
   return null;
 };
+
