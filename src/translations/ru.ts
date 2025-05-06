@@ -1,4 +1,3 @@
-
 // Russian translations
 export const ruTranslations = {
   'greeting.morning': 'Доброе утро',
@@ -157,7 +156,7 @@ export const ruTranslations = {
   'blocked.unblockedMessage': 'Этот пользователь был удален из вашего черного списка',
   'settings.gradientUI': 'Градиентный дизайн',
   'profile.avatarSizeLimit': 'Максимальный размер файла: 10МБ',
-  'profile.avatarFormats': 'Поддерживаемые форматы: JPEG, PNG, GIF',
+  'profile.avatarFormats': 'Поддерж��ваемые форматы: JPEG, PNG, GIF',
   'profile.avatarDimensions': 'Рекомендуемый размер: 200x200 to 1000x1000 pixels',
   'profile.bio': 'О себе',
   'profile.bioPlaceholder': 'Расскажите что-нибудь о себе...',
@@ -202,4 +201,7 @@ export const ruTranslations = {
   'welcome.notice': 'Обратите внимание, что некоторые функции могут работать нестабильно, а интерфейс может измениться. Мы ценим ваше терпение и поддержку в этом процессе!',
   'home.readingNest': 'ReadNest - ваша уютная библиотека',
   'profile.invalidDimensionsTitle': 'Ошибка размеров изображения',
+  'profile.unsupportedFormat': 'Неподдерживаемый формат файла. Поддерживаются только JPEG, PNG и GIF',
+  'profile.unsupportedFormatTitle': 'Ошибка формата',
+  'profile.imageTooSmall': 'Изображение слишком маленькое. Минимальный размер 200x200 пикселей',
 };

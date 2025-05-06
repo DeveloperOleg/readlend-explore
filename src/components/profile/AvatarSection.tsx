@@ -67,25 +67,32 @@ const AvatarSection: React.FC<AvatarSectionProps> = ({
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       
-      // Calculate file size in MB
+      // Calculate file size in MB correctly
       const fileSizeInMB = file.size / (1024 * 1024);
-      console.log(`File size: ${fileSizeInMB.toFixed(2)} MB (${file.size} bytes)`);
       
+      // Debug log to see actual file size
+      console.log(`Selected file: ${file.name}`);
+      console.log(`File size: ${fileSizeInMB.toFixed(2)} MB (${file.size} bytes)`);
+      console.log(`File type: ${file.type}`);
+      
+      // Fix: Only check file size if it actually exceeds the limit
       if (fileSizeInMB > MAX_AVATAR_SIZE) {
-        setAvatarError(t('profile.imageTooLarge') || 'Размер аватара не должен превышать 10МБ');
+        const errorMessage = t('profile.imageTooLarge') || 'Размер аватара не должен превышать 10МБ';
+        setAvatarError(errorMessage);
         toast({
           title: t('profile.imageTooLargeTitle') || 'Ошибка загрузки аватара',
-          description: t('profile.imageTooLarge') || 'Размер аватара не должен превышать 10МБ',
+          description: errorMessage,
           variant: 'destructive',
         });
         return;
       }
       
       if (!ALLOWED_AVATAR_FILE_TYPES.includes(file.type)) {
-        setAvatarError(t('profile.unsupportedFormat') || 'Неподдерживаемый формат файла. Поддерживаются только JPEG, PNG и GIF');
+        const errorMessage = t('profile.unsupportedFormat') || 'Неподдерживаемый формат файла. Поддерживаются только JPEG, PNG и GIF';
+        setAvatarError(errorMessage);
         toast({
           title: t('profile.unsupportedFormatTitle') || 'Ошибка формата',
-          description: t('profile.unsupportedFormat') || 'Неподдерживаемый формат файла. Поддерживаются только JPEG, PNG и GIF',
+          description: errorMessage,
           variant: 'destructive',
         });
         return;
@@ -101,8 +108,9 @@ const AvatarSection: React.FC<AvatarSectionProps> = ({
         return;
       }
       
-      setAvatarFile(file);
+      // Clearing previous errors since file passed all validations
       setAvatarError(null);
+      setAvatarFile(file);
       
       const reader = new FileReader();
       reader.onloadend = () => {
