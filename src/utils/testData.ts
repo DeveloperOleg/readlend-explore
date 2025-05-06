@@ -71,7 +71,7 @@ export const testBooks: Book[] = [
     title: "Звёздная пыль",
     author: "Марина Светлая",
     coverUrl: "/lovable-uploads/0fac89ed-334a-49b5-a9ab-7f0ee0a4be4d.png",
-    description: "Романтическая фантастика о любви, преодолевающей границы галактик",
+    description: "Романтическая фантастика о любви, преодолевающая границы галактик",
     content: `# Глава 1
 
 — Ты не можешь просто так отправиться на другую планету! — голос матери звенел от возмущения, заглушая гудение космопорта.
@@ -167,3 +167,75 @@ export const testBooks: Book[] = [
 Никто из них не заметил, как странно притихли птицы в лесу, и как неестественно потемнело небо над перевалом, хотя часы показывали только четыре часа дня...`
   }
 ];
+
+// Mock авторов для поиска
+export const testAuthors = [
+  { id: 'author1', username: 'AliceWright', displayName: 'Алиса Яркая', bio: 'Автор фантастических романов' },
+  { id: 'author2', username: 'DarkDmitry', displayName: 'Дмитрий Тёмный', bio: 'Мастер детективного жанра' },
+  { id: 'author3', username: 'LightMarina', displayName: 'Марина Светлая', bio: 'Романтическая фантастика' },
+  { id: 'author4', username: 'RobotAnna', displayName: 'Анна Роботова', bio: 'Научная фантастика' },
+  { id: 'author5', username: 'ForestElena', displayName: 'Елена Таёжная', bio: 'Мистические триллеры' },
+  { id: 'author6', username: 'WolfSerge', displayName: 'Сергей Волков', bio: 'Исторические романы' },
+];
+
+/**
+ * Search for authors based on a query string
+ * @param query The search query string
+ * @returns Array of matching authors
+ */
+export const searchTestAuthors = (query: string) => {
+  const lowercaseQuery = query.toLowerCase();
+  return testAuthors.filter(author => 
+    author.username.toLowerCase().includes(lowercaseQuery) || 
+    author.displayName.toLowerCase().includes(lowercaseQuery) ||
+    author.bio.toLowerCase().includes(lowercaseQuery)
+  );
+};
+
+/**
+ * Search for books based on a query string
+ * @param query The search query string
+ * @returns Array of matching books
+ */
+export const searchTestBooks = (query: string) => {
+  const lowercaseQuery = query.toLowerCase();
+  return testBooks.filter(book => 
+    book.title.toLowerCase().includes(lowercaseQuery) || 
+    book.author.toLowerCase().includes(lowercaseQuery) ||
+    (book.description && book.description.toLowerCase().includes(lowercaseQuery))
+  );
+};
+
+/**
+ * Get a test user by their ID
+ * @param userId The user ID to look up
+ * @returns The user object or null if not found
+ */
+export const getTestUserById = (userId: string) => {
+  // First check if this is an author ID
+  const author = testAuthors.find(author => author.id === userId);
+  if (author) {
+    // Convert author to a User object
+    return {
+      id: author.id,
+      username: author.username,
+      displayName: author.displayName,
+      bio: author.bio,
+      subscriptions: [],
+      subscribers: [],
+      blockedUsers: [],
+      publishedBooks: testBooks.filter(book => book.author.includes(author.displayName)).map(book => book.id),
+      isTestAccount: true,
+      privacy: {
+        hideSubscriptions: false,
+        commentSettings: {
+          global: true,
+          perBook: {}
+        }
+      }
+    };
+  }
+  
+  // If not found and userId starts with user-, we could implement some test users here
+  return null;
+};
