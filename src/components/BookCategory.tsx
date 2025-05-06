@@ -36,6 +36,7 @@ export const BookCategory: React.FC<BookCategoryProps> = ({
         {books.map((book) => (
           <div key={book.id} className="min-w-0">
             <BookCover
+              id={book.id}
               title={book.title}
               author={book.author}
               coverUrl={book.coverUrl}

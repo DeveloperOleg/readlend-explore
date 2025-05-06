@@ -1,3 +1,4 @@
+
 export const enTranslations = {
   'common.comingSoon': 'Coming Soon',
   'common.error': 'Error',
@@ -71,4 +72,11 @@ export const enTranslations = {
   'profile.unsupportedFormat': 'Unsupported file format. Only JPEG, PNG and GIF are supported',
   'profile.unsupportedFormatTitle': 'Format Error',
   'profile.imageTooSmall': 'Image is too small. Minimum size is 200x200 pixels',
+  'book.options': 'Options',
+  'book.addToLibrary': 'Add to Library',
+  'book.read': 'Read',
+  'book.aboutTitle': 'About Title',
+  'book.chapters': 'Chapters',
+  'book.comments': 'Comments',
+  'book.backToHome': 'Back to Home',
 };

@@ -14,6 +14,7 @@ import Search from "./pages/Search";
 import Notifications from "./pages/Notifications";
 import Settings from "./pages/Settings";
 import Achievements from "./pages/Achievements";
+import BookReader from "./pages/BookReader";
 
 // Layouts
 import Layout from "./components/Layout";
@@ -34,6 +35,7 @@ const AppRoutes = () => {
             <Route path="notifications" element={<Notifications />} />
             <Route path="settings" element={<Settings />} />
             <Route path="achievements" element={<Achievements />} />
+            <Route path="book/:bookId" element={<BookReader />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
