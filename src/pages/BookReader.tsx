@@ -25,23 +25,25 @@ const BookReader: React.FC = () => {
       author: 'Unknown',
       coverUrl: null,
       description: 'This book is not available',
-      content: 'The requested book could not be found'
+      content: 'The requested book could not be found',
+      rating: 0,
+      totalRatings: 0
     };
 
-  // Функция для возврата назад
+  // Function to go back
   const handleBack = () => {
     navigate(-1);
   };
 
-  // Общее количество страниц (условно 118, как на скриншоте)
+  // Total number of pages (conditionally 118, as in the screenshot)
   const totalPages = 118;
 
-  // Функция для переключения вкладок
+  // Function to switch tabs
   const handleTabChange = (tab: TabType) => {
     setActiveTab(tab);
   };
 
-  // Рендеринг содержимого в зависимости от активной вкладки
+  // Rendering content based on active tab
   const renderContent = () => {
     switch (activeTab) {
       case 'about':
@@ -50,7 +52,7 @@ const BookReader: React.FC = () => {
         return (
           <ScrollArea className="flex-1 px-4">
             <div className="max-w-prose mx-auto py-6">
-              {book.content || 'Содержание книги будет здесь...'}
+              {book.content || 'Book content will be here...'}
             </div>
           </ScrollArea>
         );
@@ -63,7 +65,7 @@ const BookReader: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full pb-20 animate-fade-in">
-      {/* Верхняя панель */}
+      {/* Top panel */}
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b">
         <div className="flex items-center justify-between p-4">
           <Button variant="ghost" size="icon" onClick={handleBack}>
@@ -81,7 +83,7 @@ const BookReader: React.FC = () => {
         </div>
       </div>
       
-      {/* Предисловие с обложкой книги - показываем только если выбраны главы */}
+      {/* Preface with book cover - show only if chapters are selected */}
       {activeTab === 'chapters' && (
         <div className="flex flex-col items-center p-6 mb-4 border-b">
           <div className="w-64 h-80 relative mb-4">
@@ -129,7 +131,7 @@ const BookReader: React.FC = () => {
         </div>
       )}
       
-      {/* Навигационные вкладки */}
+      {/* Navigation tabs */}
       <div className="border-b">
         <div className="w-full flex justify-between text-sm text-center">
           <button 
@@ -153,7 +155,7 @@ const BookReader: React.FC = () => {
         </div>
       </div>
       
-      {/* Содержимое в зависимости от выбранной вкладки */}
+      {/* Content depending on the selected tab */}
       <div className="flex-1 overflow-auto">
         {renderContent()}
       </div>

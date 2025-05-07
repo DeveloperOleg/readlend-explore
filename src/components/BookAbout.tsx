@@ -12,7 +12,7 @@ interface BookAboutProps {
     title: string;
     author: string;
     coverUrl: string | null;
-    description: string;
+    description?: string;
     content?: string;
     rating?: number;
     totalRatings?: number;
@@ -28,6 +28,7 @@ const BookAbout: React.FC<BookAboutProps> = ({ book }) => {
   // Default values if not provided in the book object
   const rating = book.rating || 0;
   const totalRatings = book.totalRatings || 0;
+  const description = book.description || '';
   
   const handleRating = (value: number) => {
     if (!user) {
@@ -52,7 +53,7 @@ const BookAbout: React.FC<BookAboutProps> = ({ book }) => {
     <div className="space-y-6">
       <div>
         <h3 className="text-xl font-semibold mb-2">{t('book.aboutTitle')}</h3>
-        <p className="text-sm text-muted-foreground">{book.description}</p>
+        <p className="text-sm text-muted-foreground">{description}</p>
       </div>
       
       <Separator />
@@ -72,7 +73,7 @@ const BookAbout: React.FC<BookAboutProps> = ({ book }) => {
       
       <div>
         <h3 className="text-lg font-medium mb-2">{t('book.yourRating')}</h3>
-        <div className="flex flex-col-reverse items-center gap-2">
+        <div className="flex items-center gap-2">
           {[1, 2, 3, 4, 5].map((value) => (
             <button
               key={value}
