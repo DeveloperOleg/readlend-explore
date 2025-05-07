@@ -1,3 +1,4 @@
+
 // Russian translations
 export const ruTranslations = {
   'greeting.morning': 'Доброе утро',
@@ -204,4 +205,9 @@ export const ruTranslations = {
   'profile.unsupportedFormat': 'Неподдерживаемый формат файла. Поддерживаются только JPEG, PNG и GIF',
   'profile.unsupportedFormatTitle': 'Ошибка формата',
   'profile.imageTooSmall': 'Изображение слишком маленькое. Минимальный размер 200x200 пикселей',
+  'common.refreshing': 'Обновление...',
+  'pages.notifications': 'Уведомления',
+  'pages.notificationsDescription': 'Ваши уведомления',
+  'pages.noNotifications': 'У вас пока нет уведомлений',
+  'pages.noNotificationsDescription': 'Когда появятся новые уведомления, они будут отображаться здесь',
 };

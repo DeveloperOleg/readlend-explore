@@ -79,4 +79,9 @@ export const enTranslations = {
   'book.chapters': 'Chapters',
   'book.comments': 'Comments',
   'book.backToHome': 'Back to Home',
+  'common.refreshing': 'Refreshing...',
+  'pages.notifications': 'Notifications',
+  'pages.notificationsDescription': 'Your notifications',
+  'pages.noNotifications': 'You have no notifications yet',
+  'pages.noNotificationsDescription': 'When you receive new notifications, they will appear here',
 };
