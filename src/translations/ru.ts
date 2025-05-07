@@ -1,4 +1,3 @@
-
 // Russian translations
 export const ruTranslations = {
   'greeting.morning': 'Доброе утро',
@@ -157,7 +156,7 @@ export const ruTranslations = {
   'blocked.unblockedMessage': 'Этот пользователь был удален из вашего черного списка',
   'settings.gradientUI': 'Градиентный дизайн',
   'profile.avatarSizeLimit': 'Максимальный размер файла: 10МБ',
-  'profile.avatarFormats': 'Поддерживаемые форматы: JPEG, PNG, GIF',
+  'profile.avatarFormats': 'Поддерж��ваемые форматы: JPEG, PNG, GIF',
   'profile.avatarDimensions': 'Рекомендуемый размер: 200x200 to 1000x1000 pixels',
   'profile.bio': 'О себе',
   'profile.bioPlaceholder': 'Расскажите что-нибудь о себе...',
@@ -210,5 +209,16 @@ export const ruTranslations = {
   'pages.notificationsDescription': 'Ваши уведомления',
   'pages.noNotifications': 'У вас пока нет уведомлений',
   'pages.noNotificationsDescription': 'Когда появятся новые уведомления, они будут отображаться здесь',
-  'settings.manualThemeSwitchingDisabled': 'Ручное переключение темы недоступно, когда включена системная тема'
+  'settings.manualThemeSwitchingDisabled': 'Ручное переключение темы недоступно, когда включена системная тема',
+  'book.options': 'Опции',
+  'book.addToLibrary': 'Добавить в библиотеку',
+  'book.read': 'Читать',
+  'book.aboutTitle': 'О произведении',
+  'book.chapters': 'Главы',
+  'book.comments': 'Комментарии',
+  'book.backToHome': 'Вернуться на главную',
+  'book.rating': 'Рейтинг',
+  'book.yourRating': 'Ваша оценка',
+  'book.rateBook': 'Оценить книгу',
+  'book.noRating': 'Нет оценок',
 };

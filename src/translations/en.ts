@@ -1,4 +1,3 @@
-
 export const enTranslations = {
   'common.comingSoon': 'Coming Soon',
   'common.error': 'Error',
@@ -79,6 +78,10 @@ export const enTranslations = {
   'book.chapters': 'Chapters',
   'book.comments': 'Comments',
   'book.backToHome': 'Back to Home',
+  'book.rating': 'Rating',
+  'book.yourRating': 'Your Rating',
+  'book.rateBook': 'Rate Book',
+  'book.noRating': 'No Ratings',
   'common.refreshing': 'Refreshing...',
   'pages.notifications': 'Notifications',
   'pages.notificationsDescription': 'Your notifications',
