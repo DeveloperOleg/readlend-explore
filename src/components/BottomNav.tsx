@@ -64,7 +64,7 @@ const BottomNav: React.FC = () => {
   }, []);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 glass border-t border-border/50 backdrop-blur-lg">
+    <div className="glass border-t border-border/50 backdrop-blur-lg">
       <nav className="container flex items-center justify-between h-14 relative px-0 sm:px-4">
         <div className="flex items-center justify-start flex-1 max-w-[40%]">
           <NavLink 

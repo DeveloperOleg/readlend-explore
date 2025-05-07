@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { Outlet, Link, useNavigate } from 'react-router-dom';
+import React, { useState, useCallback, useEffect } from 'react';
+import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Menu, 
   Moon, 
@@ -9,7 +9,8 @@ import {
   Flame,
   Bell,
   Settings as SettingsIcon,
-  Trophy
+  Trophy,
+  RefreshCw
 } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -17,6 +18,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import BottomNav from './BottomNav';
 import ConnectionStatus from './ConnectionStatus';
+import { toast } from 'sonner';
 import { 
   Sheet, 
   SheetContent, 
@@ -34,6 +36,11 @@ const Layout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [refreshing, setRefreshing] = useState(false);
+  const [startY, setStartY] = useState(0);
+  const [pullDistance, setPullDistance] = useState(0);
+  const pullThreshold = 100; // Minimum pull distance to trigger refresh
 
   if (!isAuthenticated) {
     return <Outlet />;
@@ -53,20 +60,78 @@ const Layout: React.FC = () => {
     setSidebarOpen(false);
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    // Only enable pull to refresh when at the top of the page
+    if (window.scrollY === 0) {
+      setStartY(e.touches[0].clientY);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (startY === 0 || window.scrollY > 0) return;
+    
+    const currentY = e.touches[0].clientY;
+    const distance = currentY - startY;
+    
+    if (distance > 0) {
+      // Prevent default to disable browser's native pull-to-refresh
+      e.preventDefault();
+      setPullDistance(Math.min(distance * 0.5, pullThreshold * 1.5));
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (pullDistance >= pullThreshold) {
+      performRefresh();
+    }
+    
+    setStartY(0);
+    setPullDistance(0);
+  };
+
+  const performRefresh = () => {
+    setRefreshing(true);
+    toast.info(t('common.refreshing'));
+    
+    // Simulate refresh
+    setTimeout(() => {
+      // Reload the current page
+      window.location.reload();
+      setRefreshing(false);
+    }, 1000);
+  };
+
   const sheetWidth = isMobile ? 'w-[280px]' : 'w-[280px] sm:w-[350px]';
   
   // Format display name
   const displayName = user?.firstName || user?.username || 'Пользователь';
 
   return (
-    <div className="relative min-h-screen pb-16 overflow-hidden">
+    <div 
+      className="relative min-h-screen pb-16 overflow-hidden"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      {/* Pull to refresh indicator */}
+      {pullDistance > 0 && (
+        <div 
+          className="fixed top-0 left-0 right-0 flex justify-center items-center bg-background/70 backdrop-blur-sm z-50 transition-all duration-200"
+          style={{ height: `${pullDistance}px` }}
+        >
+          <div className={`transition-all duration-300 ${refreshing ? 'animate-spin' : ''}`}>
+            <RefreshCw size={24} className={pullDistance >= pullThreshold ? 'text-primary' : 'text-muted-foreground'} />
+          </div>
+        </div>
+      )}
+      
       {/* Sidebar/Menu */}
       <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
         <SheetTrigger asChild>
           <Button 
             variant="ghost" 
             size="icon" 
-            className="absolute top-2 left-2 z-50"
+            className="fixed top-2 left-2 z-50"
           >
             <Menu className="h-5 w-5" />
             <span className="sr-only">Open menu</span>
@@ -173,7 +238,7 @@ const Layout: React.FC = () => {
       <Button 
         variant="ghost" 
         size="icon" 
-        className="absolute top-2 right-2 z-50"
+        className="fixed top-2 right-2 z-50"
         onClick={navigateToNotifications}
       >
         <Bell className="h-5 w-5" />
@@ -190,8 +255,10 @@ const Layout: React.FC = () => {
         <Outlet />
       </main>
       
-      {/* Bottom navigation */}
-      <BottomNav />
+      {/* Bottom navigation - fixed to bottom */}
+      <div className="fixed bottom-0 left-0 right-0 z-40">
+        <BottomNav />
+      </div>
     </div>
   );
 };
