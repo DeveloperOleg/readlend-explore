@@ -16,6 +16,15 @@ import Settings from "./pages/Settings";
 import Achievements from "./pages/Achievements";
 import BookReader from "./pages/BookReader";
 
+// Settings Pages
+import AppearanceSettings from "./pages/settings/AppearanceSettings";
+import LanguageSettings from "./pages/settings/LanguageSettings";
+import StorageSettings from "./pages/settings/StorageSettings";
+import PrivacySettings from "./pages/settings/PrivacySettings";
+import BlockedUsers from "./pages/settings/BlockedUsers";
+import NotificationSettings from "./pages/settings/NotificationSettings";
+import AboutApp from "./pages/settings/AboutApp";
+
 // Layouts
 import Layout from "./components/Layout";
 
@@ -34,6 +43,13 @@ const AppRoutes = () => {
             <Route path="search" element={<Search />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="settings/appearance" element={<AppearanceSettings />} />
+            <Route path="settings/language" element={<LanguageSettings />} />
+            <Route path="settings/storage" element={<StorageSettings />} />
+            <Route path="settings/privacy" element={<PrivacySettings />} />
+            <Route path="settings/blocked" element={<BlockedUsers />} />
+            <Route path="settings/notifications" element={<NotificationSettings />} />
+            <Route path="settings/about" element={<AboutApp />} />
             <Route path="achievements" element={<Achievements />} />
             <Route path="book/:bookId" element={<BookReader />} />
           </Route>

@@ -1,38 +1,31 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Palette, Shield, Info, Bell, Ban, Database, Globe } from 'lucide-react';
+import { 
+  ArrowLeft, 
+  Palette, 
+  Shield, 
+  Info, 
+  Bell, 
+  Ban, 
+  Database, 
+  Globe, 
+  ChevronRight 
+} from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
-import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import ThemeSettings from '@/components/ThemeSettings';
-import LanguageSettings from '@/components/LanguageSettings';
-import UserBlocked from '@/components/UserBlocked';
-import StorageSettings from '@/components/StorageSettings';
-import { Switch } from '@/components/ui/switch';
 
 const SettingsPage: React.FC = () => {
   const { t } = useLanguage();
-  const { user, toggleHideSubscriptions, toggleGlobalComments } = useAuth();
   const navigate = useNavigate();
-
-  const handleTogglePrivacy = async (value: boolean) => {
-    if (toggleHideSubscriptions) {
-      toggleHideSubscriptions(value);
-    }
-  };
-
-  const handleToggleComments = async (value: boolean) => {
-    if (toggleGlobalComments) {
-      toggleGlobalComments(value);
-    }
-  };
 
   const goBack = () => {
     navigate(-1);
+  };
+
+  const navigateTo = (path: string) => {
+    navigate(path);
   };
 
   return (
@@ -45,159 +38,125 @@ const SettingsPage: React.FC = () => {
       </div>
 
       <ScrollArea className="h-[calc(100vh-130px)]">
-        <div className="pb-4">
-          <Tabs defaultValue="appearance" className="w-full">
-            {/* Scrollable tabs container */}
-            <div className="overflow-x-auto pb-2">
-              <TabsList className="mb-2 justify-start h-auto flex w-full flex-col gap-2">
-                <TabsTrigger value="appearance" className="flex items-center gap-2 p-3 rounded-lg border w-full">
-                  <Palette className="h-5 w-5 text-primary" />
-                  <div className="flex-1 text-left">
-                    <h3 className="font-medium">{t('settings.appearance')}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {t('settings.appearanceDesc')}
-                    </p>
-                  </div>
-                </TabsTrigger>
-                
-                <TabsTrigger value="language" className="flex items-center gap-2 p-3 rounded-lg border w-full">
-                  <Globe className="h-5 w-5 text-primary" />
-                  <div className="flex-1 text-left">
-                    <h3 className="font-medium">{t('sidebar.language')}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {t('settings.appearanceDesc')}
-                    </p>
-                  </div>
-                </TabsTrigger>
-
-                <TabsTrigger value="storage" className="flex items-center gap-2 p-3 rounded-lg border w-full">
-                  <Database className="h-5 w-5 text-primary" />
-                  <div className="flex-1 text-left">
-                    <h3 className="font-medium">{t('settings.storage')}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {t('settings.storageDesc')}
-                    </p>
-                  </div>
-                </TabsTrigger>
-
-                {user && (
-                  <TabsTrigger value="privacy" className="flex items-center gap-2 p-3 rounded-lg border w-full">
-                    <Shield className="h-5 w-5 text-primary" />
-                    <div className="flex-1 text-left">
-                      <h3 className="font-medium">{t('profile.privacy')}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {t('profile.privacyDesc')}
-                      </p>
-                    </div>
-                  </TabsTrigger>
-                )}
-
-                <TabsTrigger value="blocked" className="flex items-center gap-2 p-3 rounded-lg border w-full">
-                  <Ban className="h-5 w-5 text-primary" />
-                  <div className="flex-1 text-left">
-                    <h3 className="font-medium">{t('blocked.title')}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {t('blocked.desc')}
-                    </p>
-                  </div>
-                </TabsTrigger>
-
-                <TabsTrigger value="notifications" className="flex items-center gap-2 p-3 rounded-lg border w-full">
-                  <Bell className="h-5 w-5 text-primary" />
-                  <div className="flex-1 text-left">
-                    <h3 className="font-medium">{t('settings.notifications')}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {t('settings.notificationsDesc')}
-                    </p>
-                  </div>
-                </TabsTrigger>
-
-                <TabsTrigger value="about" className="flex items-center gap-2 p-3 rounded-lg border w-full">
-                  <Info className="h-5 w-5 text-primary" />
-                  <div className="flex-1 text-left">
-                    <h3 className="font-medium">{t('settings.about')}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {t('settings.aboutDesc')}
-                    </p>
-                  </div>
-                </TabsTrigger>
-              </TabsList>
+        <div className="pb-4 space-y-2">
+          <Button 
+            variant="ghost" 
+            className="flex items-center justify-between w-full p-3 h-auto rounded-lg border" 
+            onClick={() => navigateTo('/settings/appearance')}
+          >
+            <div className="flex items-center gap-2">
+              <Palette className="h-5 w-5 text-primary" />
+              <div className="flex-1 text-left">
+                <h3 className="font-medium">{t('settings.appearance')}</h3>
+                <p className="text-xs text-muted-foreground">
+                  {t('settings.appearanceDesc')}
+                </p>
+              </div>
             </div>
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          </Button>
 
-            <div className="mt-4">
-              <TabsContent value="appearance">
-                <ThemeSettings />
-              </TabsContent>
-              
-              <TabsContent value="language">
-                <LanguageSettings />
-              </TabsContent>
-
-              <TabsContent value="storage">
-                <StorageSettings />
-              </TabsContent>
-
-              {user && (
-                <TabsContent value="privacy">
-                  <div className="space-y-2">
-                    <div className="rounded-lg border p-3">
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-0.5">
-                          <h3 className="text-sm font-medium">{t('profile.hideSubscriptions')}</h3>
-                          <p className="text-xs text-muted-foreground">
-                            {t('profile.hideSubscriptionsDescription')}
-                          </p>
-                        </div>
-                        <Switch
-                          checked={user?.privacy?.hideSubscriptions}
-                          onCheckedChange={handleTogglePrivacy}
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="rounded-lg border p-3">
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-0.5">
-                          <h3 className="text-sm font-medium">{t('profile.allowComments')}</h3>
-                          <p className="text-xs text-muted-foreground">
-                            {t('profile.allowCommentsDescription')}
-                          </p>
-                        </div>
-                        <Switch
-                          checked={user?.privacy?.commentSettings?.global}
-                          onCheckedChange={handleToggleComments}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
-              )}
-
-              <TabsContent value="blocked">
-                <UserBlocked />
-              </TabsContent>
-
-              <TabsContent value="notifications">
-                <div className="rounded-lg border p-3">
-                  <p className="text-sm text-muted-foreground">
-                    {t('settings.notificationsFeature')}
-                  </p>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="about">
-                <div className="rounded-lg border p-3">
-                  <h3 className="font-medium text-base mb-2">
-                    {t('settings.version')}
-                  </h3>
-                  <div className="text-sm text-muted-foreground">
-                    <p className="font-medium">1.0.0</p>
-                    <p className="italic mt-1">{t('settings.earlyVersion')}</p>
-                  </div>
-                </div>
-              </TabsContent>
+          <Button 
+            variant="ghost" 
+            className="flex items-center justify-between w-full p-3 h-auto rounded-lg border" 
+            onClick={() => navigateTo('/settings/language')}
+          >
+            <div className="flex items-center gap-2">
+              <Globe className="h-5 w-5 text-primary" />
+              <div className="flex-1 text-left">
+                <h3 className="font-medium">{t('sidebar.language')}</h3>
+                <p className="text-xs text-muted-foreground">
+                  {t('settings.appearanceDesc')}
+                </p>
+              </div>
             </div>
-          </Tabs>
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          </Button>
+
+          <Button 
+            variant="ghost" 
+            className="flex items-center justify-between w-full p-3 h-auto rounded-lg border" 
+            onClick={() => navigateTo('/settings/storage')}
+          >
+            <div className="flex items-center gap-2">
+              <Database className="h-5 w-5 text-primary" />
+              <div className="flex-1 text-left">
+                <h3 className="font-medium">{t('settings.storage')}</h3>
+                <p className="text-xs text-muted-foreground">
+                  {t('settings.storageDesc')}
+                </p>
+              </div>
+            </div>
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          </Button>
+
+          <Button 
+            variant="ghost" 
+            className="flex items-center justify-between w-full p-3 h-auto rounded-lg border" 
+            onClick={() => navigateTo('/settings/privacy')}
+          >
+            <div className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-primary" />
+              <div className="flex-1 text-left">
+                <h3 className="font-medium">{t('profile.privacy')}</h3>
+                <p className="text-xs text-muted-foreground">
+                  {t('profile.privacyDesc')}
+                </p>
+              </div>
+            </div>
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          </Button>
+
+          <Button 
+            variant="ghost" 
+            className="flex items-center justify-between w-full p-3 h-auto rounded-lg border" 
+            onClick={() => navigateTo('/settings/blocked')}
+          >
+            <div className="flex items-center gap-2">
+              <Ban className="h-5 w-5 text-primary" />
+              <div className="flex-1 text-left">
+                <h3 className="font-medium">{t('blocked.title')}</h3>
+                <p className="text-xs text-muted-foreground">
+                  {t('blocked.desc')}
+                </p>
+              </div>
+            </div>
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          </Button>
+
+          <Button 
+            variant="ghost" 
+            className="flex items-center justify-between w-full p-3 h-auto rounded-lg border" 
+            onClick={() => navigateTo('/settings/notifications')}
+          >
+            <div className="flex items-center gap-2">
+              <Bell className="h-5 w-5 text-primary" />
+              <div className="flex-1 text-left">
+                <h3 className="font-medium">{t('settings.notifications')}</h3>
+                <p className="text-xs text-muted-foreground">
+                  {t('settings.notificationsDesc')}
+                </p>
+              </div>
+            </div>
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          </Button>
+
+          <Button 
+            variant="ghost" 
+            className="flex items-center justify-between w-full p-3 h-auto rounded-lg border" 
+            onClick={() => navigateTo('/settings/about')}
+          >
+            <div className="flex items-center gap-2">
+              <Info className="h-5 w-5 text-primary" />
+              <div className="flex-1 text-left">
+                <h3 className="font-medium">{t('settings.about')}</h3>
+                <p className="text-xs text-muted-foreground">
+                  {t('settings.aboutDesc')}
+                </p>
+              </div>
+            </div>
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          </Button>
         </div>
       </ScrollArea>
     </div>
