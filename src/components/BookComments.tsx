@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
@@ -28,7 +27,7 @@ const initialComments: Comment[] = [
     userId: 'user1',
     username: 'reader123',
     avatarUrl: null,
-    content: 'Отличная книга! Очень понравилась история главного героя.',
+    content: 'Отличн��я книга! Очень понравилась история главного героя.',
     createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
   },
   {

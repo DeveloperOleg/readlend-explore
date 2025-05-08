@@ -110,5 +110,14 @@ export const enTranslations = {
   'settings.about': 'About',
   'settings.aboutDesc': 'Version and developer information',
   'settings.darkMode': 'Dark Mode',
-  'settings.manualThemeSwitchingDisabled': 'Manual theme switching is not available when system theme is enabled.'
+  'settings.manualThemeSwitchingDisabled': 'Manual theme switching is not available when system theme is enabled.',
+  'comments.title': 'Comments',
+  'comments.placeholder': 'Write a comment...',
+  'comments.submit': 'Submit',
+  'comments.sending': 'Sending...',
+  'comments.noComments': 'No comments yet. Be the first to comment!',
+  'comments.added': 'Comment Added',
+  'comments.addedMessage': 'Your comment has been successfully added',
+  'comments.disabled': 'Comments Disabled',
+  'comments.disabledMessage': 'The author has disabled comments for this book'
 };
