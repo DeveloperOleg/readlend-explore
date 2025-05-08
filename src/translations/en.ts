@@ -75,7 +75,7 @@ export const enTranslations = {
   'book.options': 'Options',
   'book.addToLibrary': 'Add to Library',
   'book.read': 'Read',
-  'book.aboutTitle': 'About Title',
+  'book.aboutTitle': 'About',
   'book.chapters': 'Chapters',
   'book.comments': 'Comments',
   'book.backToHome': 'Back to Home',
@@ -123,6 +123,10 @@ export const enTranslations = {
   'comments.disabledMessage': 'The author has disabled comments for this book',
   'comments.like': 'Like',
   'comments.dislike': 'Dislike',
-  'comments.heart': 'Heart'
+  'comments.heart': 'Heart',
+  'greeting.morning': 'Good morning',
+  'greeting.afternoon': 'Good afternoon',
+  'greeting.evening': 'Good evening',
+  'greeting.night': 'Good night',
+  'home.readingNest': 'Welcome to your reading nest'
 };
-

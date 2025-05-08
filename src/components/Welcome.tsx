@@ -25,11 +25,11 @@ const Welcome: React.FC = () => {
   }, [t]);
 
   return (
-    <div className="py-4 mb-6 animate-slide-in">
-      <h1 className="text-3xl font-bold tracking-tight">
+    <div className="py-4 mb-6 animate-slide-in pl-10 pr-6 md:px-4">
+      <h1 className="text-2xl md:text-3xl font-bold tracking-tight truncate">
         {greeting}, {user?.username || ''}
       </h1>
-      <p className="mt-2 text-muted-foreground">
+      <p className="mt-2 text-muted-foreground text-sm md:text-base">
         {t('home.readingNest')}
       </p>
     </div>

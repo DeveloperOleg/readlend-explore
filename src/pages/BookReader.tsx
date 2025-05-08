@@ -50,7 +50,7 @@ const BookReader: React.FC = () => {
         return <BookAbout book={book} />;
       case 'chapters':
         return (
-          <ScrollArea className="flex-1 px-4">
+          <ScrollArea className="flex-1 px-2 md:px-4">
             <div className="max-w-prose mx-auto py-6">
               {book.content || 'Book content will be here...'}
             </div>
@@ -67,11 +67,11 @@ const BookReader: React.FC = () => {
     <div className="flex flex-col h-full pb-20 animate-fade-in">
       {/* Top panel */}
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b">
-        <div className="flex items-center justify-between p-4">
+        <div className="flex items-center justify-between p-3 md:p-4">
           <Button variant="ghost" size="icon" onClick={handleBack}>
             <ChevronLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-xl font-semibold line-clamp-1">{book.title}</h1>
+          <h1 className="text-lg md:text-xl font-semibold line-clamp-1 max-w-[60%]">{book.title}</h1>
           <Button variant="ghost" size="icon">
             <span className="sr-only">{t('book.options')}</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
@@ -85,8 +85,8 @@ const BookReader: React.FC = () => {
       
       {/* Preface with book cover - show only if chapters are selected */}
       {activeTab === 'chapters' && (
-        <div className="flex flex-col items-center p-6 mb-4 border-b">
-          <div className="w-64 h-80 relative mb-4">
+        <div className="flex flex-col items-center p-4 md:p-6 mb-4 border-b">
+          <div className="w-56 h-72 md:w-64 md:h-80 relative mb-4">
             {book.coverUrl ? (
               <img 
                 src={book.coverUrl} 
@@ -107,25 +107,25 @@ const BookReader: React.FC = () => {
             </div>
           </div>
           
-          <h2 className="text-2xl font-bold mt-4">{book.title}</h2>
+          <h2 className="text-xl md:text-2xl font-bold mt-3 md:mt-4 text-center px-2">{book.title}</h2>
           <p className="text-muted-foreground">{book.author}</p>
           
-          <div className="w-full mt-6 flex justify-between">
-            <Button variant="outline" className="flex-1 mr-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 mr-2">
+          <div className="w-full mt-5 md:mt-6 flex justify-between px-2">
+            <Button variant="outline" className="flex-1 mr-2 text-xs md:text-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 md:h-5 md:w-5 mr-1 md:mr-2">
                 <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
                 <polyline points="17 21 17 13 7 13 7 21" />
                 <polyline points="7 3 7 8 15 8" />
               </svg>
-              {t('book.addToLibrary')}
+              <span className="truncate">{t('book.addToLibrary')}</span>
             </Button>
-            <Button className="flex-1 ml-2 bg-orange-500 hover:bg-orange-600">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 mr-2">
+            <Button className="flex-1 ml-2 bg-orange-500 hover:bg-orange-600 text-xs md:text-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 md:h-5 md:w-5 mr-1 md:mr-2">
                 <path d="M12 20V10" />
                 <path d="M18 20V4" />
                 <path d="M6 20v-6" />
               </svg>
-              {t('book.read')} 0/{totalPages}
+              <span className="truncate">{t('book.read')} 0/{totalPages}</span>
             </Button>
           </div>
         </div>
@@ -133,7 +133,7 @@ const BookReader: React.FC = () => {
       
       {/* Navigation tabs */}
       <div className="border-b">
-        <div className="w-full flex justify-between text-sm text-center">
+        <div className="w-full flex justify-between text-xs md:text-sm text-center">
           <button 
             className={`flex-1 py-3 ${activeTab === 'about' ? 'font-medium border-b-2 border-primary' : ''}`}
             onClick={() => handleTabChange('about')}
@@ -144,7 +144,7 @@ const BookReader: React.FC = () => {
             className={`flex-1 py-3 ${activeTab === 'chapters' ? 'font-medium border-b-2 border-primary' : ''}`}
             onClick={() => handleTabChange('chapters')}
           >
-            {t('book.chapters')} {totalPages}
+            <span className="whitespace-nowrap">{t('book.chapters')} {totalPages}</span>
           </button>
           <button 
             className={`flex-1 py-3 ${activeTab === 'comments' ? 'font-medium border-b-2 border-primary' : ''}`}
@@ -156,7 +156,7 @@ const BookReader: React.FC = () => {
       </div>
       
       {/* Content depending on the selected tab */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto px-2 md:px-0">
         {renderContent()}
       </div>
     </div>

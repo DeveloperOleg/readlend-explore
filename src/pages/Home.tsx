@@ -18,32 +18,34 @@ const Home: React.FC = () => {
 
   return (
     <ScrollArea className="h-full w-full">
-      <div className="pb-20">
+      <div className="pb-20 px-2">
         <Welcome />
         
-        <BookCategory 
-          title="Новинки" 
-          books={newBooks}
-          viewAllLink="/top-reads" 
-        />
-        
-        <BookCategory 
-          title="Вам может понравиться" 
-          books={recommendedBooks}
-          viewAllLink="/recommendations" 
-        />
-        
-        <BookCategory 
-          title="Комиксы: с чего начать" 
-          books={comics}
-          viewAllLink="/comics" 
-        />
-        
-        <BookCategory 
-          title="Давайте уже почитаем" 
-          books={mayBooks}
-          viewAllLink="/featured" 
-        />
+        <div className="space-y-6">
+          <BookCategory 
+            title="Новинки" 
+            books={newBooks}
+            viewAllLink="/top-reads" 
+          />
+          
+          <BookCategory 
+            title="Вам может понравиться" 
+            books={recommendedBooks}
+            viewAllLink="/recommendations" 
+          />
+          
+          <BookCategory 
+            title="Комиксы: с чего начать" 
+            books={comics}
+            viewAllLink="/comics" 
+          />
+          
+          <BookCategory 
+            title="Давайте уже почитаем" 
+            books={mayBooks}
+            viewAllLink="/featured" 
+          />
+        </div>
       </div>
     </ScrollArea>
   );
