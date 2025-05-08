@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
@@ -7,9 +8,10 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { MessageSquareOff } from 'lucide-react';
+import { MessageSquareOff, ThumbsUp, ThumbsDown, Heart } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { Toggle } from '@/components/ui/toggle';
 
 interface Comment {
   id: string;
@@ -18,6 +20,10 @@ interface Comment {
   avatarUrl: string | null;
   content: string;
   createdAt: Date;
+  likes: number;
+  dislikes: number;
+  hearts: number;
+  userReaction?: 'like' | 'dislike' | 'heart' | null;
 }
 
 // Mock comments data
@@ -27,8 +33,11 @@ const initialComments: Comment[] = [
     userId: 'user1',
     username: 'reader123',
     avatarUrl: null,
-    content: 'Отличн��я книга! Очень понравилась история главного героя.',
+    content: 'Отличная книга! Очень понравилась история главного героя.',
     createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
+    likes: 5,
+    dislikes: 1,
+    hearts: 0,
   },
   {
     id: '2',
@@ -37,6 +46,9 @@ const initialComments: Comment[] = [
     avatarUrl: null,
     content: 'Интересный сюжет, но концовка могла быть лучше.',
     createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
+    likes: 2,
+    dislikes: 0,
+    hearts: 1,
   },
 ];
 
@@ -53,6 +65,7 @@ const BookComments: React.FC<BookCommentsProps> = ({ bookId, authorId }) => {
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [commentsEnabled, setCommentsEnabled] = useState(true);
+  const isBookAuthor = user?.id === authorId;
 
   useEffect(() => {
     // Check if comments are enabled for this book
@@ -76,6 +89,9 @@ const BookComments: React.FC<BookCommentsProps> = ({ bookId, authorId }) => {
         avatarUrl: user.avatarUrl || null,
         content: newComment.trim(),
         createdAt: new Date(),
+        likes: 0,
+        dislikes: 0,
+        hearts: 0,
       };
       
       setComments([comment, ...comments]);
@@ -87,6 +103,51 @@ const BookComments: React.FC<BookCommentsProps> = ({ bookId, authorId }) => {
         description: t('comments.addedMessage'),
       });
     }, 500);
+  };
+
+  const handleReaction = (commentId: string, reactionType: 'like' | 'dislike' | 'heart') => {
+    if (!user) return;
+    
+    setComments(currentComments => 
+      currentComments.map(comment => {
+        if (comment.id === commentId) {
+          // If already reacted the same way, remove reaction
+          if (comment.userReaction === reactionType) {
+            const updatedComment = { 
+              ...comment, 
+              userReaction: null 
+            };
+            
+            if (reactionType === 'like') updatedComment.likes = Math.max(0, comment.likes - 1);
+            if (reactionType === 'dislike') updatedComment.dislikes = Math.max(0, comment.dislikes - 1);
+            if (reactionType === 'heart') updatedComment.hearts = Math.max(0, comment.hearts - 1);
+            
+            return updatedComment;
+          }
+          
+          // If changing reaction, update accordingly
+          const updatedComment = { 
+            ...comment, 
+            userReaction: reactionType 
+          };
+          
+          // Remove previous reaction count
+          if (comment.userReaction === 'like') updatedComment.likes = Math.max(0, comment.likes - 1);
+          if (comment.userReaction === 'dislike') updatedComment.dislikes = Math.max(0, comment.dislikes - 1);
+          if (comment.userReaction === 'heart') updatedComment.hearts = Math.max(0, comment.hearts - 1);
+          
+          // Add new reaction count
+          if (reactionType === 'like') updatedComment.likes += 1;
+          if (reactionType === 'dislike') updatedComment.dislikes += 1;
+          if (reactionType === 'heart') updatedComment.hearts += 1;
+          
+          return updatedComment;
+        }
+        return comment;
+      })
+    );
+    
+    // Could add toast notification if needed
   };
 
   const formatTime = (date: Date) => {
@@ -171,7 +232,59 @@ const BookComments: React.FC<BookCommentsProps> = ({ bookId, authorId }) => {
                       <p className="font-medium">{comment.username}</p>
                       <p className="text-xs text-muted-foreground">{formatTime(comment.createdAt)}</p>
                     </div>
-                    <p className="text-sm">{comment.content}</p>
+                    <p className="text-sm mb-3">{comment.content}</p>
+                    
+                    {/* Comment reactions */}
+                    {user && (
+                      <div className="flex items-center gap-2 mt-2">
+                        {/* Like button */}
+                        <div className="flex items-center">
+                          <Toggle
+                            size="sm"
+                            pressed={comment.userReaction === 'like'}
+                            onPressedChange={() => handleReaction(comment.id, 'like')}
+                            aria-label={t('comments.like')}
+                          >
+                            <ThumbsUp className={`h-4 w-4 ${comment.userReaction === 'like' ? 'text-blue-500' : ''}`} />
+                          </Toggle>
+                          {comment.likes > 0 && (
+                            <span className="text-xs text-muted-foreground ml-1">{comment.likes}</span>
+                          )}
+                        </div>
+                        
+                        {/* Dislike button */}
+                        <div className="flex items-center">
+                          <Toggle
+                            size="sm"
+                            pressed={comment.userReaction === 'dislike'}
+                            onPressedChange={() => handleReaction(comment.id, 'dislike')}
+                            aria-label={t('comments.dislike')}
+                          >
+                            <ThumbsDown className={`h-4 w-4 ${comment.userReaction === 'dislike' ? 'text-red-500' : ''}`} />
+                          </Toggle>
+                          {comment.dislikes > 0 && (
+                            <span className="text-xs text-muted-foreground ml-1">{comment.dislikes}</span>
+                          )}
+                        </div>
+                        
+                        {/* Heart button (only for book author) */}
+                        {isBookAuthor && (
+                          <div className="flex items-center">
+                            <Toggle
+                              size="sm"
+                              pressed={comment.userReaction === 'heart'}
+                              onPressedChange={() => handleReaction(comment.id, 'heart')}
+                              aria-label={t('comments.heart')}
+                            >
+                              <Heart className={`h-4 w-4 ${comment.userReaction === 'heart' ? 'text-rose-500' : ''}`} />
+                            </Toggle>
+                            {comment.hearts > 0 && (
+                              <span className="text-xs text-muted-foreground ml-1">{comment.hearts}</span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               </CardContent>

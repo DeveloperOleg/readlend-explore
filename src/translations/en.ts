@@ -1,3 +1,4 @@
+
 export const enTranslations = {
   'common.comingSoon': 'Coming Soon',
   'common.error': 'Error',
@@ -119,5 +120,9 @@ export const enTranslations = {
   'comments.added': 'Comment Added',
   'comments.addedMessage': 'Your comment has been successfully added',
   'comments.disabled': 'Comments Disabled',
-  'comments.disabledMessage': 'The author has disabled comments for this book'
+  'comments.disabledMessage': 'The author has disabled comments for this book',
+  'comments.like': 'Like',
+  'comments.dislike': 'Dislike',
+  'comments.heart': 'Heart'
 };
+
