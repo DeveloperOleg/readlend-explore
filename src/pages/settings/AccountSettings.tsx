@@ -53,10 +53,10 @@ const AccountSettings: React.FC = () => {
   const getRegistrationDate = () => {
     // Для тестового аккаунта возвращаем фиксированную дату
     if (user?.isTestAccount) {
-      return '01.01.2024';
+      return '22.03.2025';
     }
     // Для реальных аккаунтов можно извлечь дату из ID или использовать другую логику
-    return '01.01.2024';
+    return '22.03.2025';
   };
 
   return (
