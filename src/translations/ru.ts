@@ -1,4 +1,3 @@
-
 // Russian translations
 export const ruTranslations = {
   'greeting.morning': 'Доброе утро',
@@ -166,6 +165,19 @@ export const ruTranslations = {
   'comments.like': 'Нравится',
   'comments.dislike': 'Не нравится',
   'comments.heart': 'В избранное',
+  'comments.edit': 'Редактировать',
+  'comments.delete': 'Удалить',
+  'comments.report': 'Пожаловаться',
+  'comments.save': 'Сохранить',
+  'comments.edited': 'Комментарий изменён',
+  'comments.editedMessage': 'Ваш комментарий был успешно обновлён',
+  'comments.deleted': 'Комментарий удалён',
+  'comments.deletedMessage': 'Ваш комментарий был удалён',
+  'comments.reported': 'Жалоба отправлена',
+  'comments.reportedMessage': 'Спасибо за жалобу. Мы рассмотрим её в ближайшее время.',
+  'comments.deleteConfirm': 'Удалить комментарий',
+  'comments.deleteConfirmMessage': 'Вы уверены, что хотите удалить этот комментарий? Это действие нельзя отменить.',
+  'common.cancel': 'Отмена',
   'subscriptions.title': 'Мои подписки',
   'subscriptions.noSubscriptions': 'Нет подписок',
   'subscriptions.noSubscriptionsDescription': 'Вы еще не подписаны ни на одного автора',

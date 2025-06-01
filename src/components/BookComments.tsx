@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
@@ -8,10 +7,27 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { MessageSquareOff, ThumbsUp, ThumbsDown, Heart } from 'lucide-react';
+import { MessageSquareOff, ThumbsUp, ThumbsDown, Heart, Edit, Trash2, Flag, MoreHorizontal } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Toggle } from '@/components/ui/toggle';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 interface Comment {
   id: string;
@@ -65,6 +81,8 @@ const BookComments: React.FC<BookCommentsProps> = ({ bookId, authorId }) => {
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [commentsEnabled, setCommentsEnabled] = useState(true);
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
+  const [editingContent, setEditingContent] = useState('');
   const isBookAuthor = user?.id === authorId;
 
   useEffect(() => {
@@ -150,6 +168,58 @@ const BookComments: React.FC<BookCommentsProps> = ({ bookId, authorId }) => {
     // Could add toast notification if needed
   };
 
+  const handleEditComment = (commentId: string) => {
+    const comment = comments.find(c => c.id === commentId);
+    if (comment) {
+      setEditingCommentId(commentId);
+      setEditingContent(comment.content);
+    }
+  };
+
+  const handleSaveEdit = () => {
+    if (!editingContent.trim()) return;
+    
+    setComments(currentComments =>
+      currentComments.map(comment =>
+        comment.id === editingCommentId
+          ? { ...comment, content: editingContent.trim() }
+          : comment
+      )
+    );
+    
+    setEditingCommentId(null);
+    setEditingContent('');
+    
+    toast({
+      title: t('comments.edited'),
+      description: t('comments.editedMessage'),
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingCommentId(null);
+    setEditingContent('');
+  };
+
+  const handleDeleteComment = (commentId: string) => {
+    setComments(currentComments =>
+      currentComments.filter(comment => comment.id !== commentId)
+    );
+    
+    toast({
+      title: t('comments.deleted'),
+      description: t('comments.deletedMessage'),
+    });
+  };
+
+  const handleReportComment = (commentId: string) => {
+    // Simulate reporting
+    toast({
+      title: t('comments.reported'),
+      description: t('comments.reportedMessage'),
+    });
+  };
+
   const formatTime = (date: Date) => {
     return formatDistanceToNow(date, { 
       addSuffix: true,
@@ -230,12 +300,86 @@ const BookComments: React.FC<BookCommentsProps> = ({ bookId, authorId }) => {
                   <div className="flex-1">
                     <div className="flex justify-between items-center mb-1">
                       <p className="font-medium">{comment.username}</p>
-                      <p className="text-xs text-muted-foreground">{formatTime(comment.createdAt)}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs text-muted-foreground">{formatTime(comment.createdAt)}</p>
+                        
+                        {/* Comment options menu */}
+                        {user && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              {/* Edit and delete for own comments */}
+                              {user.id === comment.userId && (
+                                <>
+                                  <DropdownMenuItem onClick={() => handleEditComment(comment.id)}>
+                                    <Edit className="h-4 w-4 mr-2" />
+                                    {t('comments.edit')}
+                                  </DropdownMenuItem>
+                                  <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                        <Trash2 className="h-4 w-4 mr-2" />
+                                        {t('comments.delete')}
+                                      </DropdownMenuItem>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>{t('comments.deleteConfirm')}</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                          {t('comments.deleteConfirmMessage')}
+                                        </AlertDialogDescription>
+                                      </AlertDialogHeader>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+                                        <AlertDialogAction onClick={() => handleDeleteComment(comment.id)}>
+                                          {t('comments.delete')}
+                                        </AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
+                                </>
+                              )}
+                              
+                              {/* Report for other users' comments */}
+                              {user.id !== comment.userId && (
+                                <DropdownMenuItem onClick={() => handleReportComment(comment.id)}>
+                                  <Flag className="h-4 w-4 mr-2" />
+                                  {t('comments.report')}
+                                </DropdownMenuItem>
+                              )}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
+                      </div>
                     </div>
-                    <p className="text-sm mb-3">{comment.content}</p>
                     
-                    {/* Comment reactions */}
-                    {user && (
+                    {/* Comment content or edit form */}
+                    {editingCommentId === comment.id ? (
+                      <div className="space-y-3">
+                        <Textarea
+                          value={editingContent}
+                          onChange={(e) => setEditingContent(e.target.value)}
+                          className="min-h-20"
+                        />
+                        <div className="flex gap-2">
+                          <Button size="sm" onClick={handleSaveEdit}>
+                            {t('comments.save')}
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={handleCancelEdit}>
+                            {t('common.cancel')}
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-sm mb-3">{comment.content}</p>
+                    )}
+                    
+                    {/* Comment reactions - only show when not editing */}
+                    {user && editingCommentId !== comment.id && (
                       <div className="flex items-center gap-2 mt-2">
                         {/* Like button */}
                         <div className="flex items-center">
