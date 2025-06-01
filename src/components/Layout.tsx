@@ -106,6 +106,9 @@ const Layout: React.FC = () => {
   // Format display name
   const displayName = user?.firstName || user?.username || 'Пользователь';
 
+  // Check if we're on a settings page
+  const isSettingsPage = location.pathname.startsWith('/settings');
+
   return (
     <div 
       className="relative min-h-screen pb-16 overflow-hidden"
@@ -125,125 +128,129 @@ const Layout: React.FC = () => {
         </div>
       )}
       
-      {/* Sidebar/Menu */}
-      <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-        <SheetTrigger asChild>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="fixed top-2 left-2 z-50"
-          >
-            <Menu className="h-5 w-5" />
-            <span className="sr-only">Open menu</span>
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className={`${sheetWidth} bg-sidebar backdrop-blur-lg border-sidebar-border`}>
-          <div className="flex flex-col h-full text-sidebar-foreground">
-            {/* User profile section */}
-            <div className="py-6 px-4">
-              <div className="flex items-center justify-between">
-                <SheetClose asChild>
-                  <Link to="/profile" className="flex items-center gap-4 hover:bg-sidebar-accent/10 rounded-lg transition-colors">
-                    <Avatar className="h-14 w-14 border-2 border-sidebar-accent">
-                      <AvatarImage src={user?.avatarUrl} alt={displayName} />
-                      <AvatarFallback className="text-xl">
-                        {displayName.charAt(0).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col">
-                      <h2 className="text-xl font-semibold tracking-tight">
-                        {displayName}
-                      </h2>
-                      <span className="text-sm text-muted-foreground">
-                        {user?.username ? `@${user.username}` : '@username'}
-                      </span>
-                    </div>
-                  </Link>
-                </SheetClose>
+      {/* Sidebar/Menu - hidden on settings pages */}
+      {!isSettingsPage && (
+        <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+          <SheetTrigger asChild>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="fixed top-2 left-2 z-50"
+            >
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className={`${sheetWidth} bg-sidebar backdrop-blur-lg border-sidebar-border`}>
+            <div className="flex flex-col h-full text-sidebar-foreground">
+              {/* User profile section */}
+              <div className="py-6 px-4">
+                <div className="flex items-center justify-between">
+                  <SheetClose asChild>
+                    <Link to="/profile" className="flex items-center gap-4 hover:bg-sidebar-accent/10 rounded-lg transition-colors">
+                      <Avatar className="h-14 w-14 border-2 border-sidebar-accent">
+                        <AvatarImage src={user?.avatarUrl} alt={displayName} />
+                        <AvatarFallback className="text-xl">
+                          {displayName.charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <h2 className="text-xl font-semibold tracking-tight">
+                          {displayName}
+                        </h2>
+                        <span className="text-sm text-muted-foreground">
+                          {user?.username ? `@${user.username}` : '@username'}
+                        </span>
+                      </div>
+                    </Link>
+                  </SheetClose>
+                  
+                  {/* Theme Toggle Button */}
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={toggleBaseTheme}
+                    className="rounded-full h-10 w-10 flex items-center justify-center ml-4"
+                  >
+                    {baseTheme === 'dark' ? 
+                      <Moon className="h-5 w-5" /> : 
+                      <Sun className="h-5 w-5" />
+                    }
+                  </Button>
+                </div>
+              </div>
+              
+              <Separator className="bg-sidebar-border" />
+              
+              <div className="flex-1 py-4 space-y-5">
+                {/* Top Reads link */}
+                <div className="flex items-center px-4">
+                  <SheetClose asChild>
+                    <Link 
+                      to="/top-reads" 
+                      className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
+                    >
+                      <Flame className="h-5 w-5" />
+                      <span>{t('nav.topReads')}</span>
+                    </Link>
+                  </SheetClose>
+                </div>
                 
-                {/* Theme Toggle Button */}
+                {/* Achievements link */}
+                <div className="flex items-center px-4">
+                  <SheetClose asChild>
+                    <Link 
+                      to="/achievements" 
+                      className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
+                    >
+                      <Trophy className="h-5 w-5" />
+                      <span>{t('pages.achievements')}</span>
+                    </Link>
+                  </SheetClose>
+                </div>
+                
+                {/* Settings button */}
+                <div className="flex items-center px-4">
+                  <button
+                    onClick={navigateToSettings}
+                    className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
+                  >
+                    <SettingsIcon className="h-5 w-5" />
+                    <span>{t('sidebar.settings')}</span>
+                  </button>
+                </div>
+              </div>
+              
+              <Separator className="bg-sidebar-border" />
+              
+              {/* Logout button */}
+              <SheetClose asChild>
                 <Button 
                   variant="ghost" 
-                  size="icon" 
-                  onClick={toggleBaseTheme}
-                  className="rounded-full h-10 w-10 flex items-center justify-center ml-4"
+                  className="flex items-center gap-2 justify-start py-4 px-4 w-full hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-none"
+                  onClick={handleLogout}
                 >
-                  {baseTheme === 'dark' ? 
-                    <Moon className="h-5 w-5" /> : 
-                    <Sun className="h-5 w-5" />
-                  }
+                  <LogOut className="h-5 w-5" />
+                  <span>{t('sidebar.logout')}</span>
                 </Button>
-              </div>
+              </SheetClose>
             </div>
-            
-            <Separator className="bg-sidebar-border" />
-            
-            <div className="flex-1 py-4 space-y-5">
-              {/* Top Reads link */}
-              <div className="flex items-center px-4">
-                <SheetClose asChild>
-                  <Link 
-                    to="/top-reads" 
-                    className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
-                  >
-                    <Flame className="h-5 w-5" />
-                    <span>{t('nav.topReads')}</span>
-                  </Link>
-                </SheetClose>
-              </div>
-              
-              {/* Achievements link */}
-              <div className="flex items-center px-4">
-                <SheetClose asChild>
-                  <Link 
-                    to="/achievements" 
-                    className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
-                  >
-                    <Trophy className="h-5 w-5" />
-                    <span>{t('pages.achievements')}</span>
-                  </Link>
-                </SheetClose>
-              </div>
-              
-              {/* Settings button */}
-              <div className="flex items-center px-4">
-                <button
-                  onClick={navigateToSettings}
-                  className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
-                >
-                  <SettingsIcon className="h-5 w-5" />
-                  <span>{t('sidebar.settings')}</span>
-                </button>
-              </div>
-            </div>
-            
-            <Separator className="bg-sidebar-border" />
-            
-            {/* Logout button */}
-            <SheetClose asChild>
-              <Button 
-                variant="ghost" 
-                className="flex items-center gap-2 justify-start py-4 px-4 w-full hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-none"
-                onClick={handleLogout}
-              >
-                <LogOut className="h-5 w-5" />
-                <span>{t('sidebar.logout')}</span>
-              </Button>
-            </SheetClose>
-          </div>
-        </SheetContent>
-      </Sheet>
+          </SheetContent>
+        </Sheet>
+      )}
       
-      {/* Notifications button (top right) */}
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        className="fixed top-2 right-2 z-50"
-        onClick={navigateToNotifications}
-      >
-        <Bell className="h-5 w-5" />
-        <span className="sr-only">Уведомления</span>
-      </Button>
+      {/* Notifications button (top right) - hidden on settings pages */}
+      {!isSettingsPage && (
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="fixed top-2 right-2 z-50"
+          onClick={navigateToNotifications}
+        >
+          <Bell className="h-5 w-5" />
+          <span className="sr-only">Уведомления</span>
+        </Button>
+      )}
       
       {/* Connection status alert */}
       <div className="container px-2">
