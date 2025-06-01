@@ -106,8 +106,9 @@ const Layout: React.FC = () => {
   // Format display name
   const displayName = user?.firstName || user?.username || 'Пользователь';
 
-  // Check if we're on a settings page
+  // Check if we're on a settings page or book page
   const isSettingsPage = location.pathname.startsWith('/settings');
+  const isBookPage = location.pathname.startsWith('/book/');
 
   return (
     <div 
@@ -128,8 +129,8 @@ const Layout: React.FC = () => {
         </div>
       )}
       
-      {/* Sidebar/Menu - hidden on settings pages */}
-      {!isSettingsPage && (
+      {/* Sidebar/Menu - hidden on settings and book pages */}
+      {!isSettingsPage && !isBookPage && (
         <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
           <SheetTrigger asChild>
             <Button 
@@ -239,8 +240,8 @@ const Layout: React.FC = () => {
         </Sheet>
       )}
       
-      {/* Notifications button (top right) - hidden on settings pages */}
-      {!isSettingsPage && (
+      {/* Notifications button (top right) - hidden on settings and book pages */}
+      {!isSettingsPage && !isBookPage && (
         <Button 
           variant="ghost" 
           size="icon" 
