@@ -3,8 +3,9 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, 
+  User,
+  Shield,
   Palette, 
-  Shield, 
   Info, 
   Bell, 
   Ban, 
@@ -42,6 +43,23 @@ const SettingsPage: React.FC = () => {
           <Button 
             variant="ghost" 
             className="flex items-center justify-between w-full p-3 h-auto rounded-lg border" 
+            onClick={() => navigateTo('/settings/account')}
+          >
+            <div className="flex items-center gap-2">
+              <User className="h-5 w-5 text-primary" />
+              <div className="flex-1 text-left">
+                <h3 className="font-medium">{t('settings.account')}</h3>
+                <p className="text-xs text-muted-foreground">
+                  {t('settings.accountDesc')}
+                </p>
+              </div>
+            </div>
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          </Button>
+
+          <Button 
+            variant="ghost" 
+            className="flex items-center justify-between w-full p-3 h-auto rounded-lg border" 
             onClick={() => navigateTo('/settings/appearance')}
           >
             <div className="flex items-center gap-2">
@@ -50,6 +68,23 @@ const SettingsPage: React.FC = () => {
                 <h3 className="font-medium">{t('settings.appearance')}</h3>
                 <p className="text-xs text-muted-foreground">
                   {t('settings.appearanceDesc')}
+                </p>
+              </div>
+            </div>
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          </Button>
+
+          <Button 
+            variant="ghost" 
+            className="flex items-center justify-between w-full p-3 h-auto rounded-lg border" 
+            onClick={() => navigateTo('/settings/security')}
+          >
+            <div className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-primary" />
+              <div className="flex-1 text-left">
+                <h3 className="font-medium">{t('settings.security')}</h3>
+                <p className="text-xs text-muted-foreground">
+                  {t('settings.securityDesc')}
                 </p>
               </div>
             </div>
