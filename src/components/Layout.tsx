@@ -106,9 +106,19 @@ const Layout: React.FC = () => {
   // Format display name
   const displayName = user?.firstName || user?.username || 'Пользователь';
 
-  // Check if we're on a settings page or book page
+  // Check if we're on pages where header elements should be hidden
   const isSettingsPage = location.pathname.startsWith('/settings');
   const isBookPage = location.pathname.startsWith('/book/');
+  const isSearchPage = location.pathname === '/search';
+  const isFavoritesPage = location.pathname === '/favorites';
+  const isSavedPage = location.pathname === '/saved';
+  const isTopReadsPage = location.pathname === '/top-reads';
+  const isAchievementsPage = location.pathname === '/achievements';
+  const isProfilePage = location.pathname === '/profile' || location.pathname.startsWith('/profile/');
+
+  // Pages where both sidebar and notifications should be hidden
+  const shouldHideHeaderElements = isSettingsPage || isBookPage || isSearchPage || 
+    isFavoritesPage || isSavedPage || isTopReadsPage || isAchievementsPage || isProfilePage;
 
   return (
     <div 
@@ -129,8 +139,8 @@ const Layout: React.FC = () => {
         </div>
       )}
       
-      {/* Sidebar/Menu - hidden on settings and book pages */}
-      {!isSettingsPage && !isBookPage && (
+      {/* Sidebar/Menu - hidden on specified pages */}
+      {!shouldHideHeaderElements && (
         <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
           <SheetTrigger asChild>
             <Button 
@@ -240,8 +250,8 @@ const Layout: React.FC = () => {
         </Sheet>
       )}
       
-      {/* Notifications button (top right) - hidden on settings and book pages */}
-      {!isSettingsPage && !isBookPage && (
+      {/* Notifications button (top right) - hidden on specified pages */}
+      {!shouldHideHeaderElements && (
         <Button 
           variant="ghost" 
           size="icon" 
