@@ -164,5 +164,18 @@ export const enTranslations = {
   'greeting.afternoon': 'Good afternoon',
   'greeting.evening': 'Good evening',
   'greeting.night': 'Good night',
-  'home.readingNest': 'Welcome to your reading nest'
+  'home.readingNest': 'Welcome to your reading nest',
+  'search.clear': 'Clear',
+  'search.clearHistory': 'Clear History',
+  'search.searchHistory': 'Search History',
+  'search.noHistory': 'No search history',
+  'search.historyCleared': 'Search history cleared',
+  'search.booksPlaceholder': 'Search books...',
+  'search.authorsPlaceholder': 'Search authors...',
+  'search.search': 'Search',
+  'search.startTyping': 'Start typing to search',
+  'search.notFound': 'No books found',
+  'search.tryAgain': 'Try searching with different keywords',
+  'search.authorNotFound': 'No authors found',
+  'search.authorNotFoundDescription': 'Try searching with different keywords'
 };
