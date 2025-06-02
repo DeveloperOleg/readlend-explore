@@ -1,18 +1,11 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { Search as SearchIcon } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import SearchBar from '@/components/SearchBar';
 
 const Search: React.FC = () => {
   const { t } = useLanguage();
-  const [query, setQuery] = useState('');
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Here we would implement the search functionality
-  };
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -21,19 +14,11 @@ const Search: React.FC = () => {
         <h1 className="text-2xl font-bold">{t('pages.search')}</h1>
       </div>
       
-      <form onSubmit={handleSearch} className="flex gap-2">
-        <Input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={t('search.booksPlaceholder')}
-          className="flex-1"
-        />
-        <Button type="submit">
-          <SearchIcon className="h-4 w-4 mr-2" />
-          {t('search.search')}
-        </Button>
-      </form>
+      <div className="flex justify-center">
+        <div className="w-full max-w-md">
+          <SearchBar />
+        </div>
+      </div>
       
       <div className="text-center py-10">
         <p className="text-muted-foreground">{t('search.startTyping')}</p>
