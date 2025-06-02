@@ -41,6 +41,11 @@ const Layout: React.FC = () => {
   const [startY, setStartY] = useState(0);
   const [pullDistance, setPullDistance] = useState(0);
   const pullThreshold = 100; // Minimum pull distance to trigger refresh
+  
+  // Swipe state for sidebar
+  const [swipeStartX, setSwipeStartX] = useState(0);
+  const [swipeStartY, setSwipeStartY] = useState(0);
+  const [isSwipingHorizontally, setIsSwipingHorizontally] = useState(false);
 
   if (!isAuthenticated) {
     return <Outlet />;
@@ -61,32 +66,54 @@ const Layout: React.FC = () => {
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    setSwipeStartX(touch.clientX);
+    setSwipeStartY(touch.clientY);
+    setIsSwipingHorizontally(false);
+    
     // Only enable pull to refresh when at the top of the page
     if (window.scrollY === 0) {
-      setStartY(e.touches[0].clientY);
+      setStartY(touch.clientY);
     }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (startY === 0 || window.scrollY > 0) return;
+    const touch = e.touches[0];
+    const deltaX = touch.clientX - swipeStartX;
+    const deltaY = touch.clientY - swipeStartY;
     
-    const currentY = e.touches[0].clientY;
-    const distance = currentY - startY;
+    // Check if this is a horizontal swipe
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 20) {
+      setIsSwipingHorizontally(true);
+      
+      // Swipe right from left edge to open sidebar
+      if (swipeStartX < 50 && deltaX > 100 && !sidebarOpen) {
+        setSidebarOpen(true);
+      }
+    }
     
-    if (distance > 0) {
-      // Prevent default to disable browser's native pull-to-refresh
-      e.preventDefault();
-      setPullDistance(Math.min(distance * 0.5, pullThreshold * 1.5));
+    // Pull to refresh logic (only if not swiping horizontally)
+    if (!isSwipingHorizontally && startY !== 0 && window.scrollY === 0) {
+      const currentY = touch.clientY;
+      const distance = currentY - startY;
+      
+      if (distance > 0) {
+        e.preventDefault();
+        setPullDistance(Math.min(distance * 0.5, pullThreshold * 1.5));
+      }
     }
   };
 
   const handleTouchEnd = () => {
-    if (pullDistance >= pullThreshold) {
+    if (!isSwipingHorizontally && pullDistance >= pullThreshold) {
       performRefresh();
     }
     
     setStartY(0);
     setPullDistance(0);
+    setIsSwipingHorizontally(false);
+    setSwipeStartX(0);
+    setSwipeStartY(0);
   };
 
   const performRefresh = () => {

@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // Theme types
-type BaseTheme = 'light' | 'dark';
+type BaseTheme = 'light' | 'dark' | 'dark-night';
 type UIStyle = 'standard' | 'gradient';
 type ThemeMode = 'manual' | 'system';
 
@@ -41,15 +41,15 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   
   // Update CSS variables based on selected theme
   const applyTheme = () => {
-    // Apply base theme (light/dark mode)
+    // Remove all theme classes first
+    document.documentElement.classList.remove('dark', 'dark-night', 'gradient-ui');
+    
+    // Apply base theme
     if (baseTheme === 'dark') {
       document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+    } else if (baseTheme === 'dark-night') {
+      document.documentElement.classList.add('dark', 'dark-night');
     }
-
-    // Remove gradient UI if it was applied before
-    document.documentElement.classList.remove('gradient-ui');
     
     // Apply gradient UI if selected
     if (uiStyle === 'gradient') {
@@ -108,7 +108,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       // If system mode is enabled, switch to manual mode
       setThemeMode('manual');
     }
-    setBaseTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+    setBaseTheme(prevTheme => {
+      if (prevTheme === 'light') return 'dark';
+      if (prevTheme === 'dark') return 'dark-night';
+      return 'light';
+    });
   };
   
   const toggleUIStyle = () => {
