@@ -2,23 +2,32 @@
 import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useInternet } from '@/context/InternetContext';
-import { Flame, Book } from 'lucide-react';
+import { Flame, Book, ArrowLeft } from 'lucide-react';
 import { testBooks } from '@/utils/testData';
 import InternetRequired from '@/components/InternetRequired';
 import { Button } from '@/components/ui/button';
 import EmptyState from '@/components/EmptyState';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const TopReads: React.FC = () => {
   const { t } = useLanguage();
   const { isOnline, checkConnection } = useInternet();
+  const navigate = useNavigate();
   
   // For demo purposes, we'll use the test books as "top reads"
   const topBooks = testBooks;
   
   return (
     <div className="space-y-4 pb-6 animate-fade-in">
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-3 mb-4">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={() => navigate(-1)}
+          className="h-8 w-8"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
         <Flame className="h-5 w-5 text-neon" />
         <h1 className="text-2xl font-bold">{t('pages.topReads') || 'Топ читаемых'}</h1>
       </div>
