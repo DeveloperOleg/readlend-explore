@@ -46,7 +46,7 @@ const SettingsPage: React.FC = () => {
             onClick={() => navigateTo('/settings/account')}
           >
             <div className="flex items-center gap-2">
-              <User className="h-5 w-5 text-primary" />
+              <User className="h-5 w-5 text-blue-500" />
               <div className="flex-1 text-left">
                 <h3 className="font-medium">{t('settings.account')}</h3>
                 <p className="text-xs text-muted-foreground">
@@ -63,7 +63,7 @@ const SettingsPage: React.FC = () => {
             onClick={() => navigateTo('/settings/appearance')}
           >
             <div className="flex items-center gap-2">
-              <Palette className="h-5 w-5 text-primary" />
+              <Palette className="h-5 w-5 text-blue-500" />
               <div className="flex-1 text-left">
                 <h3 className="font-medium">{t('settings.appearance')}</h3>
                 <p className="text-xs text-muted-foreground">
@@ -80,7 +80,7 @@ const SettingsPage: React.FC = () => {
             onClick={() => navigateTo('/settings/security')}
           >
             <div className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-primary" />
+              <Shield className="h-5 w-5 text-blue-500" />
               <div className="flex-1 text-left">
                 <h3 className="font-medium">{t('settings.security')}</h3>
                 <p className="text-xs text-muted-foreground">
@@ -97,7 +97,7 @@ const SettingsPage: React.FC = () => {
             onClick={() => navigateTo('/settings/language')}
           >
             <div className="flex items-center gap-2">
-              <Globe className="h-5 w-5 text-primary" />
+              <Globe className="h-5 w-5 text-blue-500" />
               <div className="flex-1 text-left">
                 <h3 className="font-medium">{t('sidebar.language')}</h3>
                 <p className="text-xs text-muted-foreground">
@@ -114,7 +114,7 @@ const SettingsPage: React.FC = () => {
             onClick={() => navigateTo('/settings/storage')}
           >
             <div className="flex items-center gap-2">
-              <Database className="h-5 w-5 text-primary" />
+              <Database className="h-5 w-5 text-blue-500" />
               <div className="flex-1 text-left">
                 <h3 className="font-medium">{t('settings.storage')}</h3>
                 <p className="text-xs text-muted-foreground">
@@ -131,7 +131,7 @@ const SettingsPage: React.FC = () => {
             onClick={() => navigateTo('/settings/privacy')}
           >
             <div className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-primary" />
+              <Shield className="h-5 w-5 text-blue-500" />
               <div className="flex-1 text-left">
                 <h3 className="font-medium">{t('profile.privacy')}</h3>
                 <p className="text-xs text-muted-foreground">
@@ -148,7 +148,7 @@ const SettingsPage: React.FC = () => {
             onClick={() => navigateTo('/settings/blocked')}
           >
             <div className="flex items-center gap-2">
-              <Ban className="h-5 w-5 text-primary" />
+              <Ban className="h-5 w-5 text-blue-500" />
               <div className="flex-1 text-left">
                 <h3 className="font-medium">{t('blocked.title')}</h3>
                 <p className="text-xs text-muted-foreground">
@@ -165,7 +165,7 @@ const SettingsPage: React.FC = () => {
             onClick={() => navigateTo('/settings/notifications')}
           >
             <div className="flex items-center gap-2">
-              <Bell className="h-5 w-5 text-primary" />
+              <Bell className="h-5 w-5 text-blue-500" />
               <div className="flex-1 text-left">
                 <h3 className="font-medium">{t('settings.notifications')}</h3>
                 <p className="text-xs text-muted-foreground">
@@ -182,7 +182,7 @@ const SettingsPage: React.FC = () => {
             onClick={() => navigateTo('/settings/about')}
           >
             <div className="flex items-center gap-2">
-              <Info className="h-5 w-5 text-primary" />
+              <Info className="h-5 w-5 text-blue-500" />
               <div className="flex-1 text-left">
                 <h3 className="font-medium">{t('settings.about')}</h3>
                 <p className="text-xs text-muted-foreground">
