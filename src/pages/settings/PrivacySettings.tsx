@@ -38,8 +38,9 @@ const PrivacySettings: React.FC = () => {
       // Prevent text selection
       body.style.userSelect = 'none';
       body.style.webkitUserSelect = 'none';
-      body.style.mozUserSelect = 'none';
-      body.style.msUserSelect = 'none';
+      // Use type assertion for non-standard properties
+      (body.style as any).mozUserSelect = 'none';
+      (body.style as any).msUserSelect = 'none';
       
       // Prevent context menu
       const preventContextMenu = (e: MouseEvent) => e.preventDefault();
@@ -71,8 +72,8 @@ const PrivacySettings: React.FC = () => {
       return () => {
         body.style.userSelect = '';
         body.style.webkitUserSelect = '';
-        body.style.mozUserSelect = '';
-        body.style.msUserSelect = '';
+        (body.style as any).mozUserSelect = '';
+        (body.style as any).msUserSelect = '';
         document.removeEventListener('contextmenu', preventContextMenu);
         document.removeEventListener('keydown', preventKeyboardShortcuts);
         document.removeEventListener('dragstart', preventDragStart);

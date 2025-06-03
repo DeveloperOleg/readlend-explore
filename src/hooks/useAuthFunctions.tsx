@@ -25,6 +25,9 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
           ...(data.privacy?.hideSubscriptions !== undefined && {
             hideSubscriptions: data.privacy.hideSubscriptions
           }),
+          ...(data.privacy?.preventCopying !== undefined && {
+            preventCopying: data.privacy.preventCopying
+          }),
           commentSettings: {
             ...user.privacy.commentSettings,
             ...(data.privacy?.commentSettings?.global !== undefined && {
@@ -218,6 +221,14 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
     });
   };
 
+  const togglePreventCopying = async (prevent: boolean): Promise<boolean> => {
+    return updateProfile({
+      privacy: {
+        preventCopying: prevent
+      }
+    });
+  };
+
   const setBookCommentSetting = async (bookId: string, enabled: boolean): Promise<boolean> => {
     if (!user) return false;
 
@@ -266,6 +277,7 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
     unblockUser,
     toggleHideSubscriptions,
     toggleGlobalComments,
+    togglePreventCopying,
     setBookCommentSetting,
     getUserById,
     canViewSubscriptions: (userId: string) => canViewSubscriptions(user, userId),

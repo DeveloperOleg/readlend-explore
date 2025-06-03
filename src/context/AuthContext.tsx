@@ -54,6 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         banStatus: undefined, // User is not banned
         privacy: {
           hideSubscriptions: false,
+          preventCopying: false,
           commentSettings: {
             global: true,
             perBook: {}
@@ -155,6 +156,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       isTestAccount: false, // Regular account, not a test one
       privacy: {
         hideSubscriptions: false,
+        preventCopying: false,
         commentSettings: {
           global: true,
           perBook: {}
