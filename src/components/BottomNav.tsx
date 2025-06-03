@@ -80,13 +80,13 @@ const BottomNav: React.FC = () => {
           </NavLink>
           
           <NavLink 
-            to="/search" 
+            to="/favorites" 
             className={({ isActive }) => 
               `nav-item ${isActive ? 'active' : ''} px-4`
             }
           >
-            <Search className="h-5 w-5" />
-            <span className="text-[10px]">{t('nav.search')}</span>
+            <Heart className="h-5 w-5" />
+            <span className="text-[10px]">{t('nav.favorites')}</span>
           </NavLink>
         </div>
         
@@ -103,16 +103,6 @@ const BottomNav: React.FC = () => {
         
         <div className="flex items-center justify-end flex-1 max-w-[40%] ml-auto">
           <NavLink 
-            to="/favorites" 
-            className={({ isActive }) => 
-              `nav-item ${isActive ? 'active' : ''} px-4`
-            }
-          >
-            <Heart className="h-5 w-5" />
-            <span className="text-[10px]">{t('nav.favorites')}</span>
-          </NavLink>
-          
-          <NavLink 
             to="/saved" 
             className={({ isActive }) => 
               `nav-item ${isActive ? 'active' : ''} px-4`
@@ -120,6 +110,16 @@ const BottomNav: React.FC = () => {
           >
             <BookMarked className="h-5 w-5" />
             <span className="text-[10px]">{t('nav.saved')}</span>
+          </NavLink>
+          
+          <NavLink 
+            to="/search" 
+            className={({ isActive }) => 
+              `nav-item ${isActive ? 'active' : ''} px-4`
+            }
+          >
+            <Search className="h-5 w-5" />
+            <span className="text-[10px]">{t('nav.search')}</span>
           </NavLink>
         </div>
       </nav>
