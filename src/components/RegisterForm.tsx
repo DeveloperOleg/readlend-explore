@@ -11,7 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AlertCircle, WifiOff, Info } from 'lucide-react';
+import { AlertCircle, WifiOff, Info, HelpCircle, KeyRound } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { toast } from 'sonner';
 
@@ -93,6 +93,20 @@ const RegisterForm: React.FC = () => {
     setIsLoading(true);
     await login('tester111', 'tester111');
     setIsLoading(false);
+  };
+
+  const handleForgotPassword = () => {
+    toast.info("Восстановление пароля", {
+      description: "В тестовой версии приложения восстановление пароля недоступно. Используйте демо-аккаунт для входа.",
+      duration: 5000,
+    });
+  };
+
+  const handleNoAccess = () => {
+    toast.info("Нет доступа к аккаунту", {
+      description: "В тестовой версии приложения создание новых аккаунтов недоступно. Используйте демо-аккаунт для входа.",
+      duration: 5000,
+    });
   };
 
   useEffect(() => {
@@ -239,6 +253,29 @@ const RegisterForm: React.FC = () => {
                 <p className="text-sm font-medium text-destructive">
                   {form.formState.errors.root.message}
                 </p>
+              )}
+
+              {activeTab === 'login' && (
+                <div className="flex gap-2 justify-between text-sm">
+                  <Button 
+                    type="button" 
+                    variant="link" 
+                    className="text-blue-500 hover:text-blue-600 p-0 h-auto text-xs"
+                    onClick={handleForgotPassword}
+                  >
+                    <KeyRound className="h-3 w-3 mr-1" />
+                    Забыли пароль?
+                  </Button>
+                  <Button 
+                    type="button" 
+                    variant="link" 
+                    className="text-blue-500 hover:text-blue-600 p-0 h-auto text-xs"
+                    onClick={handleNoAccess}
+                  >
+                    <HelpCircle className="h-3 w-3 mr-1" />
+                    Нет доступа к аккаунту
+                  </Button>
+                </div>
               )}
               
               <Button type="submit" className="w-full" disabled={isLoading || (activeTab === 'register')}>
