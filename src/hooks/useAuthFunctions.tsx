@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { User, ProfileUpdateData } from '@/types/auth';
 import { canViewSubscriptions, canCommentOnBook } from '@/utils/authUtils';
@@ -252,7 +251,12 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
     
     // Для тестового аккаунта или когда запрашиваем тестовый аккаунт
     if (user.isTestAccount || userId.startsWith('author')) {
-      return getTestUserById(userId);
+      const testUser = getTestUserById(userId);
+      // Fix: Add the missing preventCopying property to test users
+      if (testUser && !testUser.privacy.hasOwnProperty('preventCopying')) {
+        testUser.privacy.preventCopying = false;
+      }
+      return testUser;
     }
     
     // Для реальных аккаунтов
@@ -262,7 +266,12 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
     // Ищем по ID среди всех аккаунтов
     for (const username in accounts) {
       if (accounts[username].userData.id === userId) {
-        return accounts[username].userData;
+        const userData = accounts[username].userData;
+        // Ensure preventCopying exists for backward compatibility
+        if (!userData.privacy.hasOwnProperty('preventCopying')) {
+          userData.privacy.preventCopying = false;
+        }
+        return userData;
       }
     }
     

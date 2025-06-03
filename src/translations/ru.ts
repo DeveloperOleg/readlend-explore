@@ -1,3 +1,4 @@
+
 // Russian translations
 export const ruTranslations = {
   'greeting.morning': 'Доброе утро',
@@ -141,6 +142,8 @@ export const ruTranslations = {
   'profile.hideSubscriptionsDescription': 'Другие пользователи не смогут видеть, на кого вы подписаны',
   'profile.allowComments': 'Разрешить комментарии к книгам',
   'profile.allowCommentsDescription': 'Пользователи смогут оставлять комментарии к вашим книгам',
+  'profile.preventCopying': 'Запретить копирование',
+  'profile.preventCopyingDescription': 'Запретить выделение текста, снимки экрана, запись экрана и другие способы копирования контента',
   'profile.perBookCommentsSettings': 'Настройки комментариев для отдельных книг',
   'profile.perBookCommentsDescription': 'Настройте возможность комментирования для каждой книги отдельно',
   'profile.noPublishedBooks': 'У вас пока нет опубликованных книг',
