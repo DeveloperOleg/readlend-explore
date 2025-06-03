@@ -40,6 +40,7 @@ export interface User {
   };
   privacy: {
     hideSubscriptions: boolean;
+    preventCopying: boolean; // New field for preventing copying/screenshots
     commentSettings: {
       global: boolean; // true = enabled, false = disabled
       perBook: Record<string, boolean>; // bookId: boolean (true = enabled, false = disabled)
@@ -56,6 +57,7 @@ export interface ProfileUpdateData {
   bio?: string; // New field for bio information
   privacy?: {
     hideSubscriptions?: boolean;
+    preventCopying?: boolean; // New field for preventing copying/screenshots
     commentSettings?: {
       global?: boolean;
       perBook?: Record<string, boolean>;
@@ -77,6 +79,7 @@ export interface AuthContextType {
   setBookCommentSetting: (bookId: string, enabled: boolean) => Promise<boolean>;
   toggleGlobalComments: (enabled: boolean) => Promise<boolean>;
   toggleHideSubscriptions: (hide: boolean) => Promise<boolean>;
+  togglePreventCopying: (prevent: boolean) => Promise<boolean>; // New method for toggling copy prevention
   canViewSubscriptions: (userId: string) => boolean;
   canCommentOnBook: (bookId: string, authorId: string) => boolean;
   getUserById: (userId: string) => User | null;

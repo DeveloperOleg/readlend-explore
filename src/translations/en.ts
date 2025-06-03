@@ -184,5 +184,7 @@ export const enTranslations = {
   'search.notFound': 'No books found',
   'search.tryAgain': 'Try searching with different keywords',
   'search.authorNotFound': 'No authors found',
-  'search.authorNotFoundDescription': 'Try searching with different keywords'
+  'search.authorNotFoundDescription': 'Try searching with different keywords',
+  'profile.preventCopying': 'Prevent Copying',
+  'profile.preventCopyingDescription': 'Prevent text selection, screenshots, and screen recording'
 };
