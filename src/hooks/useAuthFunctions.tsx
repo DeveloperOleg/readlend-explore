@@ -252,19 +252,18 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
     // Для тестового аккаунта или когда запрашиваем тестовый аккаунт
     if (user.isTestAccount || userId.startsWith('author')) {
       const testUser = getTestUserById(userId);
-      // Fix: Ensure test users have complete privacy structure
+      // Ensure test users have complete privacy structure
       if (testUser) {
-        const completePrivacy = {
-          hideSubscriptions: testUser.privacy?.hideSubscriptions || false,
-          preventCopying: (testUser.privacy as any)?.preventCopying || false,
-          commentSettings: {
-            global: testUser.privacy?.commentSettings?.global || true,
-            perBook: testUser.privacy?.commentSettings?.perBook || {}
-          }
-        };
         return {
           ...testUser,
-          privacy: completePrivacy
+          privacy: {
+            hideSubscriptions: testUser.privacy?.hideSubscriptions || false,
+            preventCopying: false, // Default value for test users
+            commentSettings: {
+              global: testUser.privacy?.commentSettings?.global || true,
+              perBook: testUser.privacy?.commentSettings?.perBook || {}
+            }
+          }
         };
       }
       return null;
