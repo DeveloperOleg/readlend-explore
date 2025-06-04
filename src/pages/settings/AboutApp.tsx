@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Info, User, Mail, MessageCircle, Bug, Play, Square, Download } from 'lucide-react';
@@ -23,6 +22,7 @@ const AboutAppPage: React.FC = () => {
   const [isLogging, setIsLogging] = useState(false);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const originalConsole = useRef<any>({});
+  const eventListenersRef = useRef<(() => void)[]>([]);
 
   useEffect(() => {
     // Store original console methods
@@ -34,12 +34,9 @@ const AboutAppPage: React.FC = () => {
     };
 
     return () => {
-      // Restore original console methods when component unmounts
+      // Cleanup: restore original console methods and remove event listeners
       if (isLogging) {
-        console.log = originalConsole.current.log;
-        console.warn = originalConsole.current.warn;
-        console.error = originalConsole.current.error;
-        console.info = originalConsole.current.info;
+        stopLogging();
       }
     };
   }, []);
@@ -61,12 +58,22 @@ const AboutAppPage: React.FC = () => {
     setIsLogging(true);
     setLogs([]);
     
+    // Clear previous event listeners
+    eventListenersRef.current.forEach(cleanup => cleanup());
+    eventListenersRef.current = [];
+    
     // Add initial log entry
-    addLog('info', 'Logging session started', {
-      userAgent: navigator.userAgent,
-      url: window.location.href,
-      timestamp: new Date().toISOString()
-    });
+    const initialLog: LogEntry = {
+      timestamp: new Date().toISOString(),
+      level: 'info',
+      message: 'Logging session started',
+      details: {
+        userAgent: navigator.userAgent,
+        url: window.location.href,
+        timestamp: new Date().toISOString()
+      }
+    };
+    setLogs([initialLog]);
 
     // Override console methods to capture logs
     console.log = (...args) => {
@@ -107,6 +114,12 @@ const AboutAppPage: React.FC = () => {
     };
 
     document.addEventListener('click', clickHandler);
+    
+    // Store cleanup function
+    eventListenersRef.current.push(() => {
+      document.removeEventListener('click', clickHandler);
+      history.pushState = originalPushState;
+    });
 
     toast.success('Logging started', {
       description: 'Application behavior is now being tracked',
@@ -115,6 +128,8 @@ const AboutAppPage: React.FC = () => {
   };
 
   const stopLogging = () => {
+    if (!isLogging) return;
+    
     setIsLogging(false);
     
     // Restore original console methods
@@ -122,6 +137,10 @@ const AboutAppPage: React.FC = () => {
     console.warn = originalConsole.current.warn;
     console.error = originalConsole.current.error;
     console.info = originalConsole.current.info;
+
+    // Clean up event listeners
+    eventListenersRef.current.forEach(cleanup => cleanup());
+    eventListenersRef.current = [];
 
     // Add final log entry
     addLog('info', 'Logging session ended', {

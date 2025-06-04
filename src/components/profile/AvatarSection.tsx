@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
@@ -74,14 +73,16 @@ const AvatarSection: React.FC<AvatarSectionProps> = ({
       console.log(`Selected file: ${file.name}`);
       console.log(`File size: ${fileSizeInMB.toFixed(2)} MB (${file.size} bytes)`);
       console.log(`File type: ${file.type}`);
+      console.log(`MAX_AVATAR_SIZE: ${MAX_AVATAR_SIZE} MB`);
+      console.log(`Size check: ${fileSizeInMB} > ${MAX_AVATAR_SIZE} = ${fileSizeInMB > MAX_AVATAR_SIZE}`);
       
-      // Fix: Only check file size if it actually exceeds the limit
+      // Check file size - FIXED: Use proper comparison
       if (fileSizeInMB > MAX_AVATAR_SIZE) {
-        const errorMessage = t('profile.imageTooLarge') || 'Размер аватара не должен превышать 10МБ';
+        const errorMessage = t('profile.imageTooLarge') || `Размер аватара не должен превышать ${MAX_AVATAR_SIZE}МБ`;
         setAvatarError(errorMessage);
         toast({
           title: t('profile.imageTooLargeTitle') || 'Ошибка загрузки аватара',
-          description: errorMessage,
+          description: `${errorMessage}. Текущий размер: ${fileSizeInMB.toFixed(2)}МБ`,
           variant: 'destructive',
         });
         return;
@@ -117,6 +118,12 @@ const AvatarSection: React.FC<AvatarSectionProps> = ({
         setAvatarPreview(reader.result as string);
       };
       reader.readAsDataURL(file);
+      
+      // Success feedback
+      toast({
+        title: 'Аватар загружен',
+        description: `Файл ${file.name} (${fileSizeInMB.toFixed(2)}МБ) успешно загружен`,
+      });
     }
   };
 
