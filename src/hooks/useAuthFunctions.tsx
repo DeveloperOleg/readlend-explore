@@ -256,7 +256,7 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
       if (testUser) {
         const completePrivacy = {
           hideSubscriptions: testUser.privacy?.hideSubscriptions || false,
-          preventCopying: testUser.privacy?.preventCopying || false,
+          preventCopying: (testUser.privacy as any)?.preventCopying || false,
           commentSettings: {
             global: testUser.privacy?.commentSettings?.global || true,
             perBook: testUser.privacy?.commentSettings?.perBook || {}
