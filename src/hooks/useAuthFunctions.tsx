@@ -255,11 +255,11 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
       // Fix: Ensure test users have complete privacy structure
       if (testUser) {
         const completePrivacy = {
-          hideSubscriptions: testUser.privacy.hideSubscriptions || false,
-          preventCopying: testUser.privacy.preventCopying || false,
+          hideSubscriptions: testUser.privacy?.hideSubscriptions || false,
+          preventCopying: testUser.privacy?.preventCopying || false,
           commentSettings: {
-            global: testUser.privacy.commentSettings?.global || true,
-            perBook: testUser.privacy.commentSettings?.perBook || {}
+            global: testUser.privacy?.commentSettings?.global || true,
+            perBook: testUser.privacy?.commentSettings?.perBook || {}
           }
         };
         return {
