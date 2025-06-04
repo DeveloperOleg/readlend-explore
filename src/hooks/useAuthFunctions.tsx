@@ -252,11 +252,22 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
     // Для тестового аккаунта или когда запрашиваем тестовый аккаунт
     if (user.isTestAccount || userId.startsWith('author')) {
       const testUser = getTestUserById(userId);
-      // Fix: Add the missing preventCopying property to test users
-      if (testUser && !testUser.privacy.hasOwnProperty('preventCopying')) {
-        testUser.privacy.preventCopying = false;
+      // Fix: Ensure test users have complete privacy structure
+      if (testUser) {
+        const completePrivacy = {
+          hideSubscriptions: testUser.privacy.hideSubscriptions || false,
+          preventCopying: testUser.privacy.preventCopying || false,
+          commentSettings: {
+            global: testUser.privacy.commentSettings?.global || true,
+            perBook: testUser.privacy.commentSettings?.perBook || {}
+          }
+        };
+        return {
+          ...testUser,
+          privacy: completePrivacy
+        };
       }
-      return testUser;
+      return null;
     }
     
     // Для реальных аккаунтов
