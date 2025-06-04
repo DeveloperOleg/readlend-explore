@@ -1,17 +1,177 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Info, User, Mail, MessageCircle, Bug } from 'lucide-react';
+import { ArrowLeft, Info, User, Mail, MessageCircle, Bug, Play, Square, Download } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
+
+interface LogEntry {
+  timestamp: string;
+  level: 'info' | 'warn' | 'error' | 'debug';
+  message: string;
+  details?: any;
+}
 
 const AboutAppPage: React.FC = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [showSymbol, setShowSymbol] = useState(false);
   const [showDebugMenu, setShowDebugMenu] = useState(false);
+  const [isLogging, setIsLogging] = useState(false);
+  const [logs, setLogs] = useState<LogEntry[]>([]);
+  const originalConsole = useRef<any>({});
+
+  useEffect(() => {
+    // Store original console methods
+    originalConsole.current = {
+      log: console.log,
+      warn: console.warn,
+      error: console.error,
+      info: console.info
+    };
+
+    return () => {
+      // Restore original console methods when component unmounts
+      if (isLogging) {
+        console.log = originalConsole.current.log;
+        console.warn = originalConsole.current.warn;
+        console.error = originalConsole.current.error;
+        console.info = originalConsole.current.info;
+      }
+    };
+  }, []);
+
+  const addLog = (level: LogEntry['level'], message: string, details?: any) => {
+    if (!isLogging) return;
+    
+    const logEntry: LogEntry = {
+      timestamp: new Date().toISOString(),
+      level,
+      message,
+      details
+    };
+    
+    setLogs(prev => [...prev, logEntry]);
+  };
+
+  const startLogging = () => {
+    setIsLogging(true);
+    setLogs([]);
+    
+    // Add initial log entry
+    addLog('info', 'Logging session started', {
+      userAgent: navigator.userAgent,
+      url: window.location.href,
+      timestamp: new Date().toISOString()
+    });
+
+    // Override console methods to capture logs
+    console.log = (...args) => {
+      originalConsole.current.log(...args);
+      addLog('info', args.join(' '), args);
+    };
+
+    console.warn = (...args) => {
+      originalConsole.current.warn(...args);
+      addLog('warn', args.join(' '), args);
+    };
+
+    console.error = (...args) => {
+      originalConsole.current.error(...args);
+      addLog('error', args.join(' '), args);
+    };
+
+    console.info = (...args) => {
+      originalConsole.current.info(...args);
+      addLog('info', args.join(' '), args);
+    };
+
+    // Log navigation changes
+    const originalPushState = history.pushState;
+    history.pushState = function(...args) {
+      addLog('debug', 'Navigation: pushState', args);
+      return originalPushState.apply(this, args);
+    };
+
+    // Log clicks and interactions
+    const clickHandler = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      addLog('debug', 'User interaction: click', {
+        element: target.tagName,
+        className: target.className,
+        textContent: target.textContent?.substring(0, 50)
+      });
+    };
+
+    document.addEventListener('click', clickHandler);
+
+    toast.success('Logging started', {
+      description: 'Application behavior is now being tracked',
+      position: "bottom-center"
+    });
+  };
+
+  const stopLogging = () => {
+    setIsLogging(false);
+    
+    // Restore original console methods
+    console.log = originalConsole.current.log;
+    console.warn = originalConsole.current.warn;
+    console.error = originalConsole.current.error;
+    console.info = originalConsole.current.info;
+
+    // Add final log entry
+    addLog('info', 'Logging session ended', {
+      totalLogs: logs.length,
+      sessionDuration: logs.length > 0 ? 
+        new Date().getTime() - new Date(logs[0].timestamp).getTime() : 0
+    });
+
+    toast.success('Logging stopped', {
+      description: `Captured ${logs.length} log entries`,
+      position: "bottom-center"
+    });
+  };
+
+  const downloadLogs = () => {
+    if (logs.length === 0) {
+      toast.error('No logs to download');
+      return;
+    }
+
+    const logData = {
+      sessionInfo: {
+        startTime: logs[0]?.timestamp,
+        endTime: new Date().toISOString(),
+        totalEntries: logs.length,
+        userAgent: navigator.userAgent,
+        url: window.location.href,
+        appVersion: '1.0.0'
+      },
+      logs: logs,
+      systemInfo: {
+        localStorage: Object.keys(localStorage).length,
+        sessionStorage: Object.keys(sessionStorage).length,
+        screenResolution: `${screen.width}x${screen.height}`,
+        viewport: `${window.innerWidth}x${window.innerHeight}`,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      }
+    };
+
+    const dataStr = JSON.stringify(logData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `readnest-logs-${Date.now()}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+
+    toast.success('Logs downloaded successfully');
+  };
 
   const goBack = () => {
     navigate(-1);
@@ -19,7 +179,7 @@ const AboutAppPage: React.FC = () => {
 
   const handleVersionClick = () => {
     setShowSymbol(true);
-    setTimeout(() => setShowSymbol(false), 2000); // Hide symbol after 2 seconds
+    setTimeout(() => setShowSymbol(false), 2000);
   };
 
   const handleVersionDoubleClick = () => {
@@ -143,6 +303,51 @@ const AboutAppPage: React.FC = () => {
             <div className="text-sm text-muted-foreground">
               <p>Test version debugging tools</p>
               <p className="text-xs mt-1">Use with caution - these actions may affect app functionality</p>
+            </div>
+
+            {/* Logging Section */}
+            <div className="border rounded-lg p-3">
+              <h4 className="font-medium text-sm mb-3">Application Logging</h4>
+              
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  {isLogging ? (
+                    <Square className="h-4 w-4 text-red-500" />
+                  ) : (
+                    <Play className="h-4 w-4 text-green-500" />
+                  )}
+                  <span className="text-sm">
+                    {isLogging ? 'Logging Active' : 'Logging Inactive'}
+                  </span>
+                </div>
+                <Switch 
+                  checked={isLogging}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      startLogging();
+                    } else {
+                      stopLogging();
+                    }
+                  }}
+                />
+              </div>
+
+              {logs.length > 0 && (
+                <div className="text-xs text-muted-foreground mb-2">
+                  Current session: {logs.length} entries
+                </div>
+              )}
+
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="w-full justify-start" 
+                onClick={downloadLogs}
+                disabled={logs.length === 0}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Download Log File
+              </Button>
             </div>
             
             <div className="space-y-2">
