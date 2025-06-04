@@ -70,23 +70,23 @@ const BottomNav: React.FC = () => {
           <NavLink 
             to="/home" 
             className={({ isActive }) => 
-              `nav-item ${isActive ? 'active' : ''} px-4`
+              `nav-item ${isActive ? 'active' : ''} flex flex-col items-center justify-center min-w-0 flex-1 py-2 px-3`
             }
             onClick={handleHomeClick}
             end
           >
-            <Home className="h-5 w-5" />
-            <span className="text-[10px]">{t('nav.home')}</span>
+            <Home className="h-5 w-5 mb-1" />
+            <span className="text-[10px] leading-none text-center">{t('nav.home')}</span>
           </NavLink>
           
           <NavLink 
-            to="/favorites" 
+            to="/search" 
             className={({ isActive }) => 
-              `nav-item ${isActive ? 'active' : ''} px-4`
+              `nav-item ${isActive ? 'active' : ''} flex flex-col items-center justify-center min-w-0 flex-1 py-2 px-3`
             }
           >
-            <Heart className="h-5 w-5" />
-            <span className="text-[10px]">{t('nav.favorites')}</span>
+            <Search className="h-5 w-5 mb-1" />
+            <span className="text-[10px] leading-none text-center">{t('nav.search')}</span>
           </NavLink>
         </div>
         
@@ -105,21 +105,21 @@ const BottomNav: React.FC = () => {
           <NavLink 
             to="/saved" 
             className={({ isActive }) => 
-              `nav-item ${isActive ? 'active' : ''} px-4`
+              `nav-item ${isActive ? 'active' : ''} flex flex-col items-center justify-center min-w-0 flex-1 py-2 px-3`
             }
           >
-            <BookMarked className="h-5 w-5" />
-            <span className="text-[10px]">{t('nav.saved')}</span>
+            <BookMarked className="h-5 w-5 mb-1" />
+            <span className="text-[10px] leading-none text-center">{t('nav.saved')}</span>
           </NavLink>
           
           <NavLink 
-            to="/search" 
+            to="/favorites" 
             className={({ isActive }) => 
-              `nav-item ${isActive ? 'active' : ''} px-4`
+              `nav-item ${isActive ? 'active' : ''} flex flex-col items-center justify-center min-w-0 flex-1 py-2 px-3`
             }
           >
-            <Search className="h-5 w-5" />
-            <span className="text-[10px]">{t('nav.search')}</span>
+            <Heart className="h-5 w-5 mb-1" />
+            <span className="text-[10px] leading-none text-center">{t('nav.favorites')}</span>
           </NavLink>
         </div>
       </nav>
