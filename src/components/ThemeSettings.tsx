@@ -46,7 +46,7 @@ const ThemeSettings: React.FC = () => {
         <div>
           <h3 className="font-medium mb-1">{t('settings.theme')}</h3>
           <p className="text-sm text-muted-foreground mb-4">
-            This will change the theme across all your devices.
+            {t('settings.themeDescription')}
           </p>
         </div>
 
@@ -68,8 +68,8 @@ const ThemeSettings: React.FC = () => {
                   <div className="absolute top-8 left-1 w-12 h-1 bg-gray-300 rounded"></div>
                 </div>
                 <div>
-                  <p className="font-medium">Light</p>
-                  <p className="text-sm text-muted-foreground">Clean and bright interface</p>
+                  <p className="font-medium">{t('settings.theme.light')}</p>
+                  <p className="text-sm text-muted-foreground">{t('settings.theme.lightDesc')}</p>
                 </div>
               </div>
             </Label>
@@ -87,8 +87,8 @@ const ThemeSettings: React.FC = () => {
                   <div className="absolute top-8 left-1 w-12 h-1 bg-gray-500 rounded"></div>
                 </div>
                 <div>
-                  <p className="font-medium">Dark</p>
-                  <p className="text-sm text-muted-foreground">Easy on the eyes in low light</p>
+                  <p className="font-medium">{t('settings.theme.dark')}</p>
+                  <p className="text-sm text-muted-foreground">{t('settings.theme.darkDesc')}</p>
                 </div>
               </div>
             </Label>
@@ -106,8 +106,8 @@ const ThemeSettings: React.FC = () => {
                   <div className="absolute top-8 left-1 w-12 h-1 bg-gray-600 rounded"></div>
                 </div>
                 <div>
-                  <p className="font-medium">Dark Night</p>
-                  <p className="text-sm text-muted-foreground">Maximum darkness for night reading</p>
+                  <p className="font-medium">{t('settings.theme.darkNight')}</p>
+                  <p className="text-sm text-muted-foreground">{t('settings.theme.darkNightDesc')}</p>
                 </div>
               </div>
             </Label>

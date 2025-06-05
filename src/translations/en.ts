@@ -1,3 +1,4 @@
+
 export const enTranslations = {
   'common.comingSoon': 'Coming Soon',
   'common.error': 'Error',
@@ -118,10 +119,18 @@ export const enTranslations = {
   'settings.systemTheme': 'System Theme',
   'settings.systemThemeEnabled': 'Follows your device settings',
   'settings.systemThemeDisabled': 'Manual theme selection',
+  'settings.theme': 'Theme',
+  'settings.themeDescription': 'This will change the theme across all your devices.',
   'settings.theme.light': 'Light',
+  'settings.theme.lightDesc': 'Clean and bright interface',
   'settings.theme.dark': 'Dark',
+  'settings.theme.darkDesc': 'Easy on the eyes in low light',
   'settings.theme.darkNight': 'Dark Night',
+  'settings.theme.darkNightDesc': 'Maximum darkness for night reading',
   'settings.theme.system': 'System',
+  'settings.uiStyle': 'UI Style',
+  'settings.uiStyle.standard': 'Standard interface design',
+  'settings.uiStyle.gradient': 'Enhanced interface with gradients',
   'account.username': 'Username',
   'account.email': 'Email for account recovery',
   'account.emailPlaceholder': 'Enter your email',
