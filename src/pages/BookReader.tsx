@@ -1,11 +1,17 @@
-
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
+import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { ChevronLeft, Book } from 'lucide-react';
+import { ChevronLeft, Book, Link, Flag } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from '@/components/ui/context-menu';
 import { testBooks } from '@/utils/testData';
 import BookAbout from '@/components/BookAbout';
 import BookComments from '@/components/BookComments';
@@ -14,6 +20,7 @@ type TabType = 'about' | 'chapters' | 'comments';
 
 const BookReader: React.FC = () => {
   const { t } = useLanguage();
+  const { toast } = useToast();
   const { bookId } = useParams<{ bookId: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>('chapters');
@@ -33,6 +40,33 @@ const BookReader: React.FC = () => {
   // Function to go back
   const handleBack = () => {
     navigate(-1);
+  };
+
+  // Function to copy book link
+  const handleCopyLink = async () => {
+    const bookUrl = window.location.href;
+    try {
+      await navigator.clipboard.writeText(bookUrl);
+      toast({
+        title: t('book.linkCopied') || 'Link copied',
+        description: t('book.linkCopiedDescription') || 'Book link has been copied to clipboard',
+      });
+    } catch (error) {
+      console.error('Failed to copy link:', error);
+      toast({
+        title: t('book.copyFailed') || 'Copy failed',
+        description: t('book.copyFailedDescription') || 'Failed to copy link to clipboard',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  // Function to report issue
+  const handleReportIssue = () => {
+    toast({
+      title: t('book.reportSubmitted') || 'Report submitted',
+      description: t('book.reportSubmittedDescription') || 'Thank you for reporting this issue. We will review it shortly.',
+    });
   };
 
   // Total number of pages (conditionally 118, as in the screenshot)
@@ -72,14 +106,28 @@ const BookReader: React.FC = () => {
             <ChevronLeft className="h-5 w-5" />
           </Button>
           <h1 className="text-lg md:text-xl font-semibold line-clamp-1 max-w-[60%]">{book.title}</h1>
-          <Button variant="ghost" size="icon">
-            <span className="sr-only">{t('book.options')}</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-              <circle cx="12" cy="12" r="1" />
-              <circle cx="12" cy="5" r="1" />
-              <circle cx="12" cy="19" r="1" />
-            </svg>
-          </Button>
+          <ContextMenu>
+            <ContextMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <span className="sr-only">{t('book.options')}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                  <circle cx="12" cy="12" r="1" />
+                  <circle cx="12" cy="5" r="1" />
+                  <circle cx="12" cy="19" r="1" />
+                </svg>
+              </Button>
+            </ContextMenuTrigger>
+            <ContextMenuContent>
+              <ContextMenuItem onClick={handleCopyLink}>
+                <Link className="h-4 w-4 mr-2" />
+                {t('book.copyLink') || 'Copy Link'}
+              </ContextMenuItem>
+              <ContextMenuItem onClick={handleReportIssue}>
+                <Flag className="h-4 w-4 mr-2" />
+                {t('book.reportIssue') || 'Report Issue'}
+              </ContextMenuItem>
+            </ContextMenuContent>
+          </ContextMenu>
         </div>
       </div>
       
