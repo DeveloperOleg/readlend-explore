@@ -70,7 +70,7 @@ const BottomNav: React.FC = () => {
           <NavLink 
             to="/home" 
             className={({ isActive }) => 
-              `nav-item ${isActive ? 'active' : ''} flex flex-col items-center justify-center min-w-0 flex-1 py-2 px-3`
+              `nav-item ${isActive ? 'active text-blue-500' : 'text-muted-foreground hover:text-blue-500'} flex flex-col items-center justify-center min-w-0 flex-1 py-2 px-3 transition-colors`
             }
             onClick={handleHomeClick}
             end
@@ -82,7 +82,7 @@ const BottomNav: React.FC = () => {
           <NavLink 
             to="/search" 
             className={({ isActive }) => 
-              `nav-item ${isActive ? 'active' : ''} flex flex-col items-center justify-center min-w-0 flex-1 py-2 px-3`
+              `nav-item ${isActive ? 'active text-blue-500' : 'text-muted-foreground hover:text-blue-500'} flex flex-col items-center justify-center min-w-0 flex-1 py-2 px-3 transition-colors`
             }
           >
             <Search className="h-5 w-5 mb-1" />
@@ -105,7 +105,7 @@ const BottomNav: React.FC = () => {
           <NavLink 
             to="/saved" 
             className={({ isActive }) => 
-              `nav-item ${isActive ? 'active' : ''} flex flex-col items-center justify-center min-w-0 flex-1 py-2 px-3`
+              `nav-item ${isActive ? 'active text-blue-500' : 'text-muted-foreground hover:text-blue-500'} flex flex-col items-center justify-center min-w-0 flex-1 py-2 px-3 transition-colors`
             }
           >
             <BookMarked className="h-5 w-5 mb-1" />
@@ -115,7 +115,7 @@ const BottomNav: React.FC = () => {
           <NavLink 
             to="/favorites" 
             className={({ isActive }) => 
-              `nav-item ${isActive ? 'active' : ''} flex flex-col items-center justify-center min-w-0 flex-1 py-2 px-3`
+              `nav-item ${isActive ? 'active text-blue-500' : 'text-muted-foreground hover:text-blue-500'} flex flex-col items-center justify-center min-w-0 flex-1 py-2 px-3 transition-colors`
             }
           >
             <Heart className="h-5 w-5 mb-1" />
