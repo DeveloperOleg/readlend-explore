@@ -9,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const ThemeSettings: React.FC = () => {
   const { baseTheme, uiStyle, themeMode, themeInterfaceStyle, toggleUIStyle, toggleThemeMode, setBaseTheme, setThemeInterfaceStyle } = useTheme();
@@ -92,63 +93,75 @@ const ThemeSettings: React.FC = () => {
   );
 
   const renderCardThemeSelection = () => (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      {/* Light Theme Card */}
-      <div 
-        className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-          baseTheme === 'light' && themeMode !== 'system' 
-            ? 'border-primary bg-primary/5' 
-            : 'border-border hover:border-primary/50'
-        } ${themeMode === 'system' ? 'opacity-50 cursor-not-allowed' : ''}`}
-        onClick={() => handleThemeCardClick('light')}
-      >
-        <div className="w-full h-20 bg-white border border-gray-200 rounded-lg shadow-sm relative overflow-hidden mb-3">
-          <div className="absolute top-0 left-0 w-full h-4 bg-gray-100"></div>
-          <div className="absolute top-4 left-2 w-12 h-2 bg-gray-200 rounded"></div>
-          <div className="absolute top-7 left-2 w-10 h-1 bg-gray-300 rounded"></div>
-          <div className="absolute top-9 left-2 w-14 h-1 bg-gray-300 rounded"></div>
-        </div>
-        <h3 className="font-medium text-center">{t('settings.theme.light')}</h3>
-        <p className="text-xs text-muted-foreground text-center mt-1">{t('settings.theme.lightDesc')}</p>
-      </div>
+    <div className="w-full max-w-md mx-auto">
+      <Carousel className="w-full">
+        <CarouselContent className="-ml-2 md:-ml-4">
+          {/* Light Theme Card */}
+          <CarouselItem className="pl-2 md:pl-4 basis-4/5 md:basis-1/2">
+            <div 
+              className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                baseTheme === 'light' && themeMode !== 'system' 
+                  ? 'border-primary bg-primary/5' 
+                  : 'border-border hover:border-primary/50'
+              } ${themeMode === 'system' ? 'opacity-50 cursor-not-allowed' : ''}`}
+              onClick={() => handleThemeCardClick('light')}
+            >
+              <div className="w-full h-20 bg-white border border-gray-200 rounded-lg shadow-sm relative overflow-hidden mb-3">
+                <div className="absolute top-0 left-0 w-full h-4 bg-gray-100"></div>
+                <div className="absolute top-4 left-2 w-12 h-2 bg-gray-200 rounded"></div>
+                <div className="absolute top-7 left-2 w-10 h-1 bg-gray-300 rounded"></div>
+                <div className="absolute top-9 left-2 w-14 h-1 bg-gray-300 rounded"></div>
+              </div>
+              <h3 className="font-medium text-center">{t('settings.theme.light')}</h3>
+              <p className="text-xs text-muted-foreground text-center mt-1">{t('settings.theme.lightDesc')}</p>
+            </div>
+          </CarouselItem>
 
-      {/* Dark Theme Card */}
-      <div 
-        className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-          baseTheme === 'dark' && themeMode !== 'system' 
-            ? 'border-primary bg-primary/5' 
-            : 'border-border hover:border-primary/50'
-        } ${themeMode === 'system' ? 'opacity-50 cursor-not-allowed' : ''}`}
-        onClick={() => handleThemeCardClick('dark')}
-      >
-        <div className="w-full h-20 bg-gray-800 border border-gray-600 rounded-lg shadow-sm relative overflow-hidden mb-3">
-          <div className="absolute top-0 left-0 w-full h-4 bg-gray-700"></div>
-          <div className="absolute top-4 left-2 w-12 h-2 bg-gray-600 rounded"></div>
-          <div className="absolute top-7 left-2 w-10 h-1 bg-gray-500 rounded"></div>
-          <div className="absolute top-9 left-2 w-14 h-1 bg-gray-500 rounded"></div>
-        </div>
-        <h3 className="font-medium text-center">{t('settings.theme.dark')}</h3>
-        <p className="text-xs text-muted-foreground text-center mt-1">{t('settings.theme.darkDesc')}</p>
-      </div>
+          {/* Dark Theme Card */}
+          <CarouselItem className="pl-2 md:pl-4 basis-4/5 md:basis-1/2">
+            <div 
+              className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                baseTheme === 'dark' && themeMode !== 'system' 
+                  ? 'border-primary bg-primary/5' 
+                  : 'border-border hover:border-primary/50'
+              } ${themeMode === 'system' ? 'opacity-50 cursor-not-allowed' : ''}`}
+              onClick={() => handleThemeCardClick('dark')}
+            >
+              <div className="w-full h-20 bg-gray-800 border border-gray-600 rounded-lg shadow-sm relative overflow-hidden mb-3">
+                <div className="absolute top-0 left-0 w-full h-4 bg-gray-700"></div>
+                <div className="absolute top-4 left-2 w-12 h-2 bg-gray-600 rounded"></div>
+                <div className="absolute top-7 left-2 w-10 h-1 bg-gray-500 rounded"></div>
+                <div className="absolute top-9 left-2 w-14 h-1 bg-gray-500 rounded"></div>
+              </div>
+              <h3 className="font-medium text-center">{t('settings.theme.dark')}</h3>
+              <p className="text-xs text-muted-foreground text-center mt-1">{t('settings.theme.darkDesc')}</p>
+            </div>
+          </CarouselItem>
 
-      {/* Dark Night Theme Card */}
-      <div 
-        className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-          baseTheme === 'dark-night' && themeMode !== 'system' 
-            ? 'border-primary bg-primary/5' 
-            : 'border-border hover:border-primary/50'
-        } ${themeMode === 'system' ? 'opacity-50 cursor-not-allowed' : ''}`}
-        onClick={() => handleThemeCardClick('dark-night')}
-      >
-        <div className="w-full h-20 bg-black border border-gray-800 rounded-lg shadow-sm relative overflow-hidden mb-3">
-          <div className="absolute top-0 left-0 w-full h-4 bg-gray-900"></div>
-          <div className="absolute top-4 left-2 w-12 h-2 bg-gray-700 rounded"></div>
-          <div className="absolute top-7 left-2 w-10 h-1 bg-gray-600 rounded"></div>
-          <div className="absolute top-9 left-2 w-14 h-1 bg-gray-600 rounded"></div>
-        </div>
-        <h3 className="font-medium text-center">{t('settings.theme.darkNight')}</h3>
-        <p className="text-xs text-muted-foreground text-center mt-1">{t('settings.theme.darkNightDesc')}</p>
-      </div>
+          {/* Dark Night Theme Card */}
+          <CarouselItem className="pl-2 md:pl-4 basis-4/5 md:basis-1/2">
+            <div 
+              className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                baseTheme === 'dark-night' && themeMode !== 'system' 
+                  ? 'border-primary bg-primary/5' 
+                  : 'border-border hover:border-primary/50'
+              } ${themeMode === 'system' ? 'opacity-50 cursor-not-allowed' : ''}`}
+              onClick={() => handleThemeCardClick('dark-night')}
+            >
+              <div className="w-full h-20 bg-black border border-gray-800 rounded-lg shadow-sm relative overflow-hidden mb-3">
+                <div className="absolute top-0 left-0 w-full h-4 bg-gray-900"></div>
+                <div className="absolute top-4 left-2 w-12 h-2 bg-gray-700 rounded"></div>
+                <div className="absolute top-7 left-2 w-10 h-1 bg-gray-600 rounded"></div>
+                <div className="absolute top-9 left-2 w-14 h-1 bg-gray-600 rounded"></div>
+              </div>
+              <h3 className="font-medium text-center">{t('settings.theme.darkNight')}</h3>
+              <p className="text-xs text-muted-foreground text-center mt-1">{t('settings.theme.darkNightDesc')}</p>
+            </div>
+          </CarouselItem>
+        </CarouselContent>
+        <CarouselPrevious className="hidden sm:flex" />
+        <CarouselNext className="hidden sm:flex" />
+      </Carousel>
     </div>
   );
 
