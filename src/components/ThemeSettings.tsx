@@ -200,11 +200,11 @@ const ThemeSettings: React.FC = () => {
             </p>
           </div>
           
-          {/* Change View Dropdown */}
+          {/* Change View Dropdown - Now using translation */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="gap-2">
-                Change view
+                {t('settings.theme.changeView')}
                 <ChevronDown className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>

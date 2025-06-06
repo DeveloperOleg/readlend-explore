@@ -1,4 +1,3 @@
-
 export const enTranslations = {
   'common.comingSoon': 'Coming Soon',
   'common.error': 'Error',
@@ -195,5 +194,6 @@ export const enTranslations = {
   'search.authorNotFound': 'No authors found',
   'search.authorNotFoundDescription': 'Try searching with different keywords',
   'profile.preventCopying': 'Prevent Copying',
-  'profile.preventCopyingDescription': 'Prevent text selection, screenshots, and screen recording'
+  'profile.preventCopyingDescription': 'Prevent text selection, screenshots, and screen recording',
+  'settings.theme.changeView': 'Change view',
 };

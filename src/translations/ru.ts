@@ -1,4 +1,3 @@
-
 // Russian translations
 export const ruTranslations = {
   'greeting.morning': 'Доброе утро',
@@ -275,4 +274,5 @@ export const ruTranslations = {
   'settings.uiStyle': 'Стиль интерфейса',
   'settings.uiStyle.standard': 'Стандартный дизайн интерфейса',
   'settings.uiStyle.gradient': 'Улучшенный интерфейс с градиентами',
+  'settings.theme.changeView': 'Изменить вид',
 };
