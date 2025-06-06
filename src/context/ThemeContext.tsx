@@ -1,19 +1,21 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // Theme types
 type BaseTheme = 'light' | 'dark' | 'dark-night';
 type UIStyle = 'standard' | 'gradient';
 type ThemeMode = 'manual' | 'system';
+type ThemeInterfaceStyle = 'radio' | 'cards';
 
 interface ThemeContextType {
   baseTheme: BaseTheme;
   uiStyle: UIStyle;
   themeMode: ThemeMode;
+  themeInterfaceStyle: ThemeInterfaceStyle;
   toggleBaseTheme: () => void;
   toggleUIStyle: () => void;
   toggleThemeMode: () => void;
   setBaseTheme: (theme: BaseTheme) => void;
+  setThemeInterfaceStyle: (style: ThemeInterfaceStyle) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -37,6 +39,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     // Initialize theme mode from localStorage
     const savedMode = localStorage.getItem('readnest-theme-mode') as ThemeMode | null;
     return savedMode || 'manual';
+  });
+
+  const [themeInterfaceStyle, setThemeInterfaceStyle] = useState<ThemeInterfaceStyle>(() => {
+    // Initialize theme interface style from localStorage
+    const savedInterfaceStyle = localStorage.getItem('readnest-theme-interface-style') as ThemeInterfaceStyle | null;
+    return savedInterfaceStyle || 'radio';
   });
   
   // Update CSS variables based on selected theme
@@ -98,10 +106,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     localStorage.setItem('readnest-theme', baseTheme);
     localStorage.setItem('readnest-ui-style', uiStyle);
     localStorage.setItem('readnest-theme-mode', themeMode);
+    localStorage.setItem('readnest-theme-interface-style', themeInterfaceStyle);
     
     // Apply theme
     applyTheme();
-  }, [baseTheme, uiStyle, themeMode]);
+  }, [baseTheme, uiStyle, themeMode, themeInterfaceStyle]);
 
   const toggleBaseTheme = () => {
     if (themeMode === 'system') {
@@ -138,10 +147,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         baseTheme,
         uiStyle,
         themeMode,
+        themeInterfaceStyle,
         toggleBaseTheme,
         toggleUIStyle,
         toggleThemeMode,
-        setBaseTheme
+        setBaseTheme,
+        setThemeInterfaceStyle
       }}
     >
       {children}
