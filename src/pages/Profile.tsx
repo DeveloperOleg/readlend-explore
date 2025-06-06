@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -124,24 +123,14 @@ const Profile: React.FC = () => {
         <div className="flex flex-col px-3 sm:px-4">
           {/* Avatar and Stats Row */}
           <div className="flex items-center gap-4 sm:gap-6">
-            {/* Avatar with Story Ring */}
+            {/* Avatar without Story Ring and Edit Button */}
             <div className="relative">
-              <div className="rounded-full p-0.5 bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
-                <Avatar className="h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 border-2 border-background">
-                  <AvatarImage src={profileUser.avatarUrl || ''} alt={displayName} />
-                  <AvatarFallback className="text-lg sm:text-2xl">
-                    {displayName.charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-              {isCurrentUser && (
-                <button 
-                  className="absolute bottom-0 right-0 rounded-full bg-primary text-white p-0.5 sm:p-1 shadow-md"
-                  aria-label={t('profile.changePhoto') || 'Изменить фото'}
-                >
-                  <Edit className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
-                </button>
-              )}
+              <Avatar className="h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 border-2 border-border">
+                <AvatarImage src={profileUser.avatarUrl || ''} alt={displayName} />
+                <AvatarFallback className="text-lg sm:text-2xl">
+                  {displayName.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
             </div>
 
             {/* User Stats */}
