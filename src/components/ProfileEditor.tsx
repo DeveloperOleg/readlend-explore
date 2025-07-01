@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form';
 import AvatarSection from './profile/AvatarSection';
 import BioSection from './profile/BioSection';
 import { profileFormSchema, ProfileFormValues } from './profile/ProfileFormSchema';
+import { validateUsername, validateBio, sanitizeHtml } from '@/utils/validationUtils';
 
 const ProfileEditor: React.FC = () => {
   const { user, updateProfile } = useAuth();
@@ -35,21 +36,46 @@ const ProfileEditor: React.FC = () => {
   const onSubmit = async (values: ProfileFormValues) => {
     if (!user) return;
     
+    // Validate and sanitize inputs
+    const usernameValidation = validateUsername(values.username);
+    if (!usernameValidation.isValid) {
+      toast({
+        title: t('profile.updateError') || 'Ошибка',
+        description: usernameValidation.message,
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const bioValidation = validateBio(values.bio);
+    if (!bioValidation.isValid) {
+      toast({
+        title: t('profile.updateError') || 'Ошибка',
+        description: bioValidation.message,
+        variant: 'destructive',
+      });
+      return;
+    }
+    
     setIsLoading(true);
     try {
-      await updateProfile({ 
-        username: values.username,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        bio: values.bio,
+      // Sanitize all inputs
+      const sanitizedData = {
+        username: sanitizeHtml(values.username.trim()),
+        firstName: sanitizeHtml(values.firstName?.trim() || ''),
+        lastName: sanitizeHtml(values.lastName?.trim() || ''),
+        bio: bioValidation.sanitized,
         avatarUrl: avatarPreview || undefined,
-      });
+      };
+
+      await updateProfile(sanitizedData);
       
       toast({
         title: t('profile.updateSuccess') || 'Профиль обновлен',
         description: t('profile.updateSuccessMessage') || 'Ваш профиль был успешно обновлен',
       });
     } catch (error) {
+      console.error('Profile update error:', error);
       toast({
         title: t('profile.updateError') || 'Ошибка',
         description: t('profile.updateErrorMessage') || 'Произошла ошибка при обновлении профиля',
@@ -83,6 +109,7 @@ const ProfileEditor: React.FC = () => {
                 <Input 
                   placeholder={field.value ? field.value : "Не указано"} 
                   {...field} 
+                  maxLength={20}
                 />
               </FormControl>
               <FormMessage />
@@ -97,7 +124,11 @@ const ProfileEditor: React.FC = () => {
             <FormItem>
               <FormLabel>{t('profile.firstName') || 'Имя'}</FormLabel>
               <FormControl>
-                <Input placeholder={t('profile.firstNamePlaceholder') || 'Введите ваше имя'} {...field} />
+                <Input 
+                  placeholder={t('profile.firstNamePlaceholder') || 'Введите ваше имя'} 
+                  {...field} 
+                  maxLength={50}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -111,7 +142,11 @@ const ProfileEditor: React.FC = () => {
             <FormItem>
               <FormLabel>{t('profile.lastName') || 'Фамилия'}</FormLabel>
               <FormControl>
-                <Input placeholder={t('profile.lastNamePlaceholder') || 'Введите вашу фамилию (по желанию)'} {...field} />
+                <Input 
+                  placeholder={t('profile.lastNamePlaceholder') || 'Введите вашу фамилию (по желанию)'} 
+                  {...field} 
+                  maxLength={50}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -8,6 +8,9 @@ import { generateDisplayId } from '@/utils/authUtils';
 import useAuthFunctions from '@/hooks/useAuthFunctions';
 import { useInternet } from '@/context/InternetContext';
 import { WifiOff } from 'lucide-react';
+import { hashPassword, verifyPassword, isPasswordStrong } from '@/utils/passwordUtils';
+import { createSession, getSession, clearSession } from '@/utils/sessionUtils';
+import { validateUsername, checkRateLimit, resetRateLimit, sanitizeHtml } from '@/utils/validationUtils';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -20,11 +23,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { isOnline } = useInternet();
 
   useEffect(() => {
-    // Check for existing user in localStorage
-    const storedUser = localStorage.getItem('readnest-user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-      setIsAuthenticated(true);
+    // Check for existing secure session
+    const session = getSession();
+    if (session) {
+      // Try to restore user from session
+      const storedUser = localStorage.getItem('readnest-user');
+      if (storedUser) {
+        try {
+          const userData = JSON.parse(storedUser);
+          if (userData.id === session.userId) {
+            setUser(userData);
+            setIsAuthenticated(true);
+          } else {
+            // Session mismatch, clear everything
+            clearSession();
+            localStorage.removeItem('readnest-user');
+          }
+        } catch {
+          clearSession();
+          localStorage.removeItem('readnest-user');
+        }
+      }
+    } else {
+      // Clear any old localStorage data if no valid session
+      const storedUser = localStorage.getItem('readnest-user');
+      if (storedUser) {
+        localStorage.removeItem('readnest-user');
+      }
     }
   }, []);
 
@@ -37,21 +62,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return false;
     }
 
-    // For demo, check against hardcoded credentials for test account
-    if (username === 'tester111' && password === 'tester111') {
-      // Ensure we have a fixed test displayId for the demo account
-      const testDisplayId = '123456'; // Fixed 6-digit ID for test account
+    // Rate limiting for login attempts
+    const rateLimitKey = `login_${username}`;
+    if (!checkRateLimit(rateLimitKey, 5, 15 * 60 * 1000)) {
+      uiToast({
+        title: "Слишком много попыток входа",
+        description: "Попробуйте снова через 15 минут",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    // Validate input
+    const usernameValidation = validateUsername(username);
+    if (!usernameValidation.isValid) {
+      uiToast({
+        title: "Ошибка входа",
+        description: usernameValidation.message,
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    // Sanitize username
+    const cleanUsername = sanitizeHtml(username.trim());
+
+    // For demo, check against hardcoded test account first
+    if (cleanUsername === 'tester111' && password === 'tester111') {
+      const testDisplayId = '123456';
       
       const userData: User = { 
         id: 'user-1234-5678-9012',
-        username,
+        username: cleanUsername,
         displayId: testDisplayId,
         subscriptions: [],
         subscribers: [],
         blockedUsers: [],
         publishedBooks: [],
-        isTestAccount: true, // Mark as test account
-        banStatus: undefined, // User is not banned
+        isTestAccount: true,
+        banStatus: undefined,
         privacy: {
           hideSubscriptions: false,
           preventCopying: false,
@@ -61,9 +110,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         }
       };
+      
       setUser(userData);
       setIsAuthenticated(true);
+      
+      // Create secure session
+      createSession(userData.id, userData.username);
       localStorage.setItem('readnest-user', JSON.stringify(userData));
+      
+      // Reset rate limit on successful login
+      resetRateLimit(rateLimitKey);
       
       uiToast({
         title: "Успешный вход",
@@ -82,23 +138,54 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return true;
     }
 
-    // Check for stored real accounts
+    // Check for stored real accounts with hashed passwords
     const storedAccounts = localStorage.getItem('readnest-accounts') || '{}';
     const accounts = JSON.parse(storedAccounts);
     
-    if (accounts[username] && accounts[username].password === password) {
-      const userData = accounts[username].userData;
-      setUser(userData);
-      setIsAuthenticated(true);
-      localStorage.setItem('readnest-user', JSON.stringify(userData));
+    if (accounts[cleanUsername]) {
+      const storedAccount = accounts[cleanUsername];
       
-      uiToast({
-        title: "Успешный вход",
-        description: "Вы успешно вошли в свой аккаунт.",
-      });
+      // Check if password is already hashed (new format) or plain text (old format)
+      let passwordMatches = false;
       
-      navigate('/home');
-      return true;
+      if (storedAccount.isHashed) {
+        // New secure format
+        passwordMatches = await verifyPassword(password, storedAccount.password);
+      } else {
+        // Old plain text format - check and migrate
+        if (storedAccount.password === password) {
+          passwordMatches = true;
+          // Migrate to hashed password
+          const hashedPwd = await hashPassword(password);
+          accounts[cleanUsername] = {
+            ...storedAccount,
+            password: hashedPwd,
+            isHashed: true
+          };
+          localStorage.setItem('readnest-accounts', JSON.stringify(accounts));
+        }
+      }
+      
+      if (passwordMatches) {
+        const userData = storedAccount.userData;
+        setUser(userData);
+        setIsAuthenticated(true);
+        
+        // Create secure session
+        createSession(userData.id, userData.username);
+        localStorage.setItem('readnest-user', JSON.stringify(userData));
+        
+        // Reset rate limit on successful login
+        resetRateLimit(rateLimitKey);
+        
+        uiToast({
+          title: "Успешный вход",
+          description: "Вы успешно вошли в свой аккаунт.",
+        });
+        
+        navigate('/home');
+        return true;
+      }
     }
     
     uiToast({
@@ -118,21 +205,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return false;
     }
 
-    // Validate username and password
-    if (username.length < 3 || password.length < 6) {
+    // Validate username
+    const usernameValidation = validateUsername(username);
+    if (!usernameValidation.isValid) {
       uiToast({
         title: "Ошибка регистрации",
-        description: "Имя пользователя должно содержать не менее 3 символов, а пароль - не менее 6 символов.",
+        description: usernameValidation.message,
         variant: "destructive",
       });
       return false;
     }
+
+    // Validate password strength
+    const passwordValidation = isPasswordStrong(password);
+    if (!passwordValidation.isStrong) {
+      uiToast({
+        title: "Ошибка регистрации",
+        description: passwordValidation.message,
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    // Sanitize username
+    const cleanUsername = sanitizeHtml(username.trim());
     
     // Check if username already exists
     const storedAccounts = localStorage.getItem('readnest-accounts') || '{}';
     const accounts = JSON.parse(storedAccounts);
     
-    if (accounts[username] || username === 'tester111') {
+    if (accounts[cleanUsername] || cleanUsername === 'tester111') {
       uiToast({
         title: "Ошибка регистрации",
         description: "Пользователь с таким именем уже существует.",
@@ -141,19 +243,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return false;
     }
     
-    // Create new user
+    // Create new user with hashed password
     const userId = `user-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
     const displayId = generateDisplayId();
+    const hashedPwd = await hashPassword(password);
     
     const userData: User = {
       id: userId,
-      username,
+      username: cleanUsername,
       displayId,
       subscriptions: [],
       subscribers: [],
       blockedUsers: [],
       publishedBooks: [],
-      isTestAccount: false, // Regular account, not a test one
+      isTestAccount: false,
       privacy: {
         hideSubscriptions: false,
         preventCopying: false,
@@ -164,17 +267,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     };
     
-    // Store account
-    accounts[username] = {
-      password,
+    // Store account with hashed password
+    accounts[cleanUsername] = {
+      password: hashedPwd,
+      isHashed: true,
       userData
     };
     
     localStorage.setItem('readnest-accounts', JSON.stringify(accounts));
     
-    // Auto login
+    // Auto login with secure session
     setUser(userData);
     setIsAuthenticated(true);
+    createSession(userData.id, userData.username);
     localStorage.setItem('readnest-user', JSON.stringify(userData));
     
     uiToast({
@@ -197,9 +302,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     setUser(null);
     setIsAuthenticated(false);
-    localStorage.removeItem('readnest-user');
     
-    // После выхода перенаправляем на страницу входа
+    // Clear secure session
+    clearSession();
+    
     navigate('/', { replace: true });
   };
 
