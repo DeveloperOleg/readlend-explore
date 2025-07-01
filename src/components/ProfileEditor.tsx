@@ -71,7 +71,6 @@ const ProfileEditor: React.FC = () => {
           avatarError={avatarError}
           setAvatarError={setAvatarError}
           username={user?.username}
-          displayId={user?.displayId}
         />
       
         <FormField

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, User, Mail, Calendar, AlertTriangle, Shield, Info } from 'lucide-react';
+import { ArrowLeft, User, Mail, Calendar, AlertTriangle, Shield, Info, Copy } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -82,6 +82,16 @@ const AccountSettings: React.FC = () => {
     return null;
   };
 
+  const handleCopyUserId = () => {
+    if (user?.displayId) {
+      navigator.clipboard.writeText(user.displayId);
+      toast({
+        title: t('profile.usernameCopied') || 'ID скопирован',
+        description: `#${user.displayId}`,
+      });
+    }
+  };
+
   const banStatus = getBanStatus();
 
   return (
@@ -113,6 +123,25 @@ const AccountSettings: React.FC = () => {
                   <Label>{t('account.username')}</Label>
                   <Input 
                     value={user?.username || ''} 
+                    disabled 
+                    className="mt-1"
+                  />
+                </div>
+
+                <div>
+                  <Label className="flex items-center gap-2">
+                    {t('profile.userID') || 'ID пользователя'}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0"
+                      onClick={handleCopyUserId}
+                    >
+                      <Copy className="h-3 w-3" />
+                    </Button>
+                  </Label>
+                  <Input 
+                    value={`#${user?.displayId || ''}`} 
                     disabled 
                     className="mt-1"
                   />
