@@ -1,3 +1,4 @@
+
 export const enTranslations = {
   'common.comingSoon': 'Coming Soon',
   'common.error': 'Error',
@@ -196,4 +197,10 @@ export const enTranslations = {
   'profile.preventCopying': 'Prevent Copying',
   'profile.preventCopyingDescription': 'Prevent text selection, screenshots, and screen recording',
   'settings.theme.changeView': 'Change view',
+  'blocked.unblocked': 'User Unblocked',
+  'blocked.unblockedMessage': 'User has been removed from your blocklist',
+  'blocked.noBlocked': 'No Blocked Users',
+  'blocked.noBlockedDescription': 'You have not blocked any users',
+  'blocked.blockedUser': 'Blocked User',
+  'blocked.unblock': 'Unblock',
 };

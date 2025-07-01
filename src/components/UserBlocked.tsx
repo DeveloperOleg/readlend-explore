@@ -83,7 +83,7 @@ const UserBlocked: React.FC = () => {
                 onClick={() => setShowBanLevels(prev => !prev)}
               >
                 <Info className="h-4 w-4" />
-                <span>{t('blocked.banInfo') || 'Система бана'}</span>
+                <span>Система бана</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent className="max-w-xs">
