@@ -58,14 +58,21 @@ export const useSearch = () => {
       setSearching(false);
       
       if (isTestAccount) {
-        if (searchType === 'authors') {
-          const results = searchTestAuthors(searchQuery);
-          setAuthorResults(results);
-          setShowEmpty(results.length === 0);
+        // Search both books and authors simultaneously
+        const bookResults = searchTestBooks(searchQuery);
+        const authorResults = searchTestAuthors(searchQuery);
+        
+        setBookResults(bookResults);
+        setAuthorResults(authorResults);
+        
+        // Show empty state only if no results found in either category
+        setShowEmpty(bookResults.length === 0 && authorResults.length === 0);
+        
+        // Set search type based on which has more results, defaulting to books
+        if (authorResults.length > bookResults.length) {
+          setSearchType('authors');
         } else {
-          const results = searchTestBooks(searchQuery);
-          setBookResults(results);
-          setShowEmpty(results.length === 0);
+          setSearchType('books');
         }
       } else {
         setShowEmpty(true);

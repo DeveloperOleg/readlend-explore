@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, X, Book, User } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/LanguageContext';
@@ -8,8 +8,8 @@ import EmptyState from './EmptyState';
 import SearchHistory from './SearchHistory';
 import SearchResults from './SearchResults';
 import SearchLoadingState from './SearchLoadingState';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSearch } from '@/hooks/useSearch';
+import { useTypingEffect } from '@/hooks/useTypingEffect';
 
 interface SearchBarProps {
   defaultExpanded?: boolean;
@@ -20,6 +20,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ defaultExpanded = false }) => {
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { t } = useLanguage();
+  const typingPlaceholder = useTypingEffect();
 
   const {
     query,
@@ -75,6 +76,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ defaultExpanded = false }) => {
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
+    // Default to books search when no type is specified
     handleSearch(query);
   };
 
@@ -104,11 +106,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ defaultExpanded = false }) => {
     }
   };
 
-  const handleTypeChange = (value: string) => {
-    setSearchType(value as 'books' | 'authors');
-    clearResults();
-  };
-
   const handleResultsClose = () => {
     setAuthorResults([]);
     setBookResults([]);
@@ -122,71 +119,49 @@ const SearchBar: React.FC<SearchBarProps> = ({ defaultExpanded = false }) => {
     <>
       <div 
         ref={searchRef}
-        className={`search-bar glass transition-all duration-300 ${
-          expanded ? 'search-bar-expanded' : 'search-bar-collapsed'
+        className={`search-bar transition-all duration-300 ${
+          expanded ? 'search-bar-expanded bg-muted/50' : 'search-bar-collapsed'
         }`}
       >
         {expanded ? (
-          <div className="w-full">
-            <Tabs defaultValue="books" onValueChange={handleTypeChange} className="w-full">
-              <div className="flex items-center p-1">
-                <TabsList className="h-8">
-                  <TabsTrigger value="books" className="text-xs px-3 py-1 h-6">
-                    <Book className="h-3 w-3 mr-1" />
-                    Книги
-                  </TabsTrigger>
-                  <TabsTrigger value="authors" className="text-xs px-3 py-1 h-6">
-                    <User className="h-3 w-3 mr-1" />
-                    Авторы
-                  </TabsTrigger>
-                </TabsList>
-                
-                {!defaultExpanded && (
-                  <div className="flex gap-1 ml-auto">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={handleToggle}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
+          <div className="w-full p-3">
+            <form onSubmit={handleFormSubmit} className="flex w-full items-center">
+              <div className="relative flex-1">
+                <Input
+                  ref={inputRef}
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder={query ? '' : typingPlaceholder}
+                  className="border-0 bg-muted/70 focus-visible:ring-0 h-12 pr-8 text-base"
+                />
+                {query && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-12 w-10"
+                    onClick={handleClearInput}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
                 )}
               </div>
-              
-              <form onSubmit={handleFormSubmit} className="flex w-full items-center px-2 pb-2">
-                <div className="relative flex-1">
-                  <Input
-                    ref={inputRef}
-                    type="text"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder={
-                      searchType === 'books' 
-                        ? "Поиск книг..."
-                        : "Поиск авторов..."
-                    }
-                    className="border-0 bg-transparent focus-visible:ring-0 h-10 pr-8"
-                  />
-                  {query && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-0 top-0 h-10 w-8"
-                      onClick={handleClearInput}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-                <Button type="submit" variant="ghost" size="sm">
-                  <Search className="h-4 w-4" />
+              <Button type="submit" variant="ghost" size="sm" className="ml-2">
+                <Search className="h-4 w-4" />
+              </Button>
+              {!defaultExpanded && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 ml-1"
+                  onClick={handleToggle}
+                >
+                  <X className="h-4 w-4" />
                 </Button>
-              </form>
-            </Tabs>
+              )}
+            </form>
           </div>
         ) : (
           <Button
