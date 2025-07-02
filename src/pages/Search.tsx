@@ -16,7 +16,7 @@ const Search: React.FC = () => {
       
       <div className="flex justify-center">
         <div className="w-full max-w-md">
-          <SearchBar />
+          <SearchBar defaultExpanded={true} />
         </div>
       </div>
       

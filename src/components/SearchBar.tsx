@@ -13,8 +13,12 @@ import { toast } from 'sonner';
 
 type SearchType = 'books' | 'authors';
 
-const SearchBar: React.FC = () => {
-  const [expanded, setExpanded] = useState(false);
+interface SearchBarProps {
+  defaultExpanded?: boolean;
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ defaultExpanded = false }) => {
+  const [expanded, setExpanded] = useState(defaultExpanded);
   const [query, setQuery] = useState('');
   const [searching, setSearching] = useState(false);
   const [showEmpty, setShowEmpty] = useState(false);
@@ -44,7 +48,7 @@ const SearchBar: React.FC = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node) && expanded) {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node) && expanded && !defaultExpanded) {
         setExpanded(false);
         setQuery('');
         setShowEmpty(false);
@@ -56,7 +60,7 @@ const SearchBar: React.FC = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [expanded]);
+  }, [expanded, defaultExpanded]);
 
   useEffect(() => {
     if (expanded && inputRef.current) {
@@ -125,6 +129,8 @@ const SearchBar: React.FC = () => {
   };
 
   const handleToggle = () => {
+    if (defaultExpanded) return; // Don't allow collapse when defaultExpanded is true
+    
     setExpanded(prev => !prev);
     if (!expanded) {
       setQuery('');
@@ -155,13 +161,17 @@ const SearchBar: React.FC = () => {
   const handleAuthorClick = (authorId: string) => {
     navigate(`/profile/${authorId}`);
     setAuthorResults([]);
-    setExpanded(false);
+    if (!defaultExpanded) {
+      setExpanded(false);
+    }
   };
 
   const handleBookClick = (bookId: string) => {
     console.log(`Navigate to book ${bookId}`);
     setBookResults([]);
-    setExpanded(false);
+    if (!defaultExpanded) {
+      setExpanded(false);
+    }
   };
 
   return (
@@ -187,17 +197,19 @@ const SearchBar: React.FC = () => {
                   </TabsTrigger>
                 </TabsList>
                 
-                <div className="flex gap-1 ml-auto">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8"
-                    onClick={handleToggle}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
+                {!defaultExpanded && (
+                  <div className="flex gap-1 ml-auto">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={handleToggle}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
               </div>
               
               <form onSubmit={handleSearch} className="flex w-full items-center px-2 pb-2">
