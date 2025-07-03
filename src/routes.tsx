@@ -16,6 +16,7 @@ const routes = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
+    errorElement: <div>Error loading home page</div>,
   },
   {
     path: "/book/:bookId",

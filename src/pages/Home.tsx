@@ -6,6 +6,9 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { testBooks } from '@/utils/testData';
 
 const Home: React.FC = () => {
+  console.log('Home component is rendering');
+  console.log('testBooks:', testBooks);
+  
   // Организуем книги по категориям
   const newBooks = testBooks.slice(0, 3);
   const recommendedBooks = [...testBooks].reverse().slice(0, 3);
@@ -18,6 +21,8 @@ const Home: React.FC = () => {
   ];
   
   const mayBooks = testBooks.slice(0, 3);
+
+  console.log('Rendering Home with data:', { newBooks, recommendedBooks, comics, mayBooks });
 
   return (
     <ScrollArea className="h-full w-full">
