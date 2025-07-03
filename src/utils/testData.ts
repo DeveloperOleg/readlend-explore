@@ -13,7 +13,7 @@ export const categories = [
   { id: '10', name: 'Психология' },
 ];
 
-// Расширяем интерфейс Book, чтобы добавить поля для содержимого книги
+// Updated Book interface to include rating and totalRatings
 export interface Book {
   id: string;
   title: string;
@@ -21,9 +21,11 @@ export interface Book {
   coverUrl: string | null;
   description?: string;
   content?: string;
+  rating: number;
+  totalRatings: number;
 }
 
-// Обновляем тестовые книги с дополнительным контентом
+// Updated test books with rating and totalRatings
 export const testBooks: Book[] = [
   {
     id: "book1",
@@ -31,6 +33,8 @@ export const testBooks: Book[] = [
     author: "Алиса Яркая",
     coverUrl: "/lovable-uploads/62d8f5f3-1bdd-40d2-bb32-c17c28ace726.png",
     description: "Увлекательная история о придворных интригах и борьбе за власть в Древнем Китае",
+    rating: 4.8,
+    totalRatings: 2547,
     content: `# Глава 1. Подарок наследника
 
 Лепестки сакуры кружились в воздухе, словно розовый снег, когда юная Лин переступила порог дворцового сада. Её руки дрожали, сжимая шкатулку из красного дерева — подарок от наследника престола.
@@ -53,6 +57,8 @@ export const testBooks: Book[] = [
     author: "Сергей Волков",
     coverUrl: null,
     description: "История о том, как один человек может изменить мир, если у него есть цель",
+    rating: 4.2,
+    totalRatings: 1234,
     content: `# Пролог
 
 Серые тучи заволокли небо, предвещая бурю. Алексей поднял воротник куртки, защищаясь от пронизывающего ветра, и ускорил шаг. Пустынные улицы казались чужими, хотя он прожил в этом городе всю жизнь.
@@ -73,6 +79,8 @@ export const testBooks: Book[] = [
     author: "Марина Светлая",
     coverUrl: "/lovable-uploads/0fac89ed-334a-49b5-a9ab-7f0ee0a4be4d.png",
     description: "Романтическая фантастика о любви, преодолевающая границы галактик",
+    rating: 4.6,
+    totalRatings: 3456,
     content: `# Глава 1
 
 — Ты не можешь просто так отправиться на другую планету! — голос матери звенел от возмущения, заглушая гудение космопорта.
@@ -97,6 +105,8 @@ export const testBooks: Book[] = [
     author: "Дмитрий Тёмный",
     coverUrl: "/lovable-uploads/c8191d2f-71ae-4773-89a8-c0d6da9da0b9.png",
     description: "Детективный триллер о серии загадочных убийств в маленьком городке",
+    rating: 4.4,
+    totalRatings: 2189,
     content: `# Глава 1. Возвращение
 
 Туман стелился над дорогой, превращая фары встречных машин в размытые жёлтые пятна. Михаил крепче сжал руль, всматриваясь в едва различимую разметку. Указатель "Темновск — 5 км" промелькнул и растворился в белой мгле.
@@ -115,6 +125,8 @@ export const testBooks: Book[] = [
     author: "Анна Роботова",
     coverUrl: "/lovable-uploads/7bf984f5-094b-4cf4-b63c-0a3cfa1b81e4.png",
     description: "Научная фантастика о создании первого искусственного интеллекта, способного переносить человеческое сознание",
+    rating: 4.7,
+    totalRatings: 4321,
     content: `# Пролог. Последняя запись
 
 Запись 42.
@@ -143,6 +155,8 @@ export const testBooks: Book[] = [
     author: "Елена Таёжная",
     coverUrl: "/lovable-uploads/10cefba9-bf52-4097-b268-137cf9ad8a9f.png",
     description: "Мистический триллер о группе туристов, столкнувшихся с древним злом в горах Алтая",
+    rating: 4.3,
+    totalRatings: 1876,
     content: `# Глава 1. Путь к озеру
 
 — Ребят, вы уверены, что мы не заблудились? — Катя остановилась, тяжело дыша, и сбросила с плеч тяжелый рюкзак.
