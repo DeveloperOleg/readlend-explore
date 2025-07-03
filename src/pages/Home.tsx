@@ -9,11 +9,14 @@ const Home: React.FC = () => {
   // Организуем книги по категориям
   const newBooks = testBooks.slice(0, 3);
   const recommendedBooks = [...testBooks].reverse().slice(0, 3);
+  
+  // Comics with proper routing format
   const comics = [
     { id: 'comic1', title: 'Русь: Правление', author: 'Павел Брятев', coverUrl: '/lovable-uploads/0fac89ed-334a-49b5-a9ab-7f0ee0a4be4d.png' },
     { id: 'comic2', title: 'Майор Гром', author: 'Сергей Железяка', coverUrl: '/lovable-uploads/7bf984f5-094b-4cf4-b63c-0a3cfa1b81e4.png' },
     { id: 'comic3', title: 'Метро 2033: Часть 1.2', author: 'ChatGPT', coverUrl: null },
   ];
+  
   const mayBooks = testBooks.slice(0, 3);
 
   return (
@@ -37,7 +40,8 @@ const Home: React.FC = () => {
           <BookCategory 
             title="Комиксы: с чего начать" 
             books={comics}
-            viewAllLink="/comics" 
+            viewAllLink="/comics"
+            linkPrefix="/comic/"
           />
           
           <BookCategory 
