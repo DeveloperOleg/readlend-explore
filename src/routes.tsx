@@ -10,49 +10,48 @@ import TopReads from "./pages/TopReads";
 import Recommendations from "./pages/Recommendations";
 import Featured from "./pages/Featured";
 import ComicsPage from "./pages/ComicsPage";
-import Layout from "./components/Layout";
 import ComicReader from '@/pages/ComicReader';
 
 const routes = createBrowserRouter([
   {
     path: "/",
-    element: <Layout><Home /></Layout>,
+    element: <Home />,
   },
   {
     path: "/book/:bookId",
-    element: <Layout><BookReader /></Layout>,
+    element: <BookReader />,
   },
   {
     path: "/comic/:comicId",
-    element: <Layout><ComicReader /></Layout>,
+    element: <ComicReader />,
   },
   {
     path: "/settings",
-    element: <Layout><Settings /></Layout>,
+    element: <Settings />,
   },
   {
     path: "/profile/:userId",
-    element: <Layout><Profile /></Layout>,
+    element: <Profile />,
   },
   {
     path: "/search",
-    element: <Layout><Search /></Layout>,
+    element: <Search />,
   },
   {
     path: "/top-reads",
-    element: <Layout><TopReads /></Layout>,
+    element: <TopReads />,
   },
   {
     path: "/recommendations",
-    element: <Layout><Recommendations /></Layout>,
+    element: <Recommendations />,
   },
   {
     path: "/featured",
-    element: <Layout><Featured /></Layout>,
+    element: <Featured />,
   },
   {
     path: "/comics",
-    element: <Layout><ComicsPage /></Layout>,
+    element: <ComicsPage />,
   },
   {
     path: "*",
