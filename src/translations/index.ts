@@ -1,6 +1,6 @@
 
 import { enTranslations } from './en';
-import { translations as ruTranslations } from './ru';
+import { ruTranslations } from './ru';
 
 export type Language = 'ru' | 'en';
 
