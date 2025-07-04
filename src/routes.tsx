@@ -12,51 +12,111 @@ import Recommendations from "./pages/Recommendations";
 import Featured from "./pages/Featured";
 import ComicsPage from "./pages/ComicsPage";
 import ComicReader from '@/pages/ComicReader';
+import Index from "./pages/Index";
 
 const routes = createBrowserRouter([
   {
     path: "/",
+    element: <Index />,
+    errorElement: <NotFound />
+  },
+  {
+    path: "/home",
     element: <Layout />,
     errorElement: <NotFound />,
     children: [
       {
         index: true,
         element: <Home />
-      },
+      }
+    ]
+  },
+  {
+    path: "/book/:bookId",
+    element: <Layout />,
+    children: [
       {
-        path: "book/:bookId",
+        index: true,
         element: <BookReader />
-      },
+      }
+    ]
+  },
+  {
+    path: "/comic/:comicId",
+    element: <Layout />,
+    children: [
       {
-        path: "comic/:comicId",
+        index: true,
         element: <ComicReader />
-      },
+      }
+    ]
+  },
+  {
+    path: "/settings",
+    element: <Layout />,
+    children: [
       {
-        path: "settings",
+        index: true,
         element: <Settings />
-      },
+      }
+    ]
+  },
+  {
+    path: "/profile/:userId",
+    element: <Layout />,
+    children: [
       {
-        path: "profile/:userId",
+        index: true,
         element: <Profile />
-      },
+      }
+    ]
+  },
+  {
+    path: "/search",
+    element: <Layout />,
+    children: [
       {
-        path: "search",
+        index: true,
         element: <Search />
-      },
+      }
+    ]
+  },
+  {
+    path: "/top-reads",
+    element: <Layout />,
+    children: [
       {
-        path: "top-reads",
+        index: true,
         element: <TopReads />
-      },
+      }
+    ]
+  },
+  {
+    path: "/recommendations",
+    element: <Layout />,
+    children: [
       {
-        path: "recommendations",
+        index: true,
         element: <Recommendations />
-      },
+      }
+    ]
+  },
+  {
+    path: "/featured",
+    element: <Layout />,
+    children: [
       {
-        path: "featured",
+        index: true,
         element: <Featured />
-      },
+      }
+    ]
+  },
+  {
+    path: "/comics",
+    element: <Layout />,
+    children: [
       {
-        path: "comics",
+        index: true,
         element: <ComicsPage />
       }
     ]
