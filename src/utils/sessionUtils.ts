@@ -51,7 +51,7 @@ export const getSession = (): SessionData | null => {
 
 export const clearSession = (): void => {
   sessionStorage.removeItem(SESSION_KEY);
-  localStorage.removeItem('readnest-user'); // Clear old storage too
+  localStorage.removeItem('readlend-user'); // Clear old storage too
 };
 
 export const refreshSession = (session: SessionData): SessionData => {
