@@ -11,7 +11,7 @@ interface SessionData {
 }
 
 const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours
-const SESSION_KEY = 'readlend_session';
+const SESSION_KEY = 'readnest_session';
 
 export const createSession = (userId: string, username: string): SessionData => {
   const token = crypto.getRandomValues(new Uint8Array(32)).reduce((acc, byte) => 
