@@ -27,7 +27,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const session = getSession();
     if (session) {
       // Try to restore user from session
-      const storedUser = localStorage.getItem('readnest-user');
+      const storedUser = localStorage.getItem('readland-user');
       if (storedUser) {
         try {
           const userData = JSON.parse(storedUser);
@@ -37,18 +37,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           } else {
             // Session mismatch, clear everything
             clearSession();
-            localStorage.removeItem('readnest-user');
+            localStorage.removeItem('readland-user');
           }
         } catch {
           clearSession();
-          localStorage.removeItem('readnest-user');
+          localStorage.removeItem('readland-user');
         }
       }
     } else {
       // Clear any old localStorage data if no valid session
-      const storedUser = localStorage.getItem('readnest-user');
+      const storedUser = localStorage.getItem('readland-user');
       if (storedUser) {
-        localStorage.removeItem('readnest-user');
+        localStorage.removeItem('readland-user');
       }
     }
   }, []);
@@ -116,7 +116,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       // Create secure session
       createSession(userData.id, userData.username);
-      localStorage.setItem('readnest-user', JSON.stringify(userData));
+      localStorage.setItem('readland-user', JSON.stringify(userData));
       
       // Reset rate limit on successful login
       resetRateLimit(rateLimitKey);
@@ -139,7 +139,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     // Check for stored real accounts with hashed passwords
-    const storedAccounts = localStorage.getItem('readnest-accounts') || '{}';
+    const storedAccounts = localStorage.getItem('readland-accounts') || '{}';
     const accounts = JSON.parse(storedAccounts);
     
     if (accounts[cleanUsername]) {
@@ -162,7 +162,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             password: hashedPwd,
             isHashed: true
           };
-          localStorage.setItem('readnest-accounts', JSON.stringify(accounts));
+          localStorage.setItem('readland-accounts', JSON.stringify(accounts));
         }
       }
       
@@ -173,7 +173,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         // Create secure session
         createSession(userData.id, userData.username);
-        localStorage.setItem('readnest-user', JSON.stringify(userData));
+        localStorage.setItem('readland-user', JSON.stringify(userData));
         
         // Reset rate limit on successful login
         resetRateLimit(rateLimitKey);
@@ -280,7 +280,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(userData);
     setIsAuthenticated(true);
     createSession(userData.id, userData.username);
-    localStorage.setItem('readnest-user', JSON.stringify(userData));
+    localStorage.setItem('readland-user', JSON.stringify(userData));
     
     uiToast({
       title: "Регистрация успешна",
