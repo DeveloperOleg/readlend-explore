@@ -1,8 +1,8 @@
 
 {
-  "name": "readnest-explore-android",
+  "name": "read lend-android",
   "version": "1.0.0",
-  "description": "Android build configuration for ReadNest Explore",
+  "description": "Android build configuration for Read lend",
   "scripts": {
     "build:android": "npm run build && npx cap sync android && npx cap open android"
   }
