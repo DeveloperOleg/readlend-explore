@@ -11,52 +11,111 @@ import Recommendations from "./pages/Recommendations";
 import Featured from "./pages/Featured";
 import ComicsPage from "./pages/ComicsPage";
 import ComicReader from '@/pages/ComicReader';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 const routes = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
-    errorElement: <div>Error loading home page</div>,
+    element: (
+      <ErrorBoundary>
+        <Home />
+      </ErrorBoundary>
+    ),
+    errorElement: (
+      <ErrorBoundary>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">Error loading home page</h1>
+            <button 
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              onClick={() => window.location.reload()}
+            >
+              Reload
+            </button>
+          </div>
+        </div>
+      </ErrorBoundary>
+    ),
   },
   {
     path: "/book/:bookId",
-    element: <BookReader />,
+    element: (
+      <ErrorBoundary>
+        <BookReader />
+      </ErrorBoundary>
+    ),
   },
   {
     path: "/comic/:comicId",
-    element: <ComicReader />,
+    element: (
+      <ErrorBoundary>
+        <ComicReader />
+      </ErrorBoundary>
+    ),
   },
   {
     path: "/settings",
-    element: <Settings />,
+    element: (
+      <ErrorBoundary>
+        <Settings />
+      </ErrorBoundary>
+    ),
   },
   {
     path: "/profile/:userId",
-    element: <Profile />,
+    element: (
+      <ErrorBoundary>
+        <Profile />
+      </ErrorBoundary>
+    ),
   },
   {
     path: "/search",
-    element: <Search />,
+    element: (
+      <ErrorBoundary>
+        <Search />
+      </ErrorBoundary>
+    ),
   },
   {
     path: "/top-reads",
-    element: <TopReads />,
+    element: (
+      <ErrorBoundary>
+        <TopReads />
+      </ErrorBoundary>
+    ),
   },
   {
     path: "/recommendations",
-    element: <Recommendations />,
+    element: (
+      <ErrorBoundary>
+        <Recommendations />
+      </ErrorBoundary>
+    ),
   },
   {
     path: "/featured",
-    element: <Featured />,
+    element: (
+      <ErrorBoundary>
+        <Featured />
+      </ErrorBoundary>
+    ),
   },
   {
     path: "/comics",
-    element: <ComicsPage />,
+    element: (
+      <ErrorBoundary>
+        <ComicsPage />
+      </ErrorBoundary>
+    ),
   },
   {
     path: "*",
-    element: <NotFound />,
+    element: (
+      <ErrorBoundary>
+        <NotFound />
+      </ErrorBoundary>
+    ),
   },
 ]);
 

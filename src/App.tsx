@@ -12,22 +12,28 @@ import routes from "./routes";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider>
-      <LanguageProvider>
-        <InternetProvider>
-          <AuthProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Sonner position="bottom-center" />
-              <RouterProvider router={routes} />
-            </TooltipProvider>
-          </AuthProvider>
-        </InternetProvider>
-      </LanguageProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  console.log('App component is rendering');
+  
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <LanguageProvider>
+          <InternetProvider>
+            <AuthProvider>
+              <TooltipProvider>
+                <Toaster />
+                <Sonner position="bottom-center" />
+                <div className="min-h-screen">
+                  <RouterProvider router={routes} />
+                </div>
+              </TooltipProvider>
+            </AuthProvider>
+          </InternetProvider>
+        </LanguageProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
