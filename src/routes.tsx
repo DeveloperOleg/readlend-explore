@@ -1,5 +1,6 @@
 
 import { createBrowserRouter } from "react-router-dom";
+import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import BookReader from "./pages/BookReader";
 import Settings from "./pages/Settings";
@@ -11,49 +12,54 @@ import Recommendations from "./pages/Recommendations";
 import Featured from "./pages/Featured";
 import ComicsPage from "./pages/ComicsPage";
 import ComicReader from '@/pages/ComicReader';
-import ErrorBoundary from '@/components/ErrorBoundary';
 
 const routes = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
-    errorElement: <NotFound />
-  },
-  {
-    path: "/book/:bookId",
-    element: <BookReader />
-  },
-  {
-    path: "/comic/:comicId",
-    element: <ComicReader />
-  },
-  {
-    path: "/settings",
-    element: <Settings />
-  },
-  {
-    path: "/profile/:userId",
-    element: <Profile />
-  },
-  {
-    path: "/search",
-    element: <Search />
-  },
-  {
-    path: "/top-reads",
-    element: <TopReads />
-  },
-  {
-    path: "/recommendations",
-    element: <Recommendations />
-  },
-  {
-    path: "/featured",
-    element: <Featured />
-  },
-  {
-    path: "/comics",
-    element: <ComicsPage />
+    element: <Layout />,
+    errorElement: <NotFound />,
+    children: [
+      {
+        index: true,
+        element: <Home />
+      },
+      {
+        path: "book/:bookId",
+        element: <BookReader />
+      },
+      {
+        path: "comic/:comicId",
+        element: <ComicReader />
+      },
+      {
+        path: "settings",
+        element: <Settings />
+      },
+      {
+        path: "profile/:userId",
+        element: <Profile />
+      },
+      {
+        path: "search",
+        element: <Search />
+      },
+      {
+        path: "top-reads",
+        element: <TopReads />
+      },
+      {
+        path: "recommendations",
+        element: <Recommendations />
+      },
+      {
+        path: "featured",
+        element: <Featured />
+      },
+      {
+        path: "comics",
+        element: <ComicsPage />
+      }
+    ]
   },
   {
     path: "*",
