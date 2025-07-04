@@ -16,12 +16,14 @@ interface BookCategoryProps {
   title: string;
   books: Book[];
   viewAllLink: string;
+  linkPrefix?: string;
 }
 
 export const BookCategory: React.FC<BookCategoryProps> = ({
   title,
   books,
   viewAllLink,
+  linkPrefix = '/book/',
 }) => {
   return (
     <section className="mb-8">
@@ -35,12 +37,14 @@ export const BookCategory: React.FC<BookCategoryProps> = ({
       <div className="grid grid-cols-3 gap-3">
         {books.map((book) => (
           <div key={book.id} className="min-w-0">
-            <BookCover
-              id={book.id}
-              title={book.title}
-              author={book.author}
-              coverUrl={book.coverUrl}
-            />
+            <Link to={`${linkPrefix}${book.id}`}>
+              <BookCover
+                id={book.id}
+                title={book.title}
+                author={book.author}
+                coverUrl={book.coverUrl}
+              />
+            </Link>
           </div>
         ))}
       </div>
