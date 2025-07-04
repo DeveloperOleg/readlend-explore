@@ -13,9 +13,9 @@ export default function LoginScreen() {
   
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      <h1 className="text-2xl font-bold mb-2">ReadNest</h1>
+      <h1 className="text-2xl font-bold mb-2">Read Land</h1>
       <p className="text-muted-foreground mb-6 text-center text-sm">
-        {t('auth.welcome') || 'Добро пожаловать в ReadNest - платформу для писателей и читателей'}
+        {t('auth.welcome') || 'Добро пожаловать в Читай Лэнд - платформа для писателей и читателей'}
       </p>
       
       <ConnectionStatus showAlert={!isOnline} />
@@ -23,7 +23,7 @@ export default function LoginScreen() {
       <RegisterForm />
       
       <div className="text-xs text-muted-foreground mt-6 text-center">
-        <p>© 2025 ReadNest. Все права защищены.</p>
+        <p>© 2025 Read Land. Все права защищены.</p>
         <p className="mt-1">
           {t('auth.terms') || 'Используя это приложение, вы соглашаетесь с нашими условиями использования и политикой конфиденциальности.'}
         </p>
