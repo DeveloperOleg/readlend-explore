@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useEffect } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
@@ -31,7 +32,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 const Layout: React.FC = () => {
   const { baseTheme, toggleBaseTheme } = useTheme();
   const { t } = useLanguage();
-  const { logout, user } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
   const navigate = useNavigate();
@@ -45,6 +46,10 @@ const Layout: React.FC = () => {
   const [swipeStartX, setSwipeStartX] = useState(0);
   const [swipeStartY, setSwipeStartY] = useState(0);
   const [isSwipingHorizontally, setIsSwipingHorizontally] = useState(false);
+
+  if (!isAuthenticated) {
+    return <Outlet />;
+  }
 
   const handleLogout = () => {
     logout();

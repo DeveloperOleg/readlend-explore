@@ -1,6 +1,5 @@
-
 import { createBrowserRouter } from "react-router-dom";
-import Layout from "./components/Layout";
+import App from "./App";
 import Home from "./pages/Home";
 import BookReader from "./pages/BookReader";
 import Settings from "./pages/Settings";
@@ -11,119 +10,96 @@ import TopReads from "./pages/TopReads";
 import Recommendations from "./pages/Recommendations";
 import Featured from "./pages/Featured";
 import ComicsPage from "./pages/ComicsPage";
+import Layout from "./components/Layout";
 import ComicReader from '@/pages/ComicReader';
-import Index from "./pages/Index";
 
 const routes = createBrowserRouter([
   {
     path: "/",
-    element: <Index />,
-    errorElement: <NotFound />
-  },
-  {
-    path: "/home",
-    element: <Layout />,
+    element: <App />,
     errorElement: <NotFound />,
     children: [
       {
-        index: true,
-        element: <Home />
-      }
-    ]
-  },
-  {
-    path: "/book/:bookId",
-    element: <Layout />,
-    children: [
+        path: "/",
+        element: (
+          <Layout>
+            <Home />
+          </Layout>
+        ),
+      },
       {
-        index: true,
-        element: <BookReader />
-      }
-    ]
+        path: "/book/:bookId",
+        element: (
+          <Layout>
+            <BookReader />
+          </Layout>
+        ),
+      },
+      {
+        path: "/settings",
+        element: (
+          <Layout>
+            <Settings />
+          </Layout>
+        ),
+      },
+      {
+        path: "/profile/:userId",
+        element: (
+          <Layout>
+            <Profile />,
+          </Layout>
+        ),
+      },
+      {
+        path: "/search",
+        element: (
+          <Layout>
+            <Search />
+          </Layout>
+        ),
+      },
+      {
+        path: "/top-reads",
+        element: (
+          <Layout>
+            <TopReads />
+          </Layout>
+        ),
+      },
+      {
+        path: "/recommendations",
+        element: (
+          <Layout>
+            <Recommendations />
+          </Layout>
+        ),
+      },
+      {
+        path: "/featured",
+        element: (
+          <Layout>
+            <Featured />
+          </Layout>
+        ),
+      },
+      {
+        path: "/comics",
+        element: (
+          <Layout>
+            <ComicsPage />
+          </Layout>
+        ),
+      },
+    ],
   },
   {
     path: "/comic/:comicId",
-    element: <Layout />,
-    children: [
-      {
-        index: true,
-        element: <ComicReader />
-      }
-    ]
-  },
-  {
-    path: "/settings",
-    element: <Layout />,
-    children: [
-      {
-        index: true,
-        element: <Settings />
-      }
-    ]
-  },
-  {
-    path: "/profile/:userId",
-    element: <Layout />,
-    children: [
-      {
-        index: true,
-        element: <Profile />
-      }
-    ]
-  },
-  {
-    path: "/search",
-    element: <Layout />,
-    children: [
-      {
-        index: true,
-        element: <Search />
-      }
-    ]
-  },
-  {
-    path: "/top-reads",
-    element: <Layout />,
-    children: [
-      {
-        index: true,
-        element: <TopReads />
-      }
-    ]
-  },
-  {
-    path: "/recommendations",
-    element: <Layout />,
-    children: [
-      {
-        index: true,
-        element: <Recommendations />
-      }
-    ]
-  },
-  {
-    path: "/featured",
-    element: <Layout />,
-    children: [
-      {
-        index: true,
-        element: <Featured />
-      }
-    ]
-  },
-  {
-    path: "/comics",
-    element: <Layout />,
-    children: [
-      {
-        index: true,
-        element: <ComicsPage />
-      }
-    ]
-  },
-  {
-    path: "*",
-    element: <NotFound />
+    element: (
+      <Layout>
+        <ComicReader />
+      </Layout>
+    ),
   },
 ]);
 
