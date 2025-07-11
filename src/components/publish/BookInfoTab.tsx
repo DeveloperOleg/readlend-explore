@@ -121,7 +121,7 @@ const BookInfoTab: React.FC<BookInfoTabProps> = ({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="genre">Жанр книги</Label>
+          <Label htmlFor="genre">Жанр</Label>
           <Select value={genre} onValueChange={(value) => setGenre(value as BookGenre)}>
             <SelectTrigger id="genre">
               <SelectValue placeholder="Выберите жанр" />
