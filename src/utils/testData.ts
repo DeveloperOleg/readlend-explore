@@ -19,7 +19,7 @@ export interface Book {
   title: string;
   author: string;
   coverUrl: string | null;
-  description?: string;
+  description: string;
   content?: string;
   rating: number;
   totalRatings: number;
