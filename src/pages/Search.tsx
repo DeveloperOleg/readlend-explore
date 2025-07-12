@@ -3,9 +3,12 @@ import React from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { Search as SearchIcon } from 'lucide-react';
 import SearchBar from '@/components/SearchBar';
+import EmptyState from '@/components/EmptyState';
+import { useSearch } from '@/hooks/useSearch';
 
 const Search: React.FC = () => {
   const { t } = useLanguage();
+  const { showEmpty, searchType, clearResults } = useSearch();
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -20,9 +23,28 @@ const Search: React.FC = () => {
         </div>
       </div>
       
-      <div className="text-center py-10">
-        <p className="text-muted-foreground">{t('search.startTyping')}</p>
-      </div>
+      {!showEmpty ? (
+        <div className="text-center py-10">
+          <p className="text-muted-foreground">{t('search.startTyping')}</p>
+        </div>
+      ) : (
+        <div className="flex justify-center py-10">
+          <EmptyState 
+            title={
+              searchType === 'books'
+                ? t('search.notFound')
+                : t('search.authorNotFound')
+            }
+            description={
+              searchType === 'books'
+                ? t('search.tryAgain')
+                : t('search.authorNotFoundDescription')
+            }
+            icon={searchType === 'books' ? 'book' : 'user'}
+            onClose={clearResults}
+          />
+        </div>
+      )}
     </div>
   );
 };

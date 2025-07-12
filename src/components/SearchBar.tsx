@@ -4,7 +4,6 @@ import { Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/LanguageContext';
-import EmptyState from './EmptyState';
 import SearchHistory from './SearchHistory';
 import SearchResults from './SearchResults';
 import SearchLoadingState from './SearchLoadingState';
@@ -204,26 +203,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ defaultExpanded = false }) => {
           onClose={handleResultsClose}
           defaultExpanded={defaultExpanded}
         />
-      )}
-      
-      {/* Empty State */}
-      {showEmpty && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-background/95 px-4 py-16 animate-fade-in">
-          <EmptyState 
-            title={
-              searchType === 'books'
-                ? t('search.notFound')
-                : t('search.authorNotFound')
-            }
-            description={
-              searchType === 'books'
-                ? t('search.tryAgain')
-                : t('search.authorNotFoundDescription')
-            }
-            icon={searchType === 'books' ? 'book' : 'user'}
-            onClose={() => setShowEmpty(false)} 
-          />
-        </div>
       )}
       
       {/* Loading State */}
