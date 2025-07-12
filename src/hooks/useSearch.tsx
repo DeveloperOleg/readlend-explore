@@ -53,10 +53,9 @@ export const useSearch = () => {
     addToHistory(searchQuery.trim());
     setSearching(true);
     setShowHistory(false);
+    setShowEmpty(false); // Reset empty state when starting new search
     
     setTimeout(() => {
-      setSearching(false);
-      
       if (isTestAccount) {
         // Search both books and authors simultaneously
         const bookResults = searchTestBooks(searchQuery);
@@ -66,7 +65,8 @@ export const useSearch = () => {
         setAuthorResults(authorResults);
         
         // Show empty state only if no results found in either category
-        setShowEmpty(bookResults.length === 0 && authorResults.length === 0);
+        const hasNoResults = bookResults.length === 0 && authorResults.length === 0;
+        setShowEmpty(hasNoResults);
         
         // Set search type based on which has more results, defaulting to books
         if (authorResults.length > bookResults.length) {
@@ -75,8 +75,14 @@ export const useSearch = () => {
           setSearchType('books');
         }
       } else {
+        // Clear any previous results
+        setBookResults([]);
+        setAuthorResults([]);
         setShowEmpty(true);
       }
+      
+      // Always set searching to false after processing results
+      setSearching(false);
     }, 800);
   };
 
