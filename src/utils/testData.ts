@@ -54,7 +54,7 @@ export const testBooks: Book[] = [
     id: "book2",
     title: "Время перемен",
     author: "Сергей Волков",
-    coverUrl: null,
+    coverUrl: "/lovable-uploads/c07f8bce-3d6d-44bb-bf4e-86bfc7c10a21.png",
     description: "История о том, как один человек может изменить мир, если у него есть цель",
     rating: 8.4,
     totalRatings: 1520,
