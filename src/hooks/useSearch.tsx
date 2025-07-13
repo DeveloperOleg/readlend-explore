@@ -64,25 +64,32 @@ export const useSearch = () => {
         setBookResults(bookResults);
         setAuthorResults(authorResults);
         
-        // Show empty state only if no results found in either category
+        // Check if we have results
         const hasNoResults = bookResults.length === 0 && authorResults.length === 0;
-        setShowEmpty(hasNoResults);
         
-        // Set search type based on which has more results, defaulting to books
-        if (authorResults.length > bookResults.length) {
-          setSearchType('authors');
+        if (hasNoResults) {
+          // Show empty state and stop loading
+          setShowEmpty(true);
+          setSearching(false);
         } else {
-          setSearchType('books');
+          // We have results, stop loading but don't show empty
+          setShowEmpty(false);
+          setSearching(false);
+          
+          // Set search type based on which has more results, defaulting to books
+          if (authorResults.length > bookResults.length) {
+            setSearchType('authors');
+          } else {
+            setSearchType('books');
+          }
         }
       } else {
-        // Clear any previous results
+        // Clear any previous results and show empty state for non-test accounts
         setBookResults([]);
         setAuthorResults([]);
         setShowEmpty(true);
+        setSearching(false);
       }
-      
-      // Always set searching to false after processing results
-      setSearching(false);
     }, 800);
   };
 
