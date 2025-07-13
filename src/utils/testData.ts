@@ -1,4 +1,3 @@
-
 // Mock data for testing purposes
 export const categories = [
   { id: '1', name: 'Фантастика' },
@@ -31,7 +30,7 @@ export const testBooks: Book[] = [
     id: "book1",
     title: "Веер Императора",
     author: "Алиса Яркая",
-    coverUrl: "/lovable-uploads/62d8f5f3-1bdd-40d2-bb32-c17c28ace726.png",
+    coverUrl: "/lovable-uploads/01c01930-5bfb-48ae-869d-a4e4d30a45ea.png",
     description: "Увлекательная история о придворных интригах и борьбе за власть в Древнем Китае",
     rating: 9.6,
     totalRatings: 2700,
@@ -78,7 +77,7 @@ export const testBooks: Book[] = [
     title: "Звёздная пыль",
     author: "Марина Светлая",
     coverUrl: "/lovable-uploads/0fac89ed-334a-49b5-a9ab-7f0ee0a4be4d.png",
-    description: "Романтическая фантастика о любви, преодолевающая границы галактик",
+    description: "Романтическая фантастика о любви, преодолевающей границы галактик",
     rating: 9.2,
     totalRatings: 3450,
     content: `# Глава 1
@@ -255,4 +254,3 @@ export const getTestUserById = (userId: string) => {
   // If not found and userId starts with user-, we could implement some test users here
   return null;
 };
-
