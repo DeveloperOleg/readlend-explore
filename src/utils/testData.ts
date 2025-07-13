@@ -1,4 +1,4 @@
-import { BookGenre, BookStatus, UserRole } from "@/types/auth";
+import { BookGenre, BookStatus } from "@/types/auth";
 
 export const testUsers = [
   {
@@ -8,7 +8,7 @@ export const testUsers = [
     displayName: "Test User",
     bio: "Just a test user for demo purposes.",
     profilePicture: "/images/avatars/avatar-1.png",
-    role: "user" as UserRole,
+    role: "user",
     isVerified: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -21,7 +21,7 @@ export const testUsers = [
     displayName: "Anna Petrova",
     bio: "Fantasy author and dreamer.",
     profilePicture: "/images/avatars/avatar-2.png",
-    role: "author" as UserRole,
+    role: "author",
     isVerified: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -34,7 +34,7 @@ export const testUsers = [
     displayName: "Sergey Volkov",
     bio: "Modern fiction writer.",
     profilePicture: "/images/avatars/avatar-3.png",
-    role: "author" as UserRole,
+    role: "author",
     isVerified: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -47,7 +47,7 @@ export const testUsers = [
     displayName: "Elena Smirnova",
     bio: "Passionate poet and dreamer.",
     profilePicture: "/images/avatars/avatar-4.png",
-    role: "author" as UserRole,
+    role: "author",
     isVerified: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -60,7 +60,7 @@ export const testUsers = [
     displayName: "Alex Morozov",
     bio: "Tech enthusiast and blogger.",
     profilePicture: "/images/avatars/avatar-5.png",
-    role: "user" as UserRole,
+    role: "user",
     isVerified: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -72,30 +72,80 @@ export const testAuthors = [
   {
     id: "author1",
     username: "anna_author",
-    displayName: "Anna Petrova",
+    firstName: "Anna",
+    lastName: "Petrova",
+    displayId: "123456",
     bio: "Fantasy author and dreamer.",
-    profilePicture: "/images/avatars/avatar-2.png",
+    avatarUrl: "/images/avatars/avatar-2.png",
+    subscriptions: [],
+    subscribers: [],
+    blockedUsers: [],
+    publishedBooks: [],
+    isTestAccount: true,
+    privacy: {
+      hideSubscriptions: false,
+      preventCopying: false,
+      commentSettings: {
+        global: true,
+        perBook: {}
+      }
+    }
   },
   {
     id: "author2",
     username: "sergey_writer",
-    displayName: "Sergey Volkov",
+    firstName: "Sergey",
+    lastName: "Volkov",
+    displayId: "234567",
     bio: "Modern fiction writer.",
-    profilePicture: "/images/avatars/avatar-3.png",
+    avatarUrl: "/images/avatars/avatar-3.png",
+    subscriptions: [],
+    subscribers: [],
+    blockedUsers: [],
+    publishedBooks: [],
+    isTestAccount: true,
+    privacy: {
+      hideSubscriptions: false,
+      preventCopying: false,
+      commentSettings: {
+        global: true,
+        perBook: {}
+      }
+    }
   },
   {
     id: "author3",
     username: "elena_poet",
-    displayName: "Elena Smirnova",
+    firstName: "Elena",
+    lastName: "Smirnova",
+    displayId: "345678",
     bio: "Passionate poet and dreamer.",
-    profilePicture: "/images/avatars/avatar-4.png",
+    avatarUrl: "/images/avatars/avatar-4.png",
+    subscriptions: [],
+    subscribers: [],
+    blockedUsers: [],
+    publishedBooks: [],
+    isTestAccount: true,
+    privacy: {
+      hideSubscriptions: false,
+      preventCopying: false,
+      commentSettings: {
+        global: true,
+        perBook: {}
+      }
+    }
   },
 ];
+
+export const getTestUserById = (userId: string) => {
+  return testAuthors.find(author => author.id === userId) || null;
+};
 
 export const searchTestAuthors = (query: string) => {
   const lowerCaseQuery = query.toLowerCase();
   return testAuthors.filter(author =>
-    author.displayName.toLowerCase().includes(lowerCaseQuery) ||
+    (author.firstName && author.firstName.toLowerCase().includes(lowerCaseQuery)) ||
+    (author.lastName && author.lastName.toLowerCase().includes(lowerCaseQuery)) ||
     author.username.toLowerCase().includes(lowerCaseQuery)
   );
 };
