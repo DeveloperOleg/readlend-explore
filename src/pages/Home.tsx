@@ -62,6 +62,7 @@ const Home: React.FC = () => {
             title="Комиксы: с чего начать" 
             books={comics}
             viewAllLink="/comics"
+            linkPrefix="/comic"
           />
           
           <BookCategory 
