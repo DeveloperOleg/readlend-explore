@@ -1,7 +1,7 @@
 // Russian translations
 export const ruTranslations = {
   'greeting.morning': 'Доброе утро',
-  'greeting.afternoon': 'Добрый день',
+  'greeting.afternoon': 'Добрый день', 
   'greeting.evening': 'Добрый вечер',
   'greeting.night': 'Доброй ночи',
   'nav.search': 'Поиск',
@@ -275,4 +275,13 @@ export const ruTranslations = {
   'settings.uiStyle.standard': 'Стандартный дизайн интерфейса',
   'settings.uiStyle.gradient': 'Улучшенный интерфейс с градиентами',
   'settings.theme.changeView': 'Изменить вид',
+  'book.save': 'Сохранить',
+  'book.aboutWork': 'О произведении',
+  'book.reviews': 'Отзывы',
+  'book.parts': 'Части',
+  'book.year': 'Год',
+  'book.userReviews': 'Отзывы пользователей',
+  'book.reactions': 'Реакции',
+  'book.genres': 'Жанры',
+  'book.description': 'Описание',
 };
