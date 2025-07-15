@@ -15,6 +15,7 @@ import Notifications from "./pages/Notifications";
 import Settings from "./pages/Settings";
 import Achievements from "./pages/Achievements";
 import BookReader from "./pages/BookReader";
+import ComicReader from "./pages/ComicReader";
 
 // Settings Pages
 import AccountSettings from "./pages/settings/AccountSettings";
@@ -56,6 +57,7 @@ const AppRoutes = () => {
             <Route path="settings/about" element={<AboutApp />} />
             <Route path="achievements" element={<Achievements />} />
             <Route path="book/:bookId" element={<BookReader />} />
+            <Route path="comic/:comicId" element={<ComicReader />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
