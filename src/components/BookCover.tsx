@@ -9,11 +9,18 @@ interface BookCoverProps {
   author: string;
   coverUrl?: string | null;
   id: string;
+  linkPrefix?: string;
 }
 
-export const BookCover: React.FC<BookCoverProps> = ({ title, author, coverUrl, id }) => {
+export const BookCover: React.FC<BookCoverProps> = ({ 
+  title, 
+  author, 
+  coverUrl, 
+  id, 
+  linkPrefix = '/book' 
+}) => {
   return (
-    <Link to={`/book/${id}`}>
+    <Link to={`${linkPrefix}/${id}`}>
       <Card className="overflow-hidden h-64 flex flex-col justify-end transition-transform hover:scale-[1.02]">
         <div 
           className="w-full h-full relative bg-gradient-to-b from-gray-700 to-gray-900"
