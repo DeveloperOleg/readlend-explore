@@ -7,9 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { Star, ThumbsUp, ThumbsDown, Calendar, BookOpen, Users, Zap } from 'lucide-react';
+import { Star, ThumbsUp, ThumbsDown, Calendar, BookOpen, Users, Zap, Heart, MessageCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import BookReactions from './BookReactions';
 
 interface Review {
   id: string;
@@ -82,12 +81,17 @@ const ComicAbout: React.FC<ComicAboutProps> = ({ comic }) => {
   const { toast } = useToast();
   const [reviews, setReviews] = useState<Review[]>(mockComicReviews);
   const [userRating, setUserRating] = useState<number>(0);
+  const [userReaction, setUserReaction] = useState<'like' | 'dislike' | null>(null);
+  const [reactionCounts, setReactionCounts] = useState({
+    likes: 156,
+    dislikes: 8
+  });
 
   const handleRating = (rating: number) => {
     if (!user) {
       toast({
-        title: t('auth.loginRequired') || 'Login required',
-        description: t('auth.loginRequiredMessage') || 'Please log in to rate this comic',
+        title: 'Требуется авторизация',
+        description: 'Пожалуйста, войдите в систему, чтобы оценить этот комикс',
         variant: 'destructive',
       });
       return;
@@ -95,8 +99,8 @@ const ComicAbout: React.FC<ComicAboutProps> = ({ comic }) => {
     
     setUserRating(rating);
     toast({
-      title: t('comic.ratingSubmitted') || 'Rating submitted',
-      description: t('comic.ratingSubmittedMessage') || 'Thank you for rating this comic!',
+      title: 'Оценка отправлена',
+      description: 'Спасибо за оценку этого комикса!',
     });
   };
 
@@ -130,6 +134,46 @@ const ComicAbout: React.FC<ComicAboutProps> = ({ comic }) => {
         return review;
       })
     );
+  };
+
+  const handleComicReaction = (reactionType: 'like' | 'dislike') => {
+    if (!user) {
+      toast({
+        title: 'Требуется авторизация',
+        description: 'Пожалуйста, войдите в систему, чтобы оценить комикс',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (userReaction === reactionType) {
+      // Remove reaction
+      setUserReaction(null);
+      setReactionCounts(prev => ({
+        ...prev,
+        [reactionType === 'like' ? 'likes' : 'dislikes']: Math.max(0, prev[reactionType === 'like' ? 'likes' : 'dislikes'] - 1)
+      }));
+    } else {
+      // Remove previous reaction if exists
+      if (userReaction) {
+        setReactionCounts(prev => ({
+          ...prev,
+          [userReaction === 'like' ? 'likes' : 'dislikes']: Math.max(0, prev[userReaction === 'like' ? 'likes' : 'dislikes'] - 1)
+        }));
+      }
+      
+      // Add new reaction
+      setUserReaction(reactionType);
+      setReactionCounts(prev => ({
+        ...prev,
+        [reactionType === 'like' ? 'likes' : 'dislikes']: prev[reactionType === 'like' ? 'likes' : 'dislikes'] + 1
+      }));
+      
+      toast({
+        title: reactionType === 'like' ? 'Комикс понравился!' : 'Реакция отправлена',
+        description: reactionType === 'like' ? 'Вы поставили лайк этому комиксу' : 'Вы поставили дизлайк этому комиксу',
+      });
+    }
   };
 
   const renderStars = (rating: number, interactive: boolean = false, onRate?: (rating: number) => void) => {
@@ -177,7 +221,7 @@ const ComicAbout: React.FC<ComicAboutProps> = ({ comic }) => {
               <Star className="w-5 h-5 text-yellow-400 fill-current" />
             </div>
             <div className="text-2xl font-bold">{averageRating.toFixed(1)}</div>
-            <div className="text-sm text-muted-foreground">{t('comic.rating')}</div>
+            <div className="text-sm text-muted-foreground">Рейтинг</div>
           </CardContent>
         </Card>
         
@@ -187,7 +231,7 @@ const ComicAbout: React.FC<ComicAboutProps> = ({ comic }) => {
               <Users className="w-5 h-5 text-blue-500" />
             </div>
             <div className="text-2xl font-bold">{reviews.length + comic.totalRatings}</div>
-            <div className="text-sm text-muted-foreground">{t('comic.reviews')}</div>
+            <div className="text-sm text-muted-foreground">Отзывы</div>
           </CardContent>
         </Card>
         
@@ -197,7 +241,7 @@ const ComicAbout: React.FC<ComicAboutProps> = ({ comic }) => {
               <BookOpen className="w-5 h-5 text-green-500" />
             </div>
             <div className="text-2xl font-bold">{comic.totalIssues}</div>
-            <div className="text-sm text-muted-foreground">{t('comic.issues')}</div>
+            <div className="text-sm text-muted-foreground">Выпуски</div>
           </CardContent>
         </Card>
         
@@ -207,20 +251,20 @@ const ComicAbout: React.FC<ComicAboutProps> = ({ comic }) => {
               <Zap className="w-5 h-5 text-purple-500" />
             </div>
             <div className="text-2xl font-bold capitalize">{comic.status || 'ongoing'}</div>
-            <div className="text-sm text-muted-foreground">{t('comic.status')}</div>
+            <div className="text-sm text-muted-foreground">Статус</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Comic Description */}
       <div>
-        <h3 className="text-lg font-semibold mb-3">{t('comic.description')}</h3>
+        <h3 className="text-lg font-semibold mb-3">Описание</h3>
         <p className="text-muted-foreground leading-relaxed">{comic.description}</p>
       </div>
 
       {/* Genre Tags */}
       <div>
-        <h3 className="text-lg font-semibold mb-3">{t('comic.genre')}</h3>
+        <h3 className="text-lg font-semibold mb-3">Жанр</h3>
         <div className="flex flex-wrap gap-2">
           {comic.genre && <Badge variant="secondary">{comic.genre}</Badge>}
           <Badge variant="secondary">Комикс</Badge>
@@ -233,12 +277,12 @@ const ComicAbout: React.FC<ComicAboutProps> = ({ comic }) => {
       {/* User Rating */}
       {user && (
         <div>
-          <h3 className="text-lg font-semibold mb-3">{t('comic.yourRating')}</h3>
+          <h3 className="text-lg font-semibold mb-3">Ваша оценка</h3>
           <div className="flex items-center gap-4">
             {renderStars(userRating, true, handleRating)}
             {userRating > 0 && (
               <span className="text-sm text-muted-foreground">
-                {t('comic.yourRatingText')} {userRating}/5
+                Ваша оценка: {userRating}/5
               </span>
             )}
           </div>
@@ -249,15 +293,39 @@ const ComicAbout: React.FC<ComicAboutProps> = ({ comic }) => {
 
       {/* Comic Reactions */}
       <div>
-        <h3 className="text-lg font-semibold mb-3">{t('comic.reactions')}</h3>
-        <BookReactions bookId={comic.id} authorId="author1" authorName={comic.author} />
+        <h3 className="text-lg font-semibold mb-3">Реакции на комикс</h3>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => handleComicReaction('like')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
+              userReaction === 'like' 
+                ? 'bg-blue-50 border-blue-200 text-blue-600' 
+                : 'hover:bg-gray-50'
+            }`}
+          >
+            <ThumbsUp className={`w-4 h-4 ${userReaction === 'like' ? 'fill-current' : ''}`} />
+            <span>{reactionCounts.likes}</span>
+          </button>
+          
+          <button
+            onClick={() => handleComicReaction('dislike')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
+              userReaction === 'dislike' 
+                ? 'bg-red-50 border-red-200 text-red-600' 
+                : 'hover:bg-gray-50'
+            }`}
+          >
+            <ThumbsDown className={`w-4 h-4 ${userReaction === 'dislike' ? 'fill-current' : ''}`} />
+            <span>{reactionCounts.dislikes}</span>
+          </button>
+        </div>
       </div>
 
       <Separator />
 
       {/* Reviews */}
       <div>
-        <h3 className="text-lg font-semibold mb-4">{t('comic.userReviews')} ({reviews.length})</h3>
+        <h3 className="text-lg font-semibold mb-4">Отзывы читателей ({reviews.length})</h3>
         <div className="space-y-4">
           {reviews.map((review) => (
             <Card key={review.id}>
