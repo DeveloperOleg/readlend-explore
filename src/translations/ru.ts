@@ -40,6 +40,7 @@ export const ruTranslations = {
   'settings.securityDesc': 'Настройки пароля и безопасности',
   'settings.appearance': 'Внешний вид',
   'settings.appearanceDesc': 'Настройки темы и отображения',
+  'settings.languageDesc': 'Настройки языка и отображения',
   'settings.darkMode': 'Темная тема',
   'settings.systemTheme': 'Системная тема',
   'settings.systemThemeEnabled': 'Тема будет автоматически меняться в соответствии с настройками вашего устройства.',

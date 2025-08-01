@@ -101,7 +101,7 @@ const SettingsPage: React.FC = () => {
               <div className="flex-1 text-left">
                 <h3 className="font-medium">{t('sidebar.language')}</h3>
                 <p className="text-xs text-muted-foreground">
-                  {t('settings.appearanceDesc')}
+                  {t('settings.languageDesc')}
                 </p>
               </div>
             </div>

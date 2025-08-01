@@ -102,6 +102,7 @@ export const enTranslations = {
   'settings.securityDesc': 'Password and security settings',
   'settings.appearance': 'Appearance',
   'settings.appearanceDesc': 'Theme and display settings',
+  'settings.languageDesc': 'Language and display settings',
   'sidebar.language': 'Language',
   'settings.storage': 'Data and Storage',
   'settings.storageDesc': 'Manage cache and storage',
