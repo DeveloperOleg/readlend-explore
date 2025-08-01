@@ -323,28 +323,30 @@ const SecuritySettings: React.FC = () => {
                 )}
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Button 
                   variant="outline" 
                   onClick={generateSecurePassword}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 flex-1"
                 >
-                  <RefreshCw className="h-4 w-4" />
-                  Сгенерировать пароль
+                  <RefreshCw className="h-4 w-4 flex-shrink-0" />
+                  <span className="truncate">Сгенерировать пароль</span>
                 </Button>
                 
                 {generatedPassword && (
                   <Button 
                     variant="outline" 
                     onClick={copyPassword}
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 flex-shrink-0 min-w-0"
                   >
                     {isPasswordCopied ? (
-                      <Check className="h-4 w-4" />
+                      <Check className="h-4 w-4 flex-shrink-0" />
                     ) : (
-                      <Copy className="h-4 w-4" />
+                      <Copy className="h-4 w-4 flex-shrink-0" />
                     )}
-                    {isPasswordCopied ? 'Скопировано' : 'Копировать'}
+                    <span className="truncate">
+                      {isPasswordCopied ? 'Скопировано' : 'Копировать'}
+                    </span>
                   </Button>
                 )}
               </div>
