@@ -15,17 +15,17 @@ const BlockedUsersPage: React.FC = () => {
   };
 
   return (
-    <div className="container px-2 pb-14">
+    <div className="container max-w-full px-2 pb-14 overflow-hidden">
       <div className="flex items-center gap-2 my-4">
-        <Button variant="ghost" size="icon" onClick={goBack}>
+        <Button variant="ghost" size="icon" onClick={goBack} className="flex-shrink-0">
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <h1 className="text-xl font-bold">{t('blocked.title')}</h1>
+        <h1 className="text-xl font-bold truncate">{t('blocked.title')}</h1>
       </div>
 
       <div className="flex items-center gap-2 mb-4">
-        <Ban className="h-5 w-5 text-primary" />
-        <h2 className="text-lg font-semibold">{t('blocked.title')}</h2>
+        <Ban className="h-5 w-5 text-primary flex-shrink-0" />
+        <h2 className="text-lg font-semibold truncate">{t('blocked.title')}</h2>
       </div>
 
       <UserBlocked />
