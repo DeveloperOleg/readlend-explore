@@ -29,6 +29,7 @@ const AccountSettings: React.FC = () => {
   const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [showDefianceSystem, setShowDefianceSystem] = useState(false);
 
   const goBack = () => {
     navigate(-1);
@@ -280,47 +281,69 @@ const AccountSettings: React.FC = () => {
                   </div>
                 )}
 
-                <div className="mt-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Info className="h-5 w-5 text-primary" />
-                    <h3 className="font-medium">Defiance System (Система Неповиновения)</h3>
+                {!showDefianceSystem && (
+                  <div className="mt-6">
+                    <Button
+                      variant="outline"
+                      className="w-full border-green-500 text-green-600 hover:bg-green-50 hover:border-green-600"
+                      onClick={() => setShowDefianceSystem(true)}
+                    >
+                      <Info className="h-4 w-4 mr-2" />
+                      Узнать больше о системе Неповиновения
+                    </Button>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    В будущем будет интегрирована система бана по уровням в полноценной версии приложения.
-                  </p>
-                  <div className="space-y-3">
-                    {banLevels.map((level) => (
-                      <div 
-                        key={level.level} 
-                        className={`flex items-center gap-3 p-3 rounded-lg border ${
-                          banStatus?.level === level.level 
-                            ? 'bg-red-50 border-red-200' 
-                            : 'bg-muted/30'
-                        }`}
-                      >
-                        <span className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${
-                          banStatus?.level === level.level
-                            ? 'bg-red-100 text-red-600'
-                            : 'bg-primary/10 text-primary'
-                        }`}>
-                          {level.level}
-                        </span>
-                        <div className="flex-1">
-                          <p className={`text-sm font-medium ${
-                            banStatus?.level === level.level ? 'text-red-800' : ''
+                )}
+
+                {showDefianceSystem && (
+                  <div className="mt-6">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Info className="h-5 w-5 text-primary" />
+                      <h3 className="font-medium">Defiance System (Система Неповиновения)</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      В будущем будет интегрирована система бана по уровням в полноценной версии приложения.
+                    </p>
+                    <div className="space-y-3">
+                      {banLevels.map((level) => (
+                        <div 
+                          key={level.level} 
+                          className={`flex items-center gap-3 p-3 rounded-lg border ${
+                            banStatus?.level === level.level 
+                              ? 'bg-red-50 border-red-200' 
+                              : 'bg-muted/30'
+                          }`}
+                        >
+                          <span className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${
+                            banStatus?.level === level.level
+                              ? 'bg-red-100 text-red-600'
+                              : 'bg-primary/10 text-primary'
                           }`}>
-                            {level.name} ({level.nameLoc})
-                          </p>
-                          <p className={`text-xs ${
-                            banStatus?.level === level.level ? 'text-red-600' : 'text-muted-foreground'
-                          }`}>
-                            {level.description}
-                          </p>
+                            {level.level}
+                          </span>
+                          <div className="flex-1">
+                            <p className={`text-sm font-medium ${
+                              banStatus?.level === level.level ? 'text-red-800' : ''
+                            }`}>
+                              {level.name} ({level.nameLoc})
+                            </p>
+                            <p className={`text-xs ${
+                              banStatus?.level === level.level ? 'text-red-600' : 'text-muted-foreground'
+                            }`}>
+                              {level.description}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
+                    <Button
+                      variant="ghost"
+                      className="w-full mt-4 text-muted-foreground"
+                      onClick={() => setShowDefianceSystem(false)}
+                    >
+                      Скрыть информацию
+                    </Button>
                   </div>
-                </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
