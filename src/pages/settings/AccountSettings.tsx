@@ -130,12 +130,12 @@ const AccountSettings: React.FC = () => {
                 </div>
 
                 <div>
-                  <Label className="flex items-center gap-2">
-                    {t('profile.userID') || 'ID пользователя'}
+                  <Label className="flex items-center justify-between">
+                    <span>{t('profile.userID') || 'ID пользователя'}</span>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-6 w-6 p-0"
+                      className="h-6 w-6 p-0 flex-shrink-0"
                       onClick={handleCopyUserId}
                     >
                       <Copy className="h-3 w-3" />
