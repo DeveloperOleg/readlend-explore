@@ -285,11 +285,11 @@ const AccountSettings: React.FC = () => {
                   <div className="mt-6">
                     <Button
                       variant="outline"
-                      className="w-full border-green-500 text-green-600 hover:bg-green-50 hover:border-green-600"
+                      className="w-full border-green-500 text-green-600 hover:bg-green-50 hover:border-green-600 h-auto py-3 px-4 text-wrap"
                       onClick={() => setShowDefianceSystem(true)}
                     >
-                      <Info className="h-4 w-4 mr-2" />
-                      Узнать больше о системе Неповиновения
+                      <Info className="h-4 w-4 mr-2 flex-shrink-0" />
+                      <span className="break-words">Узнать больше о системе Неповиновения</span>
                     </Button>
                   </div>
                 )}
