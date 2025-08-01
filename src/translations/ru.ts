@@ -62,7 +62,7 @@ export const ruTranslations = {
   'profile.privacy': 'Конфиденциальность',
   'profile.privacyDesc': 'Настройки приватности и видимости',
   'blocked.title': 'Черный список',
-  'blocked.desc': 'Управление заблокированными пользователями',
+  'blocked.desc': 'Управление пользователями',
   'settings.notifications': 'Уведомления',
   'settings.notificationsDesc': 'Настройка уведомлений приложения',
   'settings.about': 'О приложении',
