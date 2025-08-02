@@ -203,7 +203,7 @@ const Profile: React.FC = () => {
           <TabsContent value="books" className="mt-0">
             <Card className="border-0 shadow-none">
               <CardContent className="p-3 sm:p-4 text-center">
-                <p className="text-muted-foreground text-xs sm:text-sm">{t('profile.noPublishedBooks') || 'У вас пока нет опубликованных книг'}</p>
+                <p className="text-muted-foreground text-xs sm:text-sm">{t('profile.noPublishedBooks') || 'У вас пока нет опубликованного контента'}</p>
               </CardContent>
             </Card>
           </TabsContent>
