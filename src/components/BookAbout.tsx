@@ -210,13 +210,11 @@ const BookAbout: React.FC<BookAboutProps> = ({ book, totalParts = 118 }) => {
       <div className="bg-purple-50 rounded-lg p-4">
         <div className="flex items-center justify-between mb-2">
           <h3 className="font-semibold">Прогресс чтения</h3>
-          <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white text-xs">
-            Опубликовать
-          </Button>
+        
         </div>
         <div className="mb-2">
           <div className="flex justify-between text-sm text-muted-foreground mb-1">
-            <span>Глава 40 из 118</span>
+            <span>Глава 4 из 8</span>
             <span>34%</span>
           </div>
           <Progress value={34} className="h-2" />
