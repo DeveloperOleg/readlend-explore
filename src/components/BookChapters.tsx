@@ -88,23 +88,25 @@ export const BookChapters: React.FC<BookChaptersProps> = ({ bookId }) => {
   return (
     <div className="flex flex-col gap-4 p-4">
       {mockChapters.map((chapter) => (
-        <div key={chapter.id} className="flex items-center justify-between p-4 border rounded-lg">
-          <div className="flex-1 min-w-0 mr-3">
-            <h3 className="font-medium text-sm mb-2 truncate">
-              Глава {chapter.id}: {chapter.title}
-            </h3>
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <Clock className="w-3 h-3 flex-shrink-0" />
-                <span>{chapter.duration}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Eye className="w-3 h-3 flex-shrink-0" />
-                <span>{chapter.views} просмотров</span>
+        <div key={chapter.id} className="flex flex-col gap-3 p-4 border rounded-lg">
+          <div className="flex items-start justify-between">
+            <div className="flex-1 min-w-0 mr-4">
+              <h3 className="font-medium text-sm mb-2 leading-tight">
+                Глава {chapter.id}: {chapter.title}
+              </h3>
+              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <Clock className="w-3 h-3 flex-shrink-0" />
+                  <span>{chapter.duration}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Eye className="w-3 h-3 flex-shrink-0" />
+                  <span>{chapter.views} просмотров</span>
+                </div>
               </div>
             </div>
           </div>
-          <div className="flex gap-2 flex-shrink-0">
+          <div className="flex gap-2 justify-end">
             {chapter.isRead ? (
               <>
                 <Button 
