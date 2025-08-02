@@ -101,7 +101,7 @@ const BookReader: React.FC = () => {
   };
 
   // Total number of parts/chapters
-  const totalParts = 118;
+  const totalParts = 8;
 
   // Function to switch tabs
   const handleTabChange = (tab: TabType) => {
