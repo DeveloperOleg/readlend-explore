@@ -153,16 +153,6 @@ const BookReader: React.FC = () => {
             </Badge>
           </div>
           
-          {/* Additional badges */}
-          <div className="absolute bottom-3 right-3 flex gap-1">
-            <Badge variant="secondary" className="text-xs">
-              Социальная
-            </Badge>
-            <Badge variant="secondary" className="text-xs">
-              Вселенная/Мультифандом
-            </Badge>
-          </div>
-        </div>
         
         {/* Book title and author */}
         <h1 className="text-xl font-bold text-center mb-1">{book.title}</h1>
