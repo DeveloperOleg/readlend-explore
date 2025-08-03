@@ -112,7 +112,7 @@ export const BookChapters: React.FC<BookChaptersProps> = ({ bookId }) => {
                 <Button 
                   variant="outline" 
                   size="sm"
-                  className="text-green-600 border-green-600 hover:bg-green-50"
+                  className="text-emerald-600 border-emerald-600 hover:bg-emerald-600/10 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-400/10"
                   onClick={() => handleReadChapter(chapter.id)}
                 >
                   Прочитано
@@ -120,7 +120,7 @@ export const BookChapters: React.FC<BookChaptersProps> = ({ bookId }) => {
                 <Button 
                   variant="outline" 
                   size="sm"
-                  className="text-orange-600 border-orange-600 hover:bg-orange-50"
+                  className="text-primary border-primary hover:bg-primary/10"
                   onClick={() => handleRereadChapter(chapter.id)}
                 >
                   Перечитать
@@ -130,7 +130,7 @@ export const BookChapters: React.FC<BookChaptersProps> = ({ bookId }) => {
               <Button 
                 variant="outline" 
                 size="sm"
-                className="text-blue-600 border-blue-600 hover:bg-blue-50"
+                className="text-primary border-primary hover:bg-primary/10"
                 onClick={() => handleReadChapter(chapter.id)}
               >
                 Читать
