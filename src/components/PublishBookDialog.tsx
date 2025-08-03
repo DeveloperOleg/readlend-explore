@@ -124,23 +124,31 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
           </TabsContent>
         </Tabs>
         
-        <DialogFooter className="pt-4 flex flex-wrap gap-2">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {t('publish.cancel')}
-          </Button>
-          <Button 
-            variant="secondary"
-            onClick={handleSaveDraft}
-          >
-            {t('publish.saveDraft')}
-          </Button>
+        <div className="pt-4 space-y-3">
           <Button 
             onClick={handlePublish} 
             disabled={!title || !authors || !content}
+            className="w-full"
           >
             {t('publish.publish')}
           </Button>
-        </DialogFooter>
+          <div className="flex gap-2">
+            <Button 
+              variant="secondary"
+              onClick={handleSaveDraft}
+              className="flex-1"
+            >
+              {t('publish.saveDraft')}
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={() => onOpenChange(false)}
+              className="flex-1"
+            >
+              {t('publish.cancel')}
+            </Button>
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
