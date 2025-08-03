@@ -15,11 +15,6 @@ const ThemeSettings: React.FC = () => {
       description: t('settings.theme.autoDesc') || 'Автоматически переключается между светлой и темной темой'
     },
     {
-      id: 'system',
-      name: t('settings.theme.system') || 'Системная',
-      description: t('settings.theme.systemDesc') || 'Следует настройкам вашего устройства'
-    },
-    {
       id: 'light',
       name: t('settings.theme.light') || 'Светлая',
       description: t('settings.theme.lightDesc') || 'Светлая тема для использования днем'

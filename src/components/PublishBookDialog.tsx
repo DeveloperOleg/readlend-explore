@@ -90,9 +90,10 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
         </DialogHeader>
         
         <Tabs defaultValue="info" className="mt-4">
-          <TabsList className="grid grid-cols-2">
+          <TabsList className="grid grid-cols-3">
             <TabsTrigger value="info">{t('publish.bookInfo')}</TabsTrigger>
             <TabsTrigger value="content">{t('publish.bookContent')}</TabsTrigger>
+            <TabsTrigger value="cover">{t('publish.cover')}</TabsTrigger>
           </TabsList>
           
           <TabsContent value="info" className="space-y-4 py-4">
@@ -122,6 +123,47 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
               setContent={setContent}
             />
           </TabsContent>
+          
+          <TabsContent value="cover" className="space-y-4 py-4">
+            <div className="flex flex-col items-center justify-center min-h-[300px] border-2 border-dashed border-muted-foreground/20 rounded-lg">
+              {coverImage ? (
+                <div className="space-y-4 text-center">
+                  <img 
+                    src={coverImage} 
+                    alt={t('publish.cover')} 
+                    className="max-h-[200px] mx-auto object-contain rounded" 
+                  />
+                  <Button variant="outline" onClick={() => setCoverImage(null)}>
+                    {t('publish.changeCover')}
+                  </Button>
+                </div>
+              ) : (
+                <div className="text-center space-y-4">
+                  <p className="text-muted-foreground">{t('publish.dropImage')}</p>
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => setCoverImage(e.target?.result as string);
+                        reader.readAsDataURL(file);
+                      }
+                    }} 
+                    className="hidden" 
+                    id="cover-upload"
+                  />
+                  <Button 
+                    variant="secondary" 
+                    onClick={() => document.getElementById('cover-upload')?.click()}
+                  >
+                    {t('publish.selectImage')}
+                  </Button>
+                </div>
+              )}
+            </div>
+          </TabsContent>
         </Tabs>
         
         <div className="pt-4 space-y-3">
@@ -132,22 +174,13 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
           >
             {t('publish.publish')}
           </Button>
-          <div className="flex gap-2">
-            <Button 
-              variant="secondary"
-              onClick={handleSaveDraft}
-              className="flex-1"
-            >
-              {t('publish.saveDraft')}
-            </Button>
-            <Button 
-              variant="outline" 
-              onClick={() => onOpenChange(false)}
-              className="flex-1"
-            >
-              {t('publish.cancel')}
-            </Button>
-          </div>
+          <Button 
+            variant="ghost"
+            onClick={handleSaveDraft}
+            className="w-full text-muted-foreground"
+          >
+            {t('publish.saveDraft')}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
