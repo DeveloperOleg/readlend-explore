@@ -55,6 +55,8 @@ export const ruTranslations = {
   'settings.theme.lightDesc': 'Светлая тема для использования днем',
   'settings.theme.dark': 'Темная',
   'settings.theme.darkDesc': 'Темная тема для использования вечером',
+  'settings.theme.darkNight': 'Темная ночь',
+  'settings.theme.darkNightDesc': 'Глубокая темная тема с повышенным контрастом',
   'settings.open': 'Открыть настройки',
   'settings.version': 'Версия приложения',
   'settings.versionNumber': '1.0.0',

@@ -23,6 +23,11 @@ const ThemeSettings: React.FC = () => {
       id: 'dark',
       name: t('settings.theme.dark') || 'Темная',
       description: t('settings.theme.darkDesc') || 'Темная тема для использования вечером'
+    },
+    {
+      id: 'dark-night',
+      name: t('settings.theme.darkNight') || 'Темная ночь',
+      description: t('settings.theme.darkNightDesc') || 'Глубокая темная тема с повышенным контрастом'
     }
   ];
 
