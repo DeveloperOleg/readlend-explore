@@ -41,7 +41,8 @@ export const ComicChapters: React.FC<ComicChaptersProps> = ({ comicId, totalIssu
   };
 
   const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('ru-RU', {
+    const currentLang = localStorage.getItem('language') || 'ru';
+    return new Intl.DateTimeFormat(currentLang === 'en' ? 'en-US' : 'ru-RU', {
       day: 'numeric',
       month: 'long',
       year: 'numeric'
@@ -49,49 +50,57 @@ export const ComicChapters: React.FC<ComicChaptersProps> = ({ comicId, totalIssu
   };
 
   return (
-    <div className="space-y-4 p-4">
+    <div className="flex flex-col gap-4 p-4">
       {mockIssues.map((issue) => (
-        <div 
-          key={issue.id} 
-          className="border rounded-lg p-4 space-y-3 hover:bg-muted/50 transition-colors"
-        >
+        <div key={issue.id} className="flex flex-col gap-3 p-4 border rounded-lg">
           <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h3 className="font-medium text-lg">{issue.title}</h3>
-              <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
+            <div className="flex-1 min-w-0 mr-4">
+              <h3 className="font-medium text-sm mb-2 leading-tight">
+                {t('comic.issue') || 'Выпуск'} #{issue.number}
+              </h3>
+              <div className="flex items-center gap-4 text-xs text-muted-foreground">
                 <span>{formatDate(issue.releaseDate)}</span>
-                <span className="flex items-center gap-1">
-                  <BookOpen className="h-4 w-4" />
-                  {issue.pages} стр.
-                </span>
-                <span className="flex items-center gap-1">
-                  <Eye className="h-4 w-4" />
-                  {issue.views.toLocaleString()}
-                </span>
+                <div className="flex items-center gap-1">
+                  <BookOpen className="w-3 h-3 flex-shrink-0" />
+                  <span>{issue.pages} {t('comic.pages') || 'стр.'}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Eye className="w-3 h-3 flex-shrink-0" />
+                  <span>{issue.views.toLocaleString()}</span>
+                </div>
               </div>
             </div>
-            
-            <div className="ml-4">
-              {issue.isRead ? (
-                <div className="flex flex-col gap-2">
-                  <span className="text-xs text-green-600 font-medium">Прочитано</span>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => handleRereadIssue(issue.id)}
-                  >
-                    Перечитать
-                  </Button>
-                </div>
-              ) : (
+          </div>
+          <div className="flex gap-2 justify-end">
+            {issue.isRead ? (
+              <>
                 <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="text-emerald-600 border-emerald-600 hover:bg-emerald-600/10 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-400/10"
                   onClick={() => handleReadIssue(issue.id)}
-                  className="bg-orange-500 hover:bg-orange-600 text-white"
                 >
-                  Читать
+                  {t('comic.read') || 'Прочитано'}
                 </Button>
-              )}
-            </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="text-primary border-primary hover:bg-primary/10"
+                  onClick={() => handleRereadIssue(issue.id)}
+                >
+                  {t('comic.reread') || 'Перечитать'}
+                </Button>
+              </>
+            ) : (
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="text-primary border-primary hover:bg-primary/10"
+                onClick={() => handleReadIssue(issue.id)}
+              >
+                {t('comic.readButton') || 'Читать'}
+              </Button>
+            )}
           </div>
         </div>
       ))}

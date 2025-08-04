@@ -289,4 +289,15 @@ export const ruTranslations = {
   'book.reactions': 'Реакции',
   'book.genres': 'Жанры',
   'book.description': 'Описание',
+  // Comic
+  'comic.issue': 'Выпуск',
+  'comic.pages': 'стр.',
+  'comic.views': 'просмотров',
+  'comic.read': 'Прочитано',
+  'comic.reread': 'Перечитать',
+  'comic.readButton': 'Читать',
+  'comic.linkCopied': 'Ссылка скопирована',
+  'comic.linkCopiedDescription': 'Ссылка на комикс скопирована в буфер обмена',
+  'comic.copyFailed': 'Не удалось скопировать',
+  'comic.copyFailedDescription': 'Не удалось скопировать ссылку в буфер обмена',
 };

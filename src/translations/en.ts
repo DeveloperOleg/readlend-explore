@@ -257,4 +257,15 @@ export const enTranslations = {
   'blocked.blockedMessage': 'User has been added to your blocklist',
   'blocked.activeMessage': 'You have blocked this user',
   'blocked.block': 'Block',
+  // Comic
+  'comic.issue': 'Issue',
+  'comic.pages': 'pages',
+  'comic.views': 'views',
+  'comic.read': 'Read',
+  'comic.reread': 'Re-read',
+  'comic.readButton': 'Read',
+  'comic.linkCopied': 'Link copied',
+  'comic.linkCopiedDescription': 'Comic link has been copied to clipboard',
+  'comic.copyFailed': 'Copy failed',
+  'comic.copyFailedDescription': 'Failed to copy link to clipboard',
 };
