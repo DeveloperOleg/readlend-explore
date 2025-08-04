@@ -14,6 +14,9 @@ import {
 } from '@/components/ui/context-menu';
 import ComicAbout from '@/components/ComicAbout';
 import BookComments from '@/components/BookComments';
+import { ComicChapters } from '@/components/ComicChapters';
+import { Badge } from '@/components/ui/badge';
+import { Star, Eye } from 'lucide-react';
 
 type TabType = 'about' | 'issues' | 'comments';
 
@@ -141,20 +144,7 @@ const ComicReader: React.FC = () => {
       case 'about':
         return <ComicAbout comic={comic} />;
       case 'issues':
-        return (
-          <ScrollArea className="flex-1 px-2 md:px-4">
-            <div className="max-w-prose mx-auto py-6">
-              <div className="space-y-4">
-                {Array.from({ length: comic.totalIssues }, (_, i) => (
-                  <div key={i + 1} className="border rounded-lg p-4 hover:bg-muted/50 transition-colors cursor-pointer">
-                    <h3 className="font-medium">Issue #{i + 1}</h3>
-                    <p className="text-sm text-muted-foreground">Released {new Date(Date.now() - (comic.totalIssues - i) * 7 * 24 * 60 * 60 * 1000).toLocaleDateString()}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </ScrollArea>
-        );
+        return <ComicChapters comicId={comic.id} totalIssues={comic.totalIssues} />;
       case 'comments':
         return <BookComments bookId={comic.id} authorId="author1" />;
       default:
@@ -163,124 +153,119 @@ const ComicReader: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full pb-20 animate-fade-in">
-      {/* Top panel */}
-      <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b">
-        <div className="flex items-center justify-between p-3 md:p-4">
-          <Button variant="ghost" size="icon" onClick={handleBack}>
-            <ChevronLeft className="h-5 w-5" />
-          </Button>
-          <h1 className="text-lg md:text-xl font-semibold line-clamp-1 max-w-[60%]">{comic.title}</h1>
-          <ContextMenu>
-            <ContextMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <span className="sr-only">{t('comic.options')}</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                  <circle cx="12" cy="12" r="1" />
-                  <circle cx="12" cy="5" r="1" />
-                  <circle cx="12" cy="19" r="1" />
-                </svg>
-              </Button>
-            </ContextMenuTrigger>
-            <ContextMenuContent>
-              <ContextMenuItem onClick={handleCopyLink}>
-                <Link className="h-4 w-4 mr-2" />
-                {t('comic.copyLink') || 'Copy Link'}
-              </ContextMenuItem>
-              <ContextMenuItem onClick={handleReportIssue}>
-                <Flag className="h-4 w-4 mr-2" />
-                {t('comic.reportIssue') || 'Report Issue'}
-              </ContextMenuItem>
-            </ContextMenuContent>
-          </ContextMenu>
-        </div>
-      </div>
-      
-      {/* Comic cover and info section */}
-      <div className="flex flex-col items-center p-4 md:p-6 mb-4 border-b">
-        <div className="w-56 h-72 md:w-64 md:h-80 relative mb-4">
+    <div className="flex flex-col h-full bg-background">
+      {/* Comic cover section */}
+      <div className="flex flex-col items-center pt-8 pb-6 px-4">
+        <div className="relative w-48 h-72 mb-4">
           {comic.coverUrl ? (
             <img 
               src={comic.coverUrl} 
               alt={comic.title} 
-              className="object-cover w-full h-full rounded-lg shadow-lg" 
+              className="object-cover w-full h-full rounded-xl shadow-lg" 
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-muted rounded-lg">
+            <div className="w-full h-full flex items-center justify-center bg-muted rounded-xl">
               <Book className="h-16 w-16 text-muted-foreground" />
             </div>
           )}
-          <div className="absolute bottom-4 right-4 flex items-center bg-black/80 text-amber-400 rounded-full px-2 py-1">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-            </svg>
-            <span className="ml-1">{comic.rating}</span>
-            <span className="ml-2 text-gray-300 text-xs">{comic.totalRatings}</span>
+          
+          {/* Rating badge on cover */}
+          <div className="absolute top-3 left-3 flex items-center bg-black/80 text-amber-400 rounded-full px-2 py-1 text-sm">
+            <Star className="w-4 h-4 fill-current mr-1" />
+            <span>{comic.rating}</span>
+            <span className="text-xs text-gray-300 ml-1">{comic.totalRatings}</span>
+          </div>
+          
+          {/* Genre badge */}
+          <div className="absolute bottom-3 left-3 right-3">
+            <Badge className="bg-orange-500 text-white hover:bg-orange-600 w-full justify-center">
+              {comic.genre}
+            </Badge>
+          </div>
+          
+          {/* Status badge */}
+          <div className="absolute bottom-3 right-3">
+            <Badge variant="secondary" className="text-xs">
+              {comic.status === 'ongoing' ? 'Продолжается' : 'Завершен'}
+            </Badge>
           </div>
         </div>
         
-        <h2 className="text-xl md:text-2xl font-bold mt-3 md:mt-4 text-center px-2">{comic.title}</h2>
-        <p className="text-muted-foreground">{comic.author}</p>
+        {/* Comic title and author */}
+        <h1 className="text-xl font-bold text-center mb-1">{comic.title}</h1>
+        <p className="text-muted-foreground text-center mb-6">{comic.author}</p>
         
         {/* Action buttons */}
-        <div className="w-full mt-5 md:mt-6 flex flex-col gap-3 px-2">
+        <div className="w-full max-w-sm space-y-3">
           <Button 
             onClick={handleRead}
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium"
             size="lg"
           >
-            <BookOpen className="h-5 w-5 mr-2" />
-            {t('comic.read') || 'Read'}
+            <BookOpen className="h-4 w-4 mr-2" />
+            Читать
           </Button>
           
           <div className="flex gap-3">
             <Button 
               onClick={handleSave}
-              variant={isSaved ? "default" : "outline"}
+              variant="outline"
               className="flex-1"
             >
-              <Bookmark className={`h-4 w-4 mr-2 ${isSaved ? 'fill-current' : ''}`} />
-              {t('comic.save') || 'Save'}
+              <Bookmark className="h-4 w-4 mr-2" />
+              Сохранить
             </Button>
             
             <Button 
               onClick={handleFavorite}
-              variant={isFavorited ? "default" : "outline"}
+              variant="outline"
               className="flex-1"
             >
-              <Heart className={`h-4 w-4 mr-2 ${isFavorited ? 'fill-current text-red-500' : ''}`} />
-              {t('comic.addToFavorites') || 'Favorites'}
+              <Heart className="h-4 w-4 mr-2" />
+              В избранное
             </Button>
           </div>
         </div>
       </div>
       
-      {/* Navigation tabs */}
-      <div className="border-b">
-        <div className="w-full flex justify-between text-xs md:text-sm text-center">
+      {/* Tab navigation */}
+      <div className="border-b bg-background sticky top-0 z-10">
+        <div className="flex">
           <button 
-            className={`flex-1 py-3 ${activeTab === 'about' ? 'font-medium border-b-2 border-primary' : ''}`}
+            className={`flex-1 py-3 px-4 text-sm font-medium ${
+              activeTab === 'about' 
+                ? 'text-foreground border-b-2 border-orange-500' 
+                : 'text-muted-foreground'
+            }`}
             onClick={() => handleTabChange('about')}
           >
-            {t('comic.aboutWork') || 'About the Comic'}
+            О комиксе
           </button>
           <button 
-            className={`flex-1 py-3 ${activeTab === 'issues' ? 'font-medium border-b-2 border-primary' : ''}`}
+            className={`flex-1 py-3 px-4 text-sm font-medium ${
+              activeTab === 'issues' 
+                ? 'text-foreground border-b-2 border-orange-500' 
+                : 'text-muted-foreground'
+            }`}
             onClick={() => handleTabChange('issues')}
           >
-            <span className="whitespace-nowrap">{t('comic.issues')} {comic.totalIssues}</span>
+            Выпуски {comic.totalIssues}
           </button>
           <button 
-            className={`flex-1 py-3 ${activeTab === 'comments' ? 'font-medium border-b-2 border-primary' : ''}`}
+            className={`flex-1 py-3 px-4 text-sm font-medium ${
+              activeTab === 'comments' 
+                ? 'text-foreground border-b-2 border-orange-500' 
+                : 'text-muted-foreground'
+            }`}
             onClick={() => handleTabChange('comments')}
           >
-            {t('comic.comments')}
+            Комментарии
           </button>
         </div>
       </div>
       
-      {/* Content depending on the selected tab */}
-      <div className="flex-1 overflow-auto px-2 md:px-0">
+      {/* Content area */}
+      <div className="flex-1 overflow-auto">
         {renderContent()}
       </div>
     </div>
