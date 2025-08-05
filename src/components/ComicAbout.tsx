@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { Star, ThumbsUp, ThumbsDown, Calendar, BookOpen, Users, Zap, Heart, MessageCircle } from 'lucide-react';
+import { Star, ThumbsUp, ThumbsDown, Calendar, BookOpen, Users, Zap, Heart, MessageCircle, Eye } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface Review {
@@ -212,63 +213,56 @@ const ComicAbout: React.FC<ComicAboutProps> = ({ comic }) => {
     : comic.rating;
 
   return (
-    <div className="space-y-6 p-4">
-      {/* Comic Statistics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4 text-center">
-            <div className="flex items-center justify-center mb-2">
-              <Star className="w-5 h-5 text-yellow-400 fill-current" />
-            </div>
-            <div className="text-2xl font-bold">{averageRating.toFixed(1)}</div>
-            <div className="text-sm text-muted-foreground">Рейтинг</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4 text-center">
-            <div className="flex items-center justify-center mb-2">
-              <Users className="w-5 h-5 text-blue-500" />
-            </div>
-            <div className="text-2xl font-bold">{reviews.length + comic.totalRatings}</div>
-            <div className="text-sm text-muted-foreground">Отзывы</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4 text-center">
-            <div className="flex items-center justify-center mb-2">
-              <BookOpen className="w-5 h-5 text-green-500" />
-            </div>
-            <div className="text-2xl font-bold">{comic.totalIssues}</div>
-            <div className="text-sm text-muted-foreground">Выпуски</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4 text-center">
-            <div className="flex items-center justify-center mb-2">
-              <Zap className="w-5 h-5 text-purple-500" />
-            </div>
-            <div className="text-2xl font-bold capitalize">{comic.status || 'ongoing'}</div>
-            <div className="text-sm text-muted-foreground">Статус</div>
-          </CardContent>
-        </Card>
+    <div className="px-4 py-6 space-y-6">
+      {/* Statistics section - similar to BookAbout */}
+      <div className="flex justify-around text-center py-4">
+        <div className="flex flex-col items-center">
+          <Eye className="w-5 h-5 text-blue-500 mb-1" />
+          <div className="font-semibold text-lg">94K</div>
+          <div className="text-sm text-muted-foreground">Просмотров</div>
+        </div>
+        <div className="flex flex-col items-center">
+          <Heart className="w-5 h-5 text-red-500 mb-1" />
+          <div className="font-semibold text-lg">6.3K</div>
+          <div className="text-sm text-muted-foreground">Лайков</div>
+        </div>
+        <div className="flex flex-col items-center">
+          <MessageCircle className="w-5 h-5 text-green-500 mb-1" />
+          <div className="font-semibold text-lg">1.8K</div>
+          <div className="text-sm text-muted-foreground">Отзывов</div>
+        </div>
+      </div>
+
+      {/* Genre tags */}
+      <div>
+        <h3 className="font-semibold mb-3">Жанры</h3>
+        <div className="flex flex-wrap gap-2">
+          {comic.genre && <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-200">{comic.genre}</Badge>}
+          <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-200">Комикс</Badge>
+          <Badge className="bg-orange-100 text-orange-700 hover:bg-orange-200">Графический роман</Badge>
+          <Badge className="bg-green-100 text-green-700 hover:bg-green-200">Боевик</Badge>
+        </div>
       </div>
 
       {/* Comic Description */}
       <div>
-        <h3 className="text-lg font-semibold mb-3">Описание</h3>
-        <p className="text-muted-foreground leading-relaxed">{comic.description}</p>
+        <h3 className="font-semibold mb-3">Описание</h3>
+        <p className="text-muted-foreground leading-relaxed text-sm">
+          {comic.description}
+        </p>
       </div>
 
-      {/* Genre Tags */}
-      <div>
-        <h3 className="text-lg font-semibold mb-3">Жанр</h3>
-        <div className="flex flex-wrap gap-2">
-          {comic.genre && <Badge variant="secondary">{comic.genre}</Badge>}
-          <Badge variant="secondary">Комикс</Badge>
-          <Badge variant="secondary">Графический роман</Badge>
+      {/* Reading Progress */}
+      <div className="bg-muted/50 rounded-lg p-4">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="font-semibold">Прогресс чтения</h3>
+        </div>
+        <div className="mb-2">
+          <div className="flex justify-between text-sm text-muted-foreground mb-1">
+            <span>Выпуск 12 из {comic.totalIssues}</span>
+            <span>{Math.round((12 / comic.totalIssues) * 100)}%</span>
+          </div>
+          <Progress value={Math.round((12 / comic.totalIssues) * 100)} className="h-2" />
         </div>
       </div>
 
@@ -325,53 +319,46 @@ const ComicAbout: React.FC<ComicAboutProps> = ({ comic }) => {
 
       {/* Reviews */}
       <div>
-        <h3 className="text-lg font-semibold mb-4">Отзывы читателей ({reviews.length})</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold">Отзывы читателей</h3>
+          <span className="text-sm text-orange-600">1.8K отзывов</span>
+        </div>
+        
         <div className="space-y-4">
           {reviews.map((review) => (
-            <Card key={review.id}>
-              <CardContent className="p-4">
-                <div className="flex items-start gap-3">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={review.avatarUrl || ''} alt={review.username} />
-                    <AvatarFallback>{review.username.charAt(0).toUpperCase()}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">{review.username}</span>
-                        {renderStars(review.rating)}
-                      </div>
-                      <span className="text-xs text-muted-foreground">
-                        {formatDate(review.createdAt)}
-                      </span>
-                    </div>
-                    <p className="text-sm mb-3">{review.comment}</p>
-                    {user && (
-                      <div className="flex items-center gap-4">
-                        <button
-                          onClick={() => handleReviewReaction(review.id, 'like')}
-                          className={`flex items-center gap-1 text-xs ${
-                            review.userReaction === 'like' ? 'text-blue-500' : 'text-muted-foreground'
-                          } hover:text-blue-500 transition-colors`}
-                        >
-                          <ThumbsUp className="w-3 h-3" />
-                          {review.likes}
-                        </button>
-                        <button
-                          onClick={() => handleReviewReaction(review.id, 'dislike')}
-                          className={`flex items-center gap-1 text-xs ${
-                            review.userReaction === 'dislike' ? 'text-red-500' : 'text-muted-foreground'
-                          } hover:text-red-500 transition-colors`}
-                        >
-                          <ThumbsDown className="w-3 h-3" />
-                          {review.dislikes}
-                        </button>
-                      </div>
-                    )}
+            <div key={review.id} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+              <Avatar className="h-8 w-8 bg-blue-500 text-white">
+                <AvatarImage src={review.avatarUrl || ''} alt={review.username} />
+                <AvatarFallback>{review.username.charAt(0).toUpperCase()}</AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-medium text-sm">{review.username}</span>
+                  <div className="flex text-yellow-400">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <Star 
+                        key={i} 
+                        className={`w-3 h-3 ${i <= review.rating ? 'fill-current' : 'text-gray-300'}`} 
+                      />
+                    ))}
                   </div>
+                  <span className="text-xs text-muted-foreground">
+                    {formatDate(review.createdAt)}
+                  </span>
                 </div>
-              </CardContent>
-            </Card>
+                <p className="text-sm text-muted-foreground mb-2">{review.comment}</p>
+                <div className="flex items-center gap-4 text-xs">
+                  <button 
+                    onClick={() => handleReviewReaction(review.id, 'like')}
+                    className="flex items-center gap-1 text-muted-foreground"
+                  >
+                    <ThumbsUp className="w-3 h-3" />
+                    <span>{review.likes}</span>
+                  </button>
+                  <button className="text-muted-foreground">Ответить</button>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       </div>
