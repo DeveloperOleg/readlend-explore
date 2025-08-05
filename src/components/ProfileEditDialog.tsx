@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/LanguageContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useInternet } from '@/context/InternetContext';
@@ -34,12 +35,17 @@ const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({ children }) => {
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className={`${isMobile ? 'w-[95%] max-w-[95vw]' : 'max-w-2xl'} max-h-[90vh]`}>
-        <DialogHeader>
-          <DialogTitle>{t('profile.editProfile') || 'Редактировать профиль'}</DialogTitle>
-        </DialogHeader>
-        <ScrollArea className="h-[calc(90vh-100px)] pr-2">
-          <div className="p-1">
+      <DialogContent className={`${isMobile ? 'w-[95%] max-w-[95vw]' : 'max-w-md'} max-h-[90vh] p-0`}>
+        <div className="flex items-center justify-between p-4 border-b">
+          <DialogTitle className="text-lg font-medium">Редактировать профиль</DialogTitle>
+          <DialogTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <span className="text-xl">×</span>
+            </Button>
+          </DialogTrigger>
+        </div>
+        <ScrollArea className="h-[calc(90vh-120px)]">
+          <div className="p-4">
             <ProfileEditor />
           </div>
         </ScrollArea>

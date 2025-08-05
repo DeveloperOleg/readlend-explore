@@ -179,99 +179,181 @@ const Layout: React.FC = () => {
               <span className="sr-only">Open menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className={`${sheetWidth} bg-sidebar backdrop-blur-lg border-sidebar-border`}>
-            <div className="flex flex-col h-full text-sidebar-foreground">
-              {/* User profile section */}
-              <div className="py-6 px-4">
-                <div className="flex items-center justify-between">
-                  <SheetClose asChild>
-                    <Link to="/profile" className="flex items-center gap-4 hover:bg-sidebar-accent/10 rounded-lg transition-colors">
-                      <Avatar className="h-14 w-14 border-2 border-sidebar-accent">
-                        <AvatarImage src={user?.avatarUrl} alt={displayName} />
-                        <AvatarFallback className="text-xl">
-                          {displayName.charAt(0).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex flex-col">
-                        <h2 className="text-xl font-semibold tracking-tight">
-                          {displayName}
-                        </h2>
-                        <span className="text-sm text-muted-foreground">
-                          {user?.username ? `@${user.username}` : '@username'}
-                        </span>
-                      </div>
-                    </Link>
-                  </SheetClose>
-                  
-                  {/* Theme Toggle Button */}
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={toggleBaseTheme}
-                    className="rounded-full h-10 w-10 flex items-center justify-center ml-4"
-                  >
-                    {baseTheme === 'dark' ? 
-                      <Moon className="h-5 w-5" /> : 
-                      <Sun className="h-5 w-5" />
-                    }
+          <SheetContent side="left" className={`${sheetWidth} bg-background border-border`}>
+            <div className="flex flex-col h-full">
+              {/* Header */}
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-lg font-medium">Меню</h2>
+                <SheetClose asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <span className="text-xl">×</span>
                   </Button>
+                </SheetClose>
+              </div>
+
+              {/* User profile section */}
+              <div className="p-4">
+                <SheetClose asChild>
+                  <Link to="/profile" className="flex items-center gap-3 hover:bg-accent/50 rounded-lg p-2 transition-colors">
+                    <Avatar className="h-12 w-12 bg-[#6366F1] text-white">
+                      <AvatarImage src={user?.avatarUrl} alt={displayName} />
+                      <AvatarFallback className="bg-[#6366F1] text-white font-medium">
+                        {displayName.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                      <span className="font-medium text-sm">{user?.username || 'username'}</span>
+                      <span className="text-xs text-muted-foreground">@{user?.username || 'username'}</span>
+                    </div>
+                    <div className="ml-auto flex items-center gap-1">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
+                    </div>
+                  </Link>
+                </SheetClose>
+              </div>
+
+              <div className="flex-1 px-4 space-y-6">
+                {/* Основной section */}
+                <div>
+                  <h3 className="text-xs font-medium text-muted-foreground mb-3 px-2">Основной</h3>
+                  <div className="space-y-1">
+                    <SheetClose asChild>
+                      <Link 
+                        to="/top-reads" 
+                        className="flex items-center justify-between px-2 py-2 text-sm hover:bg-accent/50 rounded-lg transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-5 h-5 flex items-center justify-center">
+                            <Flame className="h-4 w-4 text-muted-foreground" />
+                          </div>
+                          <span>Топ читаемых</span>
+                        </div>
+                        <span className="text-xs bg-red-500 text-white px-2 py-0.5 rounded-full">Новое</span>
+                      </Link>
+                    </SheetClose>
+                    
+                    <SheetClose asChild>
+                      <Link 
+                        to="/achievements" 
+                        className="flex items-center justify-between px-2 py-2 text-sm hover:bg-accent/50 rounded-lg transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-5 h-5 flex items-center justify-center">
+                            <Trophy className="h-4 w-4 text-muted-foreground" />
+                          </div>
+                          <span>Достижения</span>
+                        </div>
+                        <span className="text-xs text-muted-foreground">3</span>
+                      </Link>
+                    </SheetClose>
+                    
+                    <SheetClose asChild>
+                      <Link 
+                        to="/saved" 
+                        className="flex items-center justify-between px-2 py-2 text-sm hover:bg-accent/50 rounded-lg transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-5 h-5 flex items-center justify-center">
+                            <span className="text-muted-foreground">📚</span>
+                          </div>
+                          <span>Моя библиотека</span>
+                        </div>
+                      </Link>
+                    </SheetClose>
+                    
+                    <SheetClose asChild>
+                      <Link 
+                        to="/favorites" 
+                        className="flex items-center justify-between px-2 py-2 text-sm hover:bg-accent/50 rounded-lg transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-5 h-5 flex items-center justify-center">
+                            <span className="text-muted-foreground">♥</span>
+                          </div>
+                          <span>Избранное</span>
+                        </div>
+                        <span className="text-xs text-muted-foreground">12</span>
+                      </Link>
+                    </SheetClose>
+                  </div>
+                </div>
+
+                {/* Активность section */}
+                <div>
+                  <h3 className="text-xs font-medium text-muted-foreground mb-3 px-2">Активность</h3>
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between px-2 py-2 text-sm hover:bg-accent/50 rounded-lg transition-colors cursor-pointer">
+                      <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 flex items-center justify-center">
+                          <span className="text-muted-foreground">📖</span>
+                        </div>
+                        <span>История чтения</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between px-2 py-2 text-sm hover:bg-accent/50 rounded-lg transition-colors cursor-pointer">
+                      <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 flex items-center justify-center">
+                          <span className="text-muted-foreground">⭐</span>
+                        </div>
+                        <span>Мои отзывы</span>
+                      </div>
+                      <span className="text-xs text-muted-foreground">3</span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between px-2 py-2 text-sm hover:bg-accent/50 rounded-lg transition-colors cursor-pointer">
+                      <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 flex items-center justify-center">
+                          <span className="text-muted-foreground">🔔</span>
+                        </div>
+                        <span>Подписки</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Настройки section */}
+                <div>
+                  <h3 className="text-xs font-medium text-muted-foreground mb-3 px-2">Настройки</h3>
+                  <div className="space-y-1">
+                    <SheetClose asChild>
+                      <Link 
+                        to="/notifications" 
+                        className="flex items-center justify-between px-2 py-2 text-sm hover:bg-accent/50 rounded-lg transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-5 h-5 flex items-center justify-center">
+                            <Bell className="h-4 w-4 text-muted-foreground" />
+                          </div>
+                          <span>Уведомления</span>
+                        </div>
+                      </Link>
+                    </SheetClose>
+                    
+                    <div 
+                      onClick={navigateToSettings}
+                      className="flex items-center justify-between px-2 py-2 text-sm hover:bg-accent/50 rounded-lg transition-colors cursor-pointer"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 flex items-center justify-center">
+                          <SettingsIcon className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                        <span>Настройки</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between px-2 py-2 text-sm hover:bg-accent/50 rounded-lg transition-colors cursor-pointer">
+                      <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 flex items-center justify-center">
+                          <span className="text-muted-foreground">❓</span>
+                        </div>
+                        <span>Помощь</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              
-              <Separator className="bg-sidebar-border" />
-              
-              <div className="flex-1 py-4 space-y-5">
-                {/* Top Reads link */}
-                <div className="flex items-center px-4">
-                  <SheetClose asChild>
-                    <Link 
-                      to="/top-reads" 
-                      className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
-                    >
-                      <Flame className="h-5 w-5" />
-                      <span>{t('nav.topReads')}</span>
-                    </Link>
-                  </SheetClose>
-                </div>
-                
-                {/* Achievements link */}
-                <div className="flex items-center px-4">
-                  <SheetClose asChild>
-                    <Link 
-                      to="/achievements" 
-                      className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
-                    >
-                      <Trophy className="h-5 w-5" />
-                      <span>{t('pages.achievements')}</span>
-                    </Link>
-                  </SheetClose>
-                </div>
-                
-                {/* Settings button */}
-                <div className="flex items-center px-4">
-                  <button
-                    onClick={navigateToSettings}
-                    className="flex items-center gap-2 text-sidebar-foreground hover:text-primary transition-colors"
-                  >
-                    <SettingsIcon className="h-5 w-5" />
-                    <span>{t('sidebar.settings')}</span>
-                  </button>
-                </div>
-              </div>
-              
-              <Separator className="bg-sidebar-border" />
-              
-              {/* Logout button */}
-              <SheetClose asChild>
-                <Button 
-                  variant="ghost" 
-                  className="flex items-center gap-2 justify-start py-4 px-4 w-full hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-none"
-                  onClick={handleLogout}
-                >
-                  <LogOut className="h-5 w-5" />
-                  <span>{t('sidebar.logout')}</span>
-                </Button>
-              </SheetClose>
             </div>
           </SheetContent>
         </Sheet>
