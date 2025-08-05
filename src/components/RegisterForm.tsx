@@ -201,20 +201,19 @@ const RegisterForm: React.FC = () => {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="w-full max-w-md mx-auto bg-card rounded-lg border shadow-sm p-6">
       <Tabs defaultValue="login" onValueChange={handleTabChange}>
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="login">Вход</TabsTrigger>
-          <TabsTrigger value="register">Регистрация</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 bg-muted/50">
+          <TabsTrigger value="login" className="data-[state=active]:bg-background">Вход</TabsTrigger>
+          <TabsTrigger value="register" className="data-[state=active]:bg-background">Регистрация</TabsTrigger>
         </TabsList>
         
-        <div className="mt-6">
+        <div className="mt-6 space-y-4">
           {activeTab === 'register' && (
-            <Alert variant="default" className="mb-4">
-              <Info className="h-4 w-4" />
-              <AlertTitle>Регистрация временно недоступна</AlertTitle>
-              <AlertDescription>
-                В тестовой версии приложения регистрация отключена. Используйте демо-аккаунт для входа.
+            <Alert variant="default" className="border-blue-200 bg-blue-50">
+              <Info className="h-4 w-4 text-blue-600" />
+              <AlertDescription className="text-blue-800">
+                Регистрация временно недоступна
               </AlertDescription>
             </Alert>
           )}
@@ -226,9 +225,13 @@ const RegisterForm: React.FC = () => {
                 name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Имя пользователя</FormLabel>
+                    <FormLabel className="text-sm font-medium">Имя пользователя</FormLabel>
                     <FormControl>
-                      <Input placeholder="Введите имя пользователя" {...field} />
+                      <Input 
+                        placeholder="Введите имя пользователя" 
+                        {...field} 
+                        className="h-11"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -240,9 +243,14 @@ const RegisterForm: React.FC = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Пароль</FormLabel>
+                    <FormLabel className="text-sm font-medium">Пароль</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="Введите пароль" {...field} />
+                      <Input 
+                        type="password" 
+                        placeholder="Введите пароль" 
+                        {...field} 
+                        className="h-11"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -256,29 +264,31 @@ const RegisterForm: React.FC = () => {
               )}
 
               {activeTab === 'login' && (
-                <div className="flex gap-2 justify-between text-sm">
+                <div className="flex justify-between text-sm">
                   <Button 
                     type="button" 
                     variant="link" 
-                    className="text-blue-500 hover:text-blue-600 p-0 h-auto text-xs"
+                    className="text-blue-500 hover:text-blue-600 p-0 h-auto text-sm"
                     onClick={handleForgotPassword}
                   >
-                    <KeyRound className="h-3 w-3 mr-1" />
                     Забыли пароль?
                   </Button>
                   <Button 
                     type="button" 
                     variant="link" 
-                    className="text-blue-500 hover:text-blue-600 p-0 h-auto text-xs"
+                    className="text-blue-500 hover:text-blue-600 p-0 h-auto text-sm"
                     onClick={handleNoAccess}
                   >
-                    <HelpCircle className="h-3 w-3 mr-1" />
                     Нет доступа к аккаунту
                   </Button>
                 </div>
               )}
               
-              <Button type="submit" className="w-full" disabled={isLoading || (activeTab === 'register')}>
+              <Button 
+                type="submit" 
+                className="w-full h-11 bg-slate-800 hover:bg-slate-700 text-white" 
+                disabled={isLoading || (activeTab === 'register')}
+              >
                 {isLoading ? (
                   <div className="flex items-center justify-center gap-2">
                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
@@ -297,13 +307,18 @@ const RegisterForm: React.FC = () => {
                 <span className="w-full border-t" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
+                <span className="bg-card px-2 text-muted-foreground">
                   или
                 </span>
               </div>
             </div>
             
-            <Button variant="outline" className="w-full mt-4" onClick={handleDemo} disabled={isLoading}>
+            <Button 
+              variant="outline" 
+              className="w-full mt-4 h-11" 
+              onClick={handleDemo} 
+              disabled={isLoading}
+            >
               {isLoading ? (
                 <div className="flex items-center justify-center gap-2">
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />

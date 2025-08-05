@@ -116,98 +116,156 @@ const Profile: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto px-0 md:px-4 pb-16 max-w-screen-sm">
-      {/* Instagram Style Profile Header */}
-      <div className="flex flex-col space-y-4">
-        {/* Profile Header Section */}
-        <div className="flex flex-col px-3 sm:px-4">
-          {/* Avatar and Stats Row */}
-          <div className="flex items-center gap-4 sm:gap-6">
-            {/* Avatar without Story Ring and Edit Button */}
-            <div className="relative">
-              <Avatar className="h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 border-2 border-border">
-                <AvatarImage src={profileUser.avatarUrl || ''} alt={displayName} />
-                <AvatarFallback className="text-lg sm:text-2xl">
-                  {displayName.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-            </div>
+    <div className="bg-background min-h-screen">
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 border-b">
+        <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
+          <div className="w-6 h-6 flex items-center justify-center">←</div>
+        </Button>
+        <h1 className="font-semibold">Профиль</h1>
+        <Button variant="ghost" size="icon">
+          <div className="w-6 h-6 flex items-center justify-center">⋮</div>
+        </Button>
+      </div>
 
-            {/* User Stats */}
-            <div className="flex-1 grid grid-cols-3 text-center gap-1 sm:gap-2 py-1 sm:py-2">
-              <div className="flex flex-col">
-                <span className="font-bold text-base sm:text-lg">{booksCount}</span>
-                <span className="text-[10px] sm:text-xs text-muted-foreground">{t('stats.books')}</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-base sm:text-lg">{subscribersCount}</span>
-                <span className="text-[10px] sm:text-xs text-muted-foreground">{t('stats.followers')}</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-base sm:text-lg">{subscriptionsCount}</span>
-                <span className="text-[10px] sm:text-xs text-muted-foreground">{t('stats.following')}</span>
-              </div>
-            </div>
-          </div>
+      <div className="p-4">
+        {/* Profile Info */}
+        <div className="flex items-center gap-4 mb-4">
+          <Avatar className="h-20 w-20">
+            <AvatarImage src={profileUser.avatarUrl || ''} alt={displayName} />
+            <AvatarFallback className="text-2xl bg-purple-500 text-white">
+              {displayName.charAt(0).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
           
-          {/* Username and Bio */}
-          <div className="mt-2 sm:mt-4">
-            <h1 className="font-semibold text-base sm:text-lg">{displayName}</h1>
-            <p className="text-xs sm:text-sm text-muted-foreground">@{profileUser.username}</p>
+          <div className="flex-1">
+            <h2 className="font-semibold text-lg">{displayName}</h2>
+            <p className="text-muted-foreground text-sm">@{profileUser.username}</p>
             
-            {profileUser.bio && (
-              <p className="mt-1 sm:mt-2 text-xs sm:text-sm whitespace-pre-wrap">{renderBio(profileUser.bio)}</p>
-            )}
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex gap-1.5 sm:gap-2 mt-3 sm:mt-4">
-            {isCurrentUser ? (
-              <>
+            {isCurrentUser && (
+              <div className="flex gap-2 mt-2">
                 <ProfileEditDialog>
-                  <Button variant="outline" className="flex-1 text-xs sm:text-sm h-8 sm:h-10">
-                    {t('profile.editProfile') || 'Редактировать профиль'}
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="bg-black text-white hover:bg-gray-800 border-black"
+                  >
+                    Редактировать профиль
                   </Button>
                 </ProfileEditDialog>
-                <Button variant="outline" size="icon" className="h-8 w-8 sm:h-10 sm:w-10">
-                  <Share2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <Button variant="outline" size="icon" className="h-8 w-8">
+                  <Share2 className="h-4 w-4" />
                 </Button>
-              </>
-            ) : (
-              <>
-                <Button variant="default" className="flex-1 text-xs sm:text-sm h-8 sm:h-10">
-                  <UserPlus className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                  {t('profile.follow') || 'Подписаться'}
-                </Button>
-                <Button variant="outline" className="flex-1 text-xs sm:text-sm h-8 sm:h-10">
-                  {t('profile.message') || 'Сообщение'}
-                </Button>
-                <Button variant="outline" size="icon" className="h-8 w-8 sm:h-10 sm:w-10">
-                  <Share2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                </Button>
-              </>
+              </div>
             )}
           </div>
         </div>
 
-        <Separator className="my-1 sm:my-2" />
-        
+        {/* Profile Tags */}
+        <div className="flex gap-2 mb-4 text-sm">
+          <span>📚 Любитель книг</span>
+          <span>✨ Начинающий автор</span>
+          <span>🌟 Открыт для новых историй</span>
+        </div>
+
+        {/* Stats */}
+        <div className="flex gap-6 mb-6">
+          <div className="text-center">
+            <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center mb-1">
+              <Book className="h-6 w-6" />
+            </div>
+            <div className="font-semibold">{booksCount}</div>
+            <div className="text-xs text-muted-foreground">Книг</div>
+          </div>
+          <div className="text-center">
+            <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center mb-1">
+              <UserPlus className="h-6 w-6" />
+            </div>
+            <div className="font-semibold">{subscribersCount}</div>
+            <div className="text-xs text-muted-foreground">Подписчики</div>
+          </div>
+          <div className="text-center">
+            <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center mb-1">
+              <div className="h-6 w-6 flex items-center justify-center">♥</div>
+            </div>
+            <div className="font-semibold">{subscriptionsCount}</div>
+            <div className="text-xs text-muted-foreground">Лайков</div>
+          </div>
+        </div>
+
         {/* Content Tabs */}
         <Tabs defaultValue="books" className="w-full">
-          <TabsList className="w-full flex justify-around border-t border-b border-border bg-transparent h-10 sm:h-12">
-            <TabsTrigger value="books" className="flex-1 data-[state=active]:border-t-2 data-[state=active]:border-primary data-[state=active]:rounded-none bg-transparent">
-              <Book className="h-4 w-4 sm:h-5 sm:w-5" />
+          <TabsList className="w-full grid grid-cols-3 bg-muted/30">
+            <TabsTrigger value="books" className="gap-2">
+              <Book className="h-4 w-4" />
+              Книги
+            </TabsTrigger>
+            <TabsTrigger value="reviews" className="gap-2">
+              <div className="h-4 w-4 flex items-center justify-center">⭐</div>
+              Отзывы
+            </TabsTrigger>
+            <TabsTrigger value="collections" className="gap-2">
+              <div className="h-4 w-4 flex items-center justify-center">♥</div>
+              Коллекции
             </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="books" className="mt-0">
-            <Card className="border-0 shadow-none">
-              <CardContent className="p-3 sm:p-4 text-center">
-                <p className="text-muted-foreground text-xs sm:text-sm">{t('profile.noPublishedBooks') || 'У вас пока нет опубликованного контента'}</p>
-              </CardContent>
-            </Card>
+          <TabsContent value="books" className="mt-6">
+            <div className="text-center py-12">
+              <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Book className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <h3 className="font-semibold mb-2">Пока нет опубликованных книг</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Начните свое писательское путешествие! Создайте свою первую книгу и поделитесь с миром
+              </p>
+              {isCurrentUser && (
+                <Button className="bg-black text-white hover:bg-gray-800">
+                  <Edit className="h-4 w-4 mr-2" />
+                  Написать книгу
+                </Button>
+              )}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="reviews" className="mt-6">
+            <div className="text-center py-12">
+              <div className="text-4xl mb-4">⭐</div>
+              <p className="text-muted-foreground">Отзывы пока отсутствуют</p>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="collections" className="mt-6">
+            <div className="text-center py-12">
+              <div className="text-4xl mb-4">♥</div>
+              <p className="text-muted-foreground">Коллекции пока отсутствуют</p>
+            </div>
           </TabsContent>
         </Tabs>
+
+        {/* Bottom Notice */}
+        {isCurrentUser && (
+          <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <div className="flex items-start gap-3">
+              <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                <div className="w-3 h-3 bg-white rounded-full"></div>
+              </div>
+              <div>
+                <h4 className="font-medium text-blue-900 mb-1">Завершите настройку профиля</h4>
+                <p className="text-sm text-blue-700 mb-2">
+                  Добавьте фото профиля и расскажите о себе, чтобы другие пользователи могли узнать.
+                </p>
+                <Button 
+                  size="sm" 
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  onClick={() => {/* Add action */}}
+                >
+                  + Добавить
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
