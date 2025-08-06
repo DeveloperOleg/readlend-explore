@@ -181,16 +181,6 @@ const Layout: React.FC = () => {
           </SheetTrigger>
           <SheetContent side="left" className={`${sheetWidth} bg-background border-border`}>
             <div className="flex flex-col h-full">
-              {/* Header */}
-              <div className="flex items-center justify-between p-4 border-b">
-                <h2 className="text-lg font-medium">Меню</h2>
-                <SheetClose asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <span className="text-xl">×</span>
-                  </Button>
-                </SheetClose>
-              </div>
-
               {/* User profile section */}
               <div className="p-4">
                 <SheetClose asChild>
@@ -206,8 +196,13 @@ const Layout: React.FC = () => {
                       <span className="text-xs text-muted-foreground">@{user?.username || 'username'}</span>
                     </div>
                     <div className="ml-auto flex items-center gap-1">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
+                      <Button variant="ghost" size="sm" onClick={toggleBaseTheme} className="h-6 px-2">
+                        {baseTheme === 'light' ? (
+                          <Moon className="h-3 w-3" />
+                        ) : (
+                          <Sun className="h-3 w-3" />
+                        )}
+                      </Button>
                     </div>
                   </Link>
                 </SheetClose>
@@ -353,6 +348,18 @@ const Layout: React.FC = () => {
                     </div>
                   </div>
                 </div>
+              </div>
+
+              {/* Exit button at bottom */}
+              <div className="mt-auto p-4 border-t">
+                <Button 
+                  variant="ghost" 
+                  onClick={handleLogout}
+                  className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50"
+                >
+                  <LogOut className="h-4 w-4 mr-3" />
+                  Выйти
+                </Button>
               </div>
             </div>
           </SheetContent>

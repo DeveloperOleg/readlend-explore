@@ -169,27 +169,18 @@ const Profile: React.FC = () => {
         </div>
 
         {/* Stats */}
-        <div className="flex gap-6 mb-6">
+        <div className="flex justify-center gap-12 mb-8">
           <div className="text-center">
-            <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center mb-1">
-              <Book className="h-6 w-6" />
-            </div>
-            <div className="font-semibold">{booksCount}</div>
-            <div className="text-xs text-muted-foreground">Книг</div>
+            <div className="text-xl font-bold">{booksCount}</div>
+            <div className="text-sm text-muted-foreground">Книги</div>
           </div>
           <div className="text-center">
-            <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center mb-1">
-              <UserPlus className="h-6 w-6" />
-            </div>
-            <div className="font-semibold">{subscribersCount}</div>
-            <div className="text-xs text-muted-foreground">Подписчики</div>
+            <div className="text-xl font-bold">{subscribersCount}</div>
+            <div className="text-sm text-muted-foreground">Подписчики</div>
           </div>
           <div className="text-center">
-            <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center mb-1">
-              <div className="h-6 w-6 flex items-center justify-center">♥</div>
-            </div>
-            <div className="font-semibold">{subscriptionsCount}</div>
-            <div className="text-xs text-muted-foreground">Лайков</div>
+            <div className="text-xl font-bold">{subscriptionsCount}</div>
+            <div className="text-sm text-muted-foreground">Подписки</div>
           </div>
         </div>
 

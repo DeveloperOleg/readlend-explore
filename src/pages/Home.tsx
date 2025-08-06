@@ -7,68 +7,109 @@ import { testBooks } from '@/utils/testData';
 
 const Home: React.FC = () => {
   // Организуем книги по категориям
-  const newBooks = testBooks.slice(0, 3);
-  const recommendedBooks = [...testBooks].reverse().slice(0, 3);
-  const comics = [
+  const newBooks = [
     { 
-      id: 'comic1', 
-      title: 'Русь: Правление', 
-      author: 'Павел Брятев', 
-      coverUrl: '/lovable-uploads/0fac89ed-334a-49b5-a9ab-7f0ee0a4be4d.png',
-      description: 'Эпическая история о становлении великой державы',
-      rating: 9.2,
-      totalRatings: 1547
+      id: 'new1', 
+      title: 'Интрига', 
+      author: 'Анна Петрова', 
+      coverUrl: '/lovable-uploads/01c01930-5bfb-48ae-869d-a4e4d30a45ea.png',
+      description: 'Захватывающий детектив',
+      rating: 8.5,
+      totalRatings: 234
     },
     { 
-      id: 'comic2', 
-      title: 'Майор Гром', 
-      author: 'Сергей Железяка', 
-      coverUrl: '/lovable-uploads/7bf984f5-094b-4cf4-b63c-0a3cfa1b81e4.png',
-      description: 'Супергеройский комикс о майоре полиции',
-      rating: 8.7,
-      totalRatings: 892
+      id: 'new2', 
+      title: 'Фея лето', 
+      author: 'Сергей Смирнов', 
+      coverUrl: '/lovable-uploads/62d8f5f3-1bdd-40d2-bb32-c17c28ace726.png',
+      description: 'Волшебная история',
+      rating: 9.1,
+      totalRatings: 567
     },
     { 
-      id: 'comic3', 
-      title: 'Метро 2033: Часть 1.2', 
-      author: 'ChatGPT', 
-      coverUrl: null,
-      description: 'Постапокалиптическая история выживания',
-      rating: 8.1,
-      totalRatings: 456
+      id: 'new3', 
+      title: 'Духи лета', 
+      author: 'Мария Сидорова', 
+      coverUrl: '/lovable-uploads/c07f8bce-3d6d-44bb-bf4e-86bfc7c10a21.png',
+      description: 'Мистическая драма',
+      rating: 8.8,
+      totalRatings: 789
     },
   ];
-  const mayBooks = testBooks.slice(0, 3);
+  
+  const recommendedBooks = [
+    { 
+      id: 'rec1', 
+      title: 'Тайны старого города', 
+      author: 'Александр Петров', 
+      coverUrl: null,
+      description: 'Исторический роман',
+      rating: 8.3,
+      totalRatings: 156
+    },
+    { 
+      id: 'rec2', 
+      title: 'Дорога домой', 
+      author: 'Екатерина Волкова', 
+      coverUrl: null,
+      description: 'Семейная сага',
+      rating: 9.0,
+      totalRatings: 342
+    },
+    { 
+      id: 'rec3', 
+      title: 'Весенний дождь', 
+      author: 'Мария Павлова', 
+      coverUrl: null,
+      description: 'Любовный роман',
+      rating: 8.7,
+      totalRatings: 234
+    },
+    { 
+      id: 'rec4', 
+      title: 'Северное сияние', 
+      author: 'Дмитрий Северов', 
+      coverUrl: null,
+      description: 'Приключенческий роман',
+      rating: 8.9,
+      totalRatings: 445
+    },
+    { 
+      id: 'rec5', 
+      title: 'Письма зайца', 
+      author: 'Елена Кобзева',
+      coverUrl: null,
+      description: 'Детская литература',
+      rating: 9.2,
+      totalRatings: 123
+    },
+    { 
+      id: 'rec6', 
+      title: 'Последний месяц', 
+      author: 'Владимир Марко', 
+      coverUrl: null,
+      description: 'Фантастика',
+      rating: 8.4,
+      totalRatings: 678
+    },
+  ];
 
   return (
     <ScrollArea className="h-full w-full">
-      <div className="pb-20 px-2">
+      <div className="pb-20 px-4">
         <Welcome />
         
-        <div className="space-y-6">
+        <div className="space-y-8">
           <BookCategory 
             title="Новинки" 
             books={newBooks}
-            viewAllLink="/top-reads" 
+            viewAllLink="/top-reads"
           />
           
           <BookCategory 
             title="Вам может понравиться" 
             books={recommendedBooks}
-            viewAllLink="/recommendations" 
-          />
-          
-          <BookCategory 
-            title="Комиксы: с чего начать" 
-            books={comics}
-            viewAllLink="/comics"
-            linkPrefix="/comic"
-          />
-          
-          <BookCategory 
-            title="Давайте уже почитаем" 
-            books={mayBooks}
-            viewAllLink="/featured" 
+            viewAllLink="/recommendations"
           />
         </div>
       </div>
