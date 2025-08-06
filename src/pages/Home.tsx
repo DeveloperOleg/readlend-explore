@@ -1,11 +1,13 @@
 
 import React from 'react';
-import Welcome from '@/components/Welcome';
-import { BookCategory } from '@/components/BookCategory';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { testBooks } from '@/utils/testData';
+import { BookCover } from '@/components/BookCover';
+import { Book, Users, Heart } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 const Home: React.FC = () => {
+  const { user } = useAuth();
+  
   // Организуем книги по категориям
   const newBooks = [
     { 
@@ -97,20 +99,84 @@ const Home: React.FC = () => {
   return (
     <ScrollArea className="h-full w-full">
       <div className="pb-20 px-4">
-        <Welcome />
-        
-        <div className="space-y-8">
-          <BookCategory 
-            title="Новинки" 
-            books={newBooks}
-            viewAllLink="/top-reads"
-          />
+        {/* Header Section */}
+        <div className="pt-16 pb-6">
+          <h1 className="text-2xl font-medium text-foreground mb-2">
+            Доброе утро, {user?.username || 'tester111'}
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            ReadNest - ваша уютная библиотека
+          </p>
+        </div>
+
+        {/* Stats Section */}
+        <div className="flex items-center justify-center gap-8 mb-8">
+          <div className="flex flex-col items-center">
+            <div className="flex items-center gap-1 mb-1">
+              <Book className="h-4 w-4 text-blue-500" />
+              <span className="text-lg font-medium">0</span>
+            </div>
+            <span className="text-xs text-muted-foreground">Книги</span>
+          </div>
           
-          <BookCategory 
-            title="Вам может понравиться" 
-            books={recommendedBooks}
-            viewAllLink="/recommendations"
-          />
+          <div className="flex flex-col items-center">
+            <div className="flex items-center gap-1 mb-1">
+              <Users className="h-4 w-4 text-green-500" />
+              <span className="text-lg font-medium">0</span>
+            </div>
+            <span className="text-xs text-muted-foreground">Подписчики</span>
+          </div>
+          
+          <div className="flex flex-col items-center">
+            <div className="flex items-center gap-1 mb-1">
+              <Heart className="h-4 w-4 text-red-500" />
+              <span className="text-lg font-medium">0</span>
+            </div>
+            <span className="text-xs text-muted-foreground">Подписки</span>
+          </div>
+        </div>
+
+        {/* Books Sections */}
+        <div className="space-y-8">
+          {/* Новинки */}
+          <section>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold">Новинки</h2>
+              <span className="text-sm text-blue-500">Все</span>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              {newBooks.map((book) => (
+                <BookCover
+                  key={book.id}
+                  id={book.id}
+                  title={book.title}
+                  author={book.author}
+                  coverUrl={book.coverUrl}
+                  linkPrefix="/book"
+                />
+              ))}
+            </div>
+          </section>
+
+          {/* Вам может понравиться */}
+          <section>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold">Вам может понравиться</h2>
+              <span className="text-sm text-blue-500">Все</span>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              {recommendedBooks.slice(0, 6).map((book) => (
+                <BookCover
+                  key={book.id}
+                  id={book.id}
+                  title={book.title}
+                  author={book.author}
+                  coverUrl={book.coverUrl}
+                  linkPrefix="/book"
+                />
+              ))}
+            </div>
+          </section>
         </div>
       </div>
     </ScrollArea>

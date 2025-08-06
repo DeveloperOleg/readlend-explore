@@ -196,7 +196,16 @@ const Layout: React.FC = () => {
                       <span className="text-xs text-muted-foreground">@{user?.username || 'username'}</span>
                     </div>
                     <div className="ml-auto flex items-center gap-1">
-                      <Button variant="ghost" size="sm" onClick={toggleBaseTheme} className="h-6 px-2">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleBaseTheme();
+                        }} 
+                        className="h-6 px-2"
+                      >
                         {baseTheme === 'light' ? (
                           <Moon className="h-3 w-3" />
                         ) : (

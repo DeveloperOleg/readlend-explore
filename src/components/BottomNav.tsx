@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Home, Heart, BookMarked, Plus, Search } from 'lucide-react';
+import { Home, Heart, BookMarked, Plus, Search, Zap } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useInternet } from '@/context/InternetContext';
@@ -64,7 +64,7 @@ const BottomNav: React.FC = () => {
   }, []);
 
   return (
-    <div className="glass border-t border-border/50 backdrop-blur-lg">
+    <div className="bg-background border-t border-border">
       <nav className="container flex items-center justify-between h-14 relative px-0 sm:px-4">
         <div className="flex items-center justify-start flex-1 max-w-[40%]">
           <NavLink 
@@ -103,13 +103,13 @@ const BottomNav: React.FC = () => {
         
         <div className="flex items-center justify-end flex-1 max-w-[40%] ml-auto">
           <NavLink 
-            to="/saved" 
+            to="/comics" 
             className={({ isActive }) => 
               `nav-item ${isActive ? 'active text-blue-500' : 'text-muted-foreground hover:text-blue-500'} flex flex-col items-center justify-center min-w-0 flex-1 py-2 px-3 transition-colors`
             }
           >
-            <BookMarked className="h-5 w-5 mb-1" />
-            <span className="text-[10px] leading-none text-center">{t('nav.saved')}</span>
+            <Zap className="h-5 w-5 mb-1" />
+            <span className="text-[10px] leading-none text-center">Комиксы</span>
           </NavLink>
           
           <NavLink 
