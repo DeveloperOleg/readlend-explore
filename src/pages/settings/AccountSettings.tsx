@@ -149,11 +149,32 @@ const AccountSettings: React.FC = () => {
                 </div>
 
                 <div>
-                  <Label>{t('account.email')}</Label>
-                  <div className="flex gap-2 mt-1">
+                  <Label className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4" />
+                    Дата регистрации
+                  </Label>
+                  <Input 
+                    value={getRegistrationDate()} 
+                    disabled 
+                    className="mt-1"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Mail className="h-5 w-5" />
+                  Email для восстановления аккаунта
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <div className="flex gap-2">
                     <Input 
                       type="email"
-                      placeholder={t('account.emailPlaceholder')}
+                      placeholder="Введите ваш email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
@@ -165,7 +186,70 @@ const AccountSettings: React.FC = () => {
                       {isSaving ? 'Сохранение...' : 'Сохранить'}
                     </Button>
                   </div>
+                  <div className="flex items-start gap-2 mt-2 p-3 bg-blue-50 rounded-lg">
+                    <Info className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <p className="text-sm text-blue-700">
+                      Этот email будет использован для восстановления доступа к аккаунту в случае утери пароля.
+                    </p>
+                  </div>
                 </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-red-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-red-600">
+                  <AlertTriangle className="h-5 w-5" />
+                  Управление аккаунтом
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <p className="text-sm text-red-600 mb-4">
+                  Внимание! Эти действия являются необратимыми и могут привести к потере всех данных.
+                </p>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline" className="w-full border-orange-200 text-orange-600 hover:bg-orange-50">
+                      Деактивировать аккаунт
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Деактивировать аккаунт</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Вы уверены, что хотите деактивировать свой аккаунт? Это действие временно скроет ваш профиль и контент от других пользователей.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Отмена</AlertDialogCancel>
+                      <AlertDialogAction className="bg-orange-600 hover:bg-orange-700">
+                        Деактивировать
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline" className="w-full border-red-200 text-red-600 hover:bg-red-50">
+                      Удалить аккаунт
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Удалить аккаунт</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Вы уверены, что хотите навсегда удалить свой аккаунт? Это действие необратимо и приведет к удалению всех ваших данных, включая книги и комментарии.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Отмена</AlertDialogCancel>
+                      <AlertDialogAction className="bg-red-600 hover:bg-red-700">
+                        Удалить навсегда
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
 
                 <div>
                   <Label className="flex items-center gap-2">
@@ -240,7 +324,7 @@ const AccountSettings: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Shield className="h-5 w-5" />
+                  <User className="h-5 w-5" />
                   Статус аккаунта
                 </CardTitle>
               </CardHeader>
@@ -272,7 +356,7 @@ const AccountSettings: React.FC = () => {
                 ) : (
                   <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
                     <div className="flex items-center gap-2">
-                      <Shield className="h-5 w-5 text-green-600" />
+                      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                       <h3 className="font-medium text-green-800">Аккаунт активен</h3>
                     </div>
                     <p className="text-sm text-green-700 mt-1">
@@ -281,18 +365,43 @@ const AccountSettings: React.FC = () => {
                   </div>
                 )}
 
-                {!showDefianceSystem && (
-                  <div className="mt-6">
-                    <Button
-                      variant="outline"
-                      className="w-full border-green-500 text-green-600 hover:bg-green-50 hover:border-green-600 h-auto py-3 px-4 text-wrap"
-                      onClick={() => setShowDefianceSystem(true)}
-                    >
-                      <Info className="h-4 w-4 mr-2 flex-shrink-0" />
-                      <span className="break-words">Узнать больше о системе Неповиновения</span>
-                    </Button>
+                {/* Profile completion and violations */}
+                <div className="grid grid-cols-2 gap-4 mt-6">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-blue-600 mb-1">100%</div>
+                    <div className="text-sm text-muted-foreground">Заполненность профиля</div>
                   </div>
-                )}
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-purple-600 mb-1">0</div>
+                    <div className="text-sm text-muted-foreground">Нарушений</div>
+                  </div>
+                </div>
+
+                {/* Security information */}
+                <div className="mt-6 p-4 bg-muted/30 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Info className="h-4 w-4 text-muted-foreground" />
+                    <h4 className="text-sm font-medium">Информация о системе безопасности</h4>
+                  </div>
+                  <Button
+                    variant="link"
+                    className="text-sm text-blue-600 p-0 h-auto font-normal"
+                    onClick={() => setShowDefianceSystem(true)}
+                  >
+                    Узнать больше о системе неповиновения
+                  </Button>
+                </div>
+
+                {/* Last activity */}
+                <div className="mt-4 p-4 bg-muted/30 rounded-lg">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Shield className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm font-medium">Последняя активность</span>
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Сегодня в 15:49
+                  </div>
+                </div>
 
                 {showDefianceSystem && (
                   <div className="mt-6">
