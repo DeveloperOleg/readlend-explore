@@ -1,4 +1,5 @@
 export const enTranslations = {
+  'app.name': 'Read Land',
   'common.comingSoon': 'Coming Soon',
   'common.error': 'Error',
   'common.success': 'Success',
@@ -186,6 +187,10 @@ export const enTranslations = {
   'home.readingNest': 'Welcome to your reading nest',
   'search.clear': 'Clear',
   'search.clearHistory': 'Clear History',
+  'search.showAll': 'Show all',
+  'search.popularQueries': 'Popular queries',
+  'search.recentSearches': 'Recent searches',
+  'search.popularCategories': 'Popular categories',
   'search.searchHistory': 'Search History',
   'search.noHistory': 'No search history',
   'search.historyCleared': 'Search history cleared',

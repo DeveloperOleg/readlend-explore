@@ -32,6 +32,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 const Layout: React.FC = () => {
   const { baseTheme, toggleBaseTheme } = useTheme();
   const { t } = useLanguage();
+  
+  // Update document title based on language
+  React.useEffect(() => {
+    document.title = t('app.name');
+  }, [t]);
   const { isAuthenticated, logout, user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();

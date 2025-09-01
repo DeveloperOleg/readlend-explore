@@ -1,5 +1,6 @@
 // Russian translations
 export const ruTranslations = {
+  'app.name': 'Читай Лэнд',
   'greeting.morning': 'Доброе утро',
   'greeting.afternoon': 'Добрый день', 
   'greeting.evening': 'Добрый вечер',
@@ -240,6 +241,11 @@ export const ruTranslations = {
   'pages.achievementEmpty': 'Эта страница временно пуста',
   'pages.achievementEmptyDescription': 'Следите за новостями!',
   'pages.search': 'Поиск',
+  'search.showAll': 'Показать всё',
+  'search.popularQueries': 'Популярные запросы',
+  'search.recentSearches': 'Недавние поиски',
+  'search.popularCategories': 'Популярные категории',
+  'search.clearHistory': 'Очистить историю',
   'pages.searchDescription': 'Найдите книги и авторов',
   'pages.saved': 'Сохраненные книги',
   'pages.savedDescription': 'Ваши сохраненные книги для чтения офлайн',
