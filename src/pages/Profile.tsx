@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Grid, Book, Edit, Copy, Share2, UserPlus } from 'lucide-react';
+import { Grid, Book, Edit, Copy, Share2, UserPlus, Users, Heart } from 'lucide-react';
 import ProfileEditDialog from '@/components/ProfileEditDialog';
 import { useToast } from '@/hooks/use-toast';
 import { User } from '@/types/auth';
@@ -168,19 +168,30 @@ const Profile: React.FC = () => {
           <span>🌟 Открыт для новых историй</span>
         </div>
 
-        {/* Stats */}
-        <div className="flex justify-center gap-12 mb-8">
-          <div className="text-center">
-            <div className="text-xl font-bold">{booksCount}</div>
-            <div className="text-sm text-muted-foreground">Книги</div>
+        {/* Stats Section with Icons */}
+        <div className="flex items-center justify-center gap-8 mb-8">
+          <div className="flex flex-col items-center">
+            <div className="flex items-center gap-1 mb-1">
+              <Book className="h-4 w-4 text-blue-500" />
+              <span className="text-lg font-medium">{booksCount}</span>
+            </div>
+            <span className="text-xs text-muted-foreground">Книги</span>
           </div>
-          <div className="text-center">
-            <div className="text-xl font-bold">{subscribersCount}</div>
-            <div className="text-sm text-muted-foreground">Подписчики</div>
+          
+          <div className="flex flex-col items-center">
+            <div className="flex items-center gap-1 mb-1">
+              <Users className="h-4 w-4 text-green-500" />
+              <span className="text-lg font-medium">{subscribersCount}</span>
+            </div>
+            <span className="text-xs text-muted-foreground">Подписчики</span>
           </div>
-          <div className="text-center">
-            <div className="text-xl font-bold">{subscriptionsCount}</div>
-            <div className="text-sm text-muted-foreground">Подписки</div>
+          
+          <div className="flex flex-col items-center">
+            <div className="flex items-center gap-1 mb-1">
+              <Heart className="h-4 w-4 text-red-500" />
+              <span className="text-lg font-medium">{subscriptionsCount}</span>
+            </div>
+            <span className="text-xs text-muted-foreground">Подписки</span>
           </div>
         </div>
 

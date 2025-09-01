@@ -2,11 +2,9 @@
 import React from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { BookCover } from '@/components/BookCover';
-import { Book, Users, Heart } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
+import Welcome from '@/components/Welcome';
 
 const Home: React.FC = () => {
-  const { user } = useAuth();
   
   // Организуем книги по категориям
   const newBooks = [
@@ -100,41 +98,7 @@ const Home: React.FC = () => {
     <ScrollArea className="h-full w-full">
       <div className="pb-20 px-4">
         {/* Header Section */}
-        <div className="pt-16 pb-6">
-          <h1 className="text-2xl font-medium text-foreground mb-2">
-            Доброе утро, {user?.username || 'tester111'}
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            ReadNest - ваша уютная библиотека
-          </p>
-        </div>
-
-        {/* Stats Section */}
-        <div className="flex items-center justify-center gap-8 mb-8">
-          <div className="flex flex-col items-center">
-            <div className="flex items-center gap-1 mb-1">
-              <Book className="h-4 w-4 text-blue-500" />
-              <span className="text-lg font-medium">0</span>
-            </div>
-            <span className="text-xs text-muted-foreground">Книги</span>
-          </div>
-          
-          <div className="flex flex-col items-center">
-            <div className="flex items-center gap-1 mb-1">
-              <Users className="h-4 w-4 text-green-500" />
-              <span className="text-lg font-medium">0</span>
-            </div>
-            <span className="text-xs text-muted-foreground">Подписчики</span>
-          </div>
-          
-          <div className="flex flex-col items-center">
-            <div className="flex items-center gap-1 mb-1">
-              <Heart className="h-4 w-4 text-red-500" />
-              <span className="text-lg font-medium">0</span>
-            </div>
-            <span className="text-xs text-muted-foreground">Подписки</span>
-          </div>
-        </div>
+        <Welcome />
 
         {/* Books Sections */}
         <div className="space-y-8">

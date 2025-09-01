@@ -22,7 +22,7 @@ const Welcome: React.FC = () => {
     }
     
     return t(key);
-  }, [t]);
+  }, []); // Remove dependency on t to force re-render based on time
 
   return (
     <div className="py-4 mb-6 animate-slide-in pl-10 pr-6 md:px-4">
