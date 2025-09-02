@@ -34,11 +34,11 @@ const Welcome: React.FC = () => {
   }, [t]);
 
   return (
-    <div className="py-6 mb-8 px-2">
-      <h1 className="text-2xl font-semibold text-foreground mb-1">
+    <div className="py-4 mb-6 px-4">
+      <h1 className="text-lg font-medium text-foreground mb-1">
         {greeting}, {user?.username || ''}
       </h1>
-      <p className="text-muted-foreground text-sm">
+      <p className="text-muted-foreground text-xs">
         {todayInfo}
       </p>
     </div>
