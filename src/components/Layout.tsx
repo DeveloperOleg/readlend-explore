@@ -178,9 +178,9 @@ const Layout: React.FC = () => {
             <Button 
               variant="ghost" 
               size="icon" 
-              className="fixed top-2 left-2 z-50"
+              className="fixed top-3 left-3 z-50 h-8 w-8"
             >
-              <Menu className="h-5 w-5" />
+              <Menu className="h-6 w-6" />
               <span className="sr-only">Open menu</span>
             </Button>
           </SheetTrigger>
@@ -385,10 +385,10 @@ const Layout: React.FC = () => {
         <Button 
           variant="ghost" 
           size="icon" 
-          className="fixed top-2 right-2 z-50"
+          className="fixed top-3 right-3 z-50 h-8 w-8"
           onClick={navigateToNotifications}
         >
-          <Bell className="h-5 w-5" />
+          <Bell className="h-6 w-6" />
           <span className="sr-only">Уведомления</span>
         </Button>
       )}

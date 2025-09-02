@@ -97,8 +97,10 @@ const Home: React.FC = () => {
   return (
     <ScrollArea className="h-full w-full">
       <div className="pb-20 px-6">
-        {/* Header Section */}
-        <Welcome />
+        {/* Header Section - positioned after menu buttons */}
+        <div className="pt-14">
+          <Welcome />
+        </div>
 
         {/* Books Sections */}
         <div className="space-y-6">
