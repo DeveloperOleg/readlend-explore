@@ -21,9 +21,9 @@ export const BookCover: React.FC<BookCoverProps> = ({
 }) => {
   return (
     <Link to={`${linkPrefix}/${id}`}>
-      <Card className="overflow-hidden h-64 flex flex-col justify-end transition-transform hover:scale-[1.02]">
+      <Card className="overflow-hidden h-56 flex flex-col justify-end transition-transform hover:scale-[1.02] border-0 shadow-sm">
         <div 
-          className="w-full h-full relative bg-gradient-to-b from-gray-700 to-gray-900"
+          className="w-full h-full relative bg-gradient-to-b from-muted/50 to-muted rounded-lg"
           style={{
             backgroundImage: coverUrl ? `url(${coverUrl})` : undefined,
             backgroundSize: 'cover',
@@ -31,14 +31,14 @@ export const BookCover: React.FC<BookCoverProps> = ({
           }}
         >
           {!coverUrl && (
-            <div className="absolute inset-0 flex items-center justify-center text-gray-300">
-              <Book size={42} />
+            <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
+              <Book size={36} />
             </div>
           )}
           
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
-            <h3 className="font-medium text-sm text-white line-clamp-2">{title}</h3>
-            <p className="text-xs text-gray-300 mt-1">{author}</p>
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-3 rounded-b-lg">
+            <h3 className="font-medium text-sm text-white line-clamp-2 mb-1">{title}</h3>
+            <p className="text-xs text-white/80">{author}</p>
           </div>
         </div>
       </Card>

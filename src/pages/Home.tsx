@@ -96,19 +96,19 @@ const Home: React.FC = () => {
 
   return (
     <ScrollArea className="h-full w-full">
-      <div className="pb-20 px-4">
+      <div className="pb-20 px-6">
         {/* Header Section */}
         <Welcome />
 
         {/* Books Sections */}
-        <div className="space-y-8">
+        <div className="space-y-6">
           {/* Новинки */}
           <section>
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">Новинки</h2>
-              <span className="text-sm text-blue-500">Все</span>
+              <h2 className="text-xl font-semibold text-foreground">Новинки</h2>
+              <span className="text-sm text-primary font-medium">Все</span>
             </div>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-4">
               {newBooks.map((book) => (
                 <BookCover
                   key={book.id}
@@ -125,10 +125,10 @@ const Home: React.FC = () => {
           {/* Вам может понравиться */}
           <section>
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">Вам может понравиться</h2>
-              <span className="text-sm text-blue-500">Все</span>
+              <h2 className="text-xl font-semibold text-foreground">Вам может понравиться</h2>
+              <span className="text-sm text-primary font-medium">Все</span>
             </div>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-4">
               {recommendedBooks.slice(0, 6).map((book) => (
                 <BookCover
                   key={book.id}
