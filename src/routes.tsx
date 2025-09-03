@@ -17,6 +17,8 @@ import Achievements from "./pages/Achievements";
 import BookReader from "./pages/BookReader";
 import ComicReader from "./pages/ComicReader";
 import Comics from "./pages/Comics";
+import MangaReader from "./pages/MangaReader";
+import FanfictionReader from "./pages/FanfictionReader";
 
 // Settings Pages
 import AccountSettings from "./pages/settings/AccountSettings";
@@ -60,6 +62,8 @@ const AppRoutes = () => {
             <Route path="book/:bookId" element={<BookReader />} />
             <Route path="comic/:comicId" element={<ComicReader />} />
             <Route path="comics" element={<Comics />} />
+            <Route path="manga/:mangaId" element={<MangaReader />} />
+            <Route path="fanfiction/:fanfictionId" element={<FanfictionReader />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -314,4 +314,23 @@ export const ruTranslations = {
   'comic.linkCopiedDescription': 'Ссылка на комикс скопирована в буфер обмена',
   'comic.copyFailed': 'Не удалось скопировать',
   'comic.copyFailedDescription': 'Не удалось скопировать ссылку в буфер обмена',
+  
+  // Sections
+  'sections.newBooks': 'Новинки',
+  'sections.recommended': 'Вам может понравиться',
+  'sections.manga': 'Манга',
+  'sections.fanfiction': 'Фанфикшн',
+  'sections.viewAll': 'Все',
+  
+  // Manga
+  'manga.chapter': 'Глава',
+  'manga.volumes': 'томов',
+  'manga.read': 'Читать',
+  'manga.reread': 'Перечитать',
+  
+  // Fanfiction  
+  'fanfiction.chapter': 'Глава',
+  'fanfiction.words': 'слов',
+  'fanfiction.read': 'Читать',
+  'fanfiction.reread': 'Перечитать',
 };

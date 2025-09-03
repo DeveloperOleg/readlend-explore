@@ -3,8 +3,10 @@ import React from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { BookCover } from '@/components/BookCover';
 import Welcome from '@/components/Welcome';
+import { useLanguage } from '@/context/LanguageContext';
 
 const Home: React.FC = () => {
+  const { t } = useLanguage();
   
   // Организуем книги по категориям
   const newBooks = [
@@ -93,6 +95,66 @@ const Home: React.FC = () => {
       totalRatings: 678
     },
   ];
+  
+  const mangaBooks = [
+    { 
+      id: 'manga1', 
+      title: 'Боевые искусства', 
+      author: 'Такэси Миура', 
+      coverUrl: null,
+      description: 'Эпическая манга о боевых искусствах',
+      rating: 9.3,
+      totalRatings: 1234
+    },
+    { 
+      id: 'manga2', 
+      title: 'Звёздный путь', 
+      author: 'Акира Ямамото', 
+      coverUrl: null,
+      description: 'Космическое приключение',
+      rating: 8.9,
+      totalRatings: 876
+    },
+    { 
+      id: 'manga3', 
+      title: 'Волшебная академия', 
+      author: 'Юки Танака', 
+      coverUrl: null,
+      description: 'Магическая школа и её секреты',
+      rating: 9.1,
+      totalRatings: 543
+    },
+  ];
+  
+  const fanfictionBooks = [
+    { 
+      id: 'fanfic1', 
+      title: 'Альтернативная история', 
+      author: 'Анна_К', 
+      coverUrl: null,
+      description: 'Что было бы, если всё пошло иначе',
+      rating: 8.7,
+      totalRatings: 234
+    },
+    { 
+      id: 'fanfic2', 
+      title: 'Новые приключения', 
+      author: 'Автор2023', 
+      coverUrl: null,
+      description: 'Продолжение любимой истории',
+      rating: 9.0,
+      totalRatings: 456
+    },
+    { 
+      id: 'fanfic3', 
+      title: 'Параллельная вселенная', 
+      author: 'ФанВriter', 
+      coverUrl: null,
+      description: 'История в другой реальности',
+      rating: 8.5,
+      totalRatings: 321
+    },
+  ];
 
   return (
     <ScrollArea className="h-full w-full">
@@ -107,8 +169,8 @@ const Home: React.FC = () => {
           {/* Новинки */}
           <section>
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-foreground">Новинки</h2>
-              <span className="text-sm text-primary font-medium">Все</span>
+              <h2 className="text-xl font-semibold text-foreground">{t('sections.newBooks')}</h2>
+              <span className="text-sm text-primary font-medium">{t('sections.viewAll')}</span>
             </div>
             <div className="grid grid-cols-3 gap-4">
               {newBooks.map((book) => (
@@ -127,8 +189,8 @@ const Home: React.FC = () => {
           {/* Вам может понравиться */}
           <section>
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-foreground">Вам может понравиться</h2>
-              <span className="text-sm text-primary font-medium">Все</span>
+              <h2 className="text-xl font-semibold text-foreground">{t('sections.recommended')}</h2>
+              <span className="text-sm text-primary font-medium">{t('sections.viewAll')}</span>
             </div>
             <div className="grid grid-cols-3 gap-4">
               {recommendedBooks.slice(0, 6).map((book) => (
@@ -139,6 +201,46 @@ const Home: React.FC = () => {
                   author={book.author}
                   coverUrl={book.coverUrl}
                   linkPrefix="/book"
+                />
+              ))}
+            </div>
+          </section>
+
+          {/* Манга */}
+          <section>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-foreground">{t('sections.manga')}</h2>
+              <span className="text-sm text-primary font-medium">{t('sections.viewAll')}</span>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              {mangaBooks.map((book) => (
+                <BookCover
+                  key={book.id}
+                  id={book.id}
+                  title={book.title}
+                  author={book.author}
+                  coverUrl={book.coverUrl}
+                  linkPrefix="/manga"
+                />
+              ))}
+            </div>
+          </section>
+
+          {/* Фанфикшн */}
+          <section>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-foreground">{t('sections.fanfiction')}</h2>
+              <span className="text-sm text-primary font-medium">{t('sections.viewAll')}</span>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              {fanfictionBooks.map((book) => (
+                <BookCover
+                  key={book.id}
+                  id={book.id}
+                  title={book.title}
+                  author={book.author}
+                  coverUrl={book.coverUrl}
+                  linkPrefix="/fanfiction"
                 />
               ))}
             </div>

@@ -281,4 +281,23 @@ export const enTranslations = {
   'comic.linkCopiedDescription': 'Comic link has been copied to clipboard',
   'comic.copyFailed': 'Copy failed',
   'comic.copyFailedDescription': 'Failed to copy link to clipboard',
+  
+  // Sections
+  'sections.newBooks': 'New Books',
+  'sections.recommended': 'You May Like',
+  'sections.manga': 'Manga',
+  'sections.fanfiction': 'Fanfiction',
+  'sections.viewAll': 'View All',
+  
+  // Manga
+  'manga.chapter': 'Chapter',
+  'manga.volumes': 'volumes',
+  'manga.read': 'Read',
+  'manga.reread': 'Re-read',
+  
+  // Fanfiction  
+  'fanfiction.chapter': 'Chapter',
+  'fanfiction.words': 'words',
+  'fanfiction.read': 'Read',
+  'fanfiction.reread': 'Re-read',
 };
