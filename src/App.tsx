@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { InternetProvider } from "@/context/InternetContext";
 import LoadingScreen from "@/components/LoadingScreen";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 import AppRoutes from "./routes";
 
@@ -35,19 +36,21 @@ const App = () => {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <LanguageProvider>
-          <InternetProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Sonner position="bottom-center" />
-              <AppRoutes />
-            </TooltipProvider>
-          </InternetProvider>
-        </LanguageProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <LanguageProvider>
+            <InternetProvider>
+              <TooltipProvider>
+                <Toaster />
+                <Sonner position="bottom-center" />
+                <AppRoutes />
+              </TooltipProvider>
+            </InternetProvider>
+          </LanguageProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 };
 

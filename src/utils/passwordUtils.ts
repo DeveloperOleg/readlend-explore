@@ -25,20 +25,28 @@ export const generateSecureToken = (): string => {
 };
 
 export const isPasswordStrong = (password: string): { isStrong: boolean; message: string } => {
-  if (password.length < 8) {
+  // Sanitize input
+  const sanitizedPassword = password?.trim() || '';
+  
+  if (sanitizedPassword.length < 8) {
     return { isStrong: false, message: 'Пароль должен содержать не менее 8 символов' };
   }
   
-  if (!/[A-Z]/.test(password)) {
+  if (!/[A-Z]/.test(sanitizedPassword)) {
     return { isStrong: false, message: 'Пароль должен содержать заглавную букву' };
   }
   
-  if (!/[a-z]/.test(password)) {
+  if (!/[a-z]/.test(sanitizedPassword)) {
     return { isStrong: false, message: 'Пароль должен содержать строчную букву' };
   }
   
-  if (!/[0-9]/.test(password)) {
+  if (!/[0-9]/.test(sanitizedPassword)) {
     return { isStrong: false, message: 'Пароль должен содержать цифру' };
+  }
+  
+  // Check for special characters for extra security
+  if (sanitizedPassword.length >= 12 && /[!@#$%^&*(),.?":{}|<>]/.test(sanitizedPassword)) {
+    return { isStrong: true, message: 'Очень надежный пароль' };
   }
   
   return { isStrong: true, message: 'Пароль достаточно надежный' };

@@ -16,40 +16,40 @@ const BanStatusDialog: React.FC<BanStatusDialogProps> = ({ open, onOpenChange })
     {
       level: 1,
       icon: AlertTriangle,
-      color: 'bg-yellow-100 text-yellow-700',
-      iconColor: 'text-yellow-600',
+      color: 'bg-secondary text-secondary-foreground',
+      iconColor: 'text-secondary-foreground',
       title: 'Caution (Осторожность)',
       description: 'Warning issued to the user',
     },
     {
       level: 2,
       icon: Clock,
-      color: 'bg-orange-100 text-orange-700',
-      iconColor: 'text-orange-600',
+      color: 'bg-accent text-accent-foreground',
+      iconColor: 'text-accent-foreground',
       title: '24-Hour Restriction (Ограничение на 24 часа)',
       description: 'User restricted for 24 hours',
     },
     {
       level: 3,
       icon: VolumeX,
-      color: 'bg-red-100 text-red-700',
-      iconColor: 'text-red-600',
+      color: 'bg-destructive/10 text-destructive-foreground',
+      iconColor: 'text-destructive',
       title: 'Week of Silence (Неделя молчания)',
       description: 'User cannot post for 7 days',
     },
     {
       level: 4,
       icon: Shield,
-      color: 'bg-purple-100 text-purple-700',
-      iconColor: 'text-purple-600',
+      color: 'bg-primary/10 text-primary-foreground',
+      iconColor: 'text-primary',
       title: '30-Day Isolation (30-дневная изоляция)',
       description: 'User cannot interact for 30 days',
     },
     {
       level: 5,
       icon: Ban,
-      color: 'bg-gray-100 text-gray-700',
-      iconColor: 'text-gray-600',
+      color: 'bg-muted text-muted-foreground',
+      iconColor: 'text-muted-foreground',
       title: 'Ultimate Ban (Окончательный бан)',
       description: 'Account blocked at device level',
     },
@@ -76,7 +76,7 @@ const BanStatusDialog: React.FC<BanStatusDialogProps> = ({ open, onOpenChange })
                 key={ban.level}
                 className={`flex items-center gap-3 p-3 rounded-lg ${ban.color}`}
               >
-                <div className={`flex items-center justify-center w-8 h-8 rounded-full bg-white/80`}>
+                <div className={`flex items-center justify-center w-8 h-8 rounded-full bg-background/80`}>
                   <ban.icon className={`h-4 w-4 ${ban.iconColor}`} />
                 </div>
                 <div className="flex-1 min-w-0">

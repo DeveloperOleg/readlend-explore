@@ -11,10 +11,11 @@ const LoadingScreen: React.FC = () => {
         if (oldProgress >= 100) {
           return 100;
         }
-        const diff = Math.random() * 10;
+        // More predictable progress increment
+        const diff = 5 + Math.random() * 3; // 5-8% increment
         return Math.min(oldProgress + diff, 100);
       });
-    }, 200);
+    }, 150);
 
     return () => {
       clearInterval(timer);
@@ -22,22 +23,22 @@ const LoadingScreen: React.FC = () => {
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center z-[9999]">
+    <div className="fixed inset-0 bg-background flex flex-col items-center justify-center z-[9999]">
       {/* App Name */}
       <div className="mb-16">
-        <h1 className="text-white text-3xl font-semibold text-center tracking-wide">
+        <h1 className="text-foreground text-3xl font-semibold text-center tracking-wide">
           {t('app.name')}
         </h1>
-        <p className="text-slate-400 text-sm text-center mt-2 tracking-wider">
+        <p className="text-muted-foreground text-sm text-center mt-2 tracking-wider">
           READ LAND
         </p>
       </div>
 
       {/* Progress Bar */}
       <div className="w-64 mb-8">
-        <div className="w-full bg-slate-700/50 rounded-full h-1">
+        <div className="w-full bg-muted rounded-full h-1">
           <div 
-            className="bg-white h-1 rounded-full transition-all duration-300 ease-out"
+            className="bg-primary h-1 rounded-full transition-all duration-300 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -45,13 +46,13 @@ const LoadingScreen: React.FC = () => {
 
       {/* Loading Dots */}
       <div className="flex space-x-2">
-        <div className="w-2 h-2 bg-slate-400 rounded-full animate-pulse" />
-        <div className="w-2 h-2 bg-slate-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
-        <div className="w-2 h-2 bg-slate-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }} />
+        <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse" />
+        <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
+        <div className="w-2 h-2 bg-muted-foreground rounded-full animate-pulse" style={{ animationDelay: '0.4s' }} />
       </div>
 
       {/* Version */}
-      <div className="absolute bottom-8 text-slate-500 text-xs">
+      <div className="absolute bottom-8 text-muted-foreground text-xs">
         v1.0
       </div>
     </div>

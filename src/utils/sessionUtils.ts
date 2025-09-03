@@ -14,19 +14,30 @@ const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 const SESSION_KEY = 'readnest_session';
 
 export const createSession = (userId: string, username: string): SessionData => {
-  const token = crypto.getRandomValues(new Uint8Array(32)).reduce((acc, byte) => 
-    acc + byte.toString(16).padStart(2, '0'), '');
+  // Validate inputs
+  if (!userId?.trim() || !username?.trim()) {
+    throw new Error('Invalid session data');
+  }
+  
+  // Generate cryptographically secure token
+  const tokenArray = new Uint8Array(32);
+  crypto.getRandomValues(tokenArray);
+  const token = Array.from(tokenArray, byte => byte.toString(16).padStart(2, '0')).join('');
   
   const session: SessionData = {
-    userId,
-    username,
+    userId: userId.trim(),
+    username: username.trim(),
     expiresAt: Date.now() + SESSION_DURATION,
     token
   };
   
-  // Store session securely
-  sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-  return session;
+  try {
+    // Store session securely
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    return session;
+  } catch (error) {
+    throw new Error('Failed to create session');
+  }
 };
 
 export const getSession = (): SessionData | null => {
