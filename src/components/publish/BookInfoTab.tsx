@@ -95,38 +95,40 @@ const BookInfoTab: React.FC<BookInfoTabProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="space-y-6">
       <div className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="title">{t('publish.bookTitle')}</Label>
+        <div className="bg-card p-4 rounded-lg border space-y-3">
+          <Label htmlFor="title" className="text-sm font-medium">{t('publish.bookTitle')}</Label>
           <Input 
             id="title" 
             value={title} 
             onChange={(e) => setTitle(e.target.value)} 
-            placeholder={t('publish.titlePlaceholder')} 
+            placeholder={t('publish.titlePlaceholder')}
+            className="h-12 rounded-lg border-2 focus:border-primary"
           />
         </div>
         
-        <div className="space-y-2">
-          <Label htmlFor="authors">{t('publish.author')}</Label>
+        <div className="bg-card p-4 rounded-lg border space-y-3">
+          <Label htmlFor="authors" className="text-sm font-medium">{t('publish.author')}</Label>
           <Input 
             id="authors" 
             value={authors} 
             onChange={(e) => setAuthors(e.target.value)} 
-            placeholder={t('publish.authorPlaceholder')} 
+            placeholder={t('publish.authorPlaceholder')}
+            className="h-12 rounded-lg border-2 focus:border-primary"
           />
           <p className="text-xs text-muted-foreground">
             {t('publish.multipleAuthorsHint')}
           </p>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="genre">Жанр</Label>
+        <div className="bg-card p-4 rounded-lg border space-y-3">
+          <Label htmlFor="genre" className="text-sm font-medium">Жанр</Label>
           <Select value={genre} onValueChange={(value) => setGenre(value as BookGenre)}>
-            <SelectTrigger id="genre">
+            <SelectTrigger id="genre" className="h-12 rounded-lg border-2 focus:border-primary">
               <SelectValue placeholder="Выберите жанр" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-lg">
               <SelectItem value="fiction">Художественная литература</SelectItem>
               <SelectItem value="non-fiction">Нон-фикшн</SelectItem>
               <SelectItem value="fantasy">Фэнтези</SelectItem>
@@ -149,13 +151,13 @@ const BookInfoTab: React.FC<BookInfoTabProps> = ({
           </Select>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="status">Статус книги</Label>
+        <div className="bg-card p-4 rounded-lg border space-y-3">
+          <Label htmlFor="status" className="text-sm font-medium">Статус книги</Label>
           <Select value={status} onValueChange={(value) => setStatus(value as BookStatus)}>
-            <SelectTrigger id="status">
+            <SelectTrigger id="status" className="h-12 rounded-lg border-2 focus:border-primary">
               <SelectValue placeholder="Выберите статус" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-lg">
               <SelectItem value="published">Опубликована</SelectItem>
               <SelectItem value="draft">Черновик</SelectItem>
               <SelectItem value="in-progress">В процессе написания</SelectItem>
@@ -163,15 +165,15 @@ const BookInfoTab: React.FC<BookInfoTabProps> = ({
           </Select>
         </div>
         
-        <div className="space-y-2">
-          <Label>{t('publish.releaseDate')}</Label>
+        <div className="bg-card p-4 rounded-lg border space-y-3">
+          <Label className="text-sm font-medium">{t('publish.releaseDate')}</Label>
           <div className="flex gap-2">
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
                   className={cn(
-                    "w-full justify-start text-left font-normal",
+                    "flex-1 h-12 justify-start text-left font-normal rounded-lg border-2",
                     !releaseDate && "text-muted-foreground"
                   )}
                 >
@@ -193,99 +195,11 @@ const BookInfoTab: React.FC<BookInfoTabProps> = ({
             <Button 
               variant="secondary" 
               onClick={setTodayAsReleaseDate} 
-              className="whitespace-nowrap"
+              className="h-12 px-4 whitespace-nowrap rounded-lg border-2"
             >
               Сегодня
             </Button>
           </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="tags">Метки (теги)</Label>
-          <div className="flex gap-2">
-            <Input
-              id="tags"
-              value={tagInput}
-              onChange={(e) => setTagInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Добавьте теги"
-            />
-            <Button 
-              type="button" 
-              onClick={addTag} 
-              variant="secondary"
-              size="icon"
-            >
-              <Plus className="h-4 w-4" />
-            </Button>
-          </div>
-          <ScrollArea className="h-20 w-full">
-            <div className="flex flex-wrap gap-2 mt-2">
-              {tags.map((tag, index) => (
-                <Badge key={index} variant="secondary" className="flex items-center gap-1">
-                  {tag}
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="h-4 w-4 p-0" 
-                    onClick={() => removeTag(tag)}
-                  >
-                    <X className="h-3 w-3" />
-                  </Button>
-                </Badge>
-              ))}
-            </div>
-          </ScrollArea>
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="description">{t('publish.description')}</Label>
-          <TextEditor 
-            content={description} 
-            onChange={setDescription} 
-          />
-        </div>
-      </div>
-      
-      <div className="space-y-4">
-        <Label htmlFor="cover">{t('publish.coverImage')}</Label>
-        <div className="border rounded-md p-4 text-center">
-          {coverImage ? (
-            <div className="space-y-4">
-              <img 
-                src={coverImage} 
-                alt={t('publish.cover')} 
-                className="max-h-[300px] mx-auto object-contain rounded" 
-              />
-              <Button variant="outline" size="sm" onClick={() => setCoverImage(null)}>
-                {t('publish.changeCover')}
-              </Button>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              <div className="border-2 border-dashed border-muted-foreground/20 rounded-md p-8 flex flex-col items-center justify-center">
-                <p className="text-sm text-muted-foreground mb-2">
-                  {t('publish.dropImage')}
-                </p>
-                <Input 
-                  id="cover" 
-                  type="file" 
-                  accept="image/*" 
-                  onChange={handleImageUpload} 
-                  className="hidden" 
-                />
-                <Button 
-                  variant="secondary" 
-                  onClick={() => document.getElementById('cover')?.click()}
-                >
-                  {t('publish.selectImage')}
-                </Button>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {t('publish.recommendedSize')}
-              </p>
-            </div>
-          )}
         </div>
       </div>
     </div>

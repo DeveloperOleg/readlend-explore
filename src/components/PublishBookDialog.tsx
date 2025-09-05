@@ -81,103 +81,104 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>{t('publish.title')}</DialogTitle>
-          <DialogDescription>
-            {t('publish.description')}
-          </DialogDescription>
+      <DialogContent className="sm:max-w-[520px] max-h-[90vh] overflow-hidden flex flex-col">
+        <DialogHeader className="pb-4">
+          <DialogTitle className="text-lg font-semibold">{t('publish.title')}</DialogTitle>
         </DialogHeader>
         
-        <Tabs defaultValue="info" className="mt-4">
-          <TabsList className="grid grid-cols-3">
-            <TabsTrigger value="info">{t('publish.bookInfo')}</TabsTrigger>
-            <TabsTrigger value="content">{t('publish.bookContent')}</TabsTrigger>
-            <TabsTrigger value="cover">{t('publish.cover')}</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="info" className="space-y-4 py-4">
-            <BookInfoTab 
-              title={title}
-              setTitle={setTitle}
-              authors={authors}
-              setAuthors={setAuthors}
-              coverImage={coverImage}
-              setCoverImage={setCoverImage}
-              description={description}
-              setDescription={setDescription}
-              releaseDate={releaseDate}
-              setReleaseDate={setReleaseDate}
-              genre={genre}
-              setGenre={setGenre}
-              status={status}
-              setStatus={setStatus}
-              tags={tags}
-              setTags={setTags}
-            />
-          </TabsContent>
-          
-          <TabsContent value="content" className="space-y-4 py-4">
-            <BookContentTab 
-              content={content}
-              setContent={setContent}
-            />
-          </TabsContent>
-          
-          <TabsContent value="cover" className="space-y-4 py-4">
-            <div className="flex flex-col items-center justify-center min-h-[300px] border-2 border-dashed border-muted-foreground/20 rounded-lg">
-              {coverImage ? (
-                <div className="space-y-4 text-center">
-                  <img 
-                    src={coverImage} 
-                    alt={t('publish.cover')} 
-                    className="max-h-[200px] mx-auto object-contain rounded" 
-                  />
-                  <Button variant="outline" onClick={() => setCoverImage(null)}>
-                    {t('publish.changeCover')}
-                  </Button>
+        <div className="flex-1 flex flex-col min-h-0">
+          <Tabs defaultValue="info" className="flex flex-col h-full">
+            <TabsList className="grid grid-cols-3 mb-6 bg-muted rounded-lg p-1">
+              <TabsTrigger value="info" className="rounded-md">{t('publish.bookInfo')}</TabsTrigger>
+              <TabsTrigger value="content" className="rounded-md">{t('publish.bookContent')}</TabsTrigger>
+              <TabsTrigger value="cover" className="rounded-md">{t('publish.cover')}</TabsTrigger>
+            </TabsList>
+            
+            <div className="flex-1 overflow-y-auto">
+              <TabsContent value="info" className="mt-0 space-y-4">
+                <BookInfoTab 
+                  title={title}
+                  setTitle={setTitle}
+                  authors={authors}
+                  setAuthors={setAuthors}
+                  coverImage={coverImage}
+                  setCoverImage={setCoverImage}
+                  description={description}
+                  setDescription={setDescription}
+                  releaseDate={releaseDate}
+                  setReleaseDate={setReleaseDate}
+                  genre={genre}
+                  setGenre={setGenre}
+                  status={status}
+                  setStatus={setStatus}
+                  tags={tags}
+                  setTags={setTags}
+                />
+              </TabsContent>
+              
+              <TabsContent value="content" className="mt-0 space-y-4">
+                <BookContentTab 
+                  content={content}
+                  setContent={setContent}
+                />
+              </TabsContent>
+              
+              <TabsContent value="cover" className="mt-0 space-y-4">
+                <div className="flex flex-col items-center justify-center min-h-[300px] border-2 border-dashed border-muted-foreground/20 rounded-lg bg-muted/10">
+                  {coverImage ? (
+                    <div className="space-y-4 text-center">
+                      <img 
+                        src={coverImage} 
+                        alt={t('publish.cover')} 
+                        className="max-h-[200px] mx-auto object-contain rounded-lg" 
+                      />
+                      <Button variant="outline" onClick={() => setCoverImage(null)}>
+                        {t('publish.changeCover')}
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="text-center space-y-4">
+                      <p className="text-muted-foreground">{t('publish.dropImage')}</p>
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (e) => setCoverImage(e.target?.result as string);
+                            reader.readAsDataURL(file);
+                          }
+                        }} 
+                        className="hidden" 
+                        id="cover-upload"
+                      />
+                      <Button 
+                        variant="secondary" 
+                        onClick={() => document.getElementById('cover-upload')?.click()}
+                      >
+                        {t('publish.selectImage')}
+                      </Button>
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div className="text-center space-y-4">
-                  <p className="text-muted-foreground">{t('publish.dropImage')}</p>
-                  <input 
-                    type="file" 
-                    accept="image/*" 
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (e) => setCoverImage(e.target?.result as string);
-                        reader.readAsDataURL(file);
-                      }
-                    }} 
-                    className="hidden" 
-                    id="cover-upload"
-                  />
-                  <Button 
-                    variant="secondary" 
-                    onClick={() => document.getElementById('cover-upload')?.click()}
-                  >
-                    {t('publish.selectImage')}
-                  </Button>
-                </div>
-              )}
+              </TabsContent>
             </div>
-          </TabsContent>
-        </Tabs>
+          </Tabs>
+        </div>
         
-        <div className="pt-4 space-y-3">
+        <div className="pt-6 space-y-3 border-t bg-background">
           <Button 
             onClick={handlePublish} 
             disabled={!title || !authors || !content}
-            className="w-full"
+            className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg"
           >
             {t('publish.publish')}
           </Button>
           <Button 
-            variant="ghost"
+            variant="outline"
             onClick={handleSaveDraft}
-            className="w-full text-muted-foreground"
+            className="w-full h-12 border-2 hover:bg-muted/50 font-medium rounded-lg"
           >
             {t('publish.saveDraft')}
           </Button>
