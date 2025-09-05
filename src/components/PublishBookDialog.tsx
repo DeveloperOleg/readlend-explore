@@ -81,21 +81,21 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[520px] max-h-[90vh] overflow-hidden flex flex-col">
-        <DialogHeader className="pb-4">
+      <DialogContent className="sm:max-w-[520px] max-h-[90vh] flex flex-col">
+        <DialogHeader className="pb-4 shrink-0">
           <DialogTitle className="text-lg font-semibold">{t('publish.title')}</DialogTitle>
         </DialogHeader>
         
         <div className="flex-1 flex flex-col min-h-0">
           <Tabs defaultValue="info" className="flex flex-col h-full">
-            <TabsList className="grid grid-cols-3 mb-6 bg-muted rounded-lg p-1">
+            <TabsList className="grid grid-cols-3 mb-4 bg-muted rounded-lg p-1 shrink-0">
               <TabsTrigger value="info" className="rounded-md">{t('publish.bookInfo')}</TabsTrigger>
               <TabsTrigger value="content" className="rounded-md">{t('publish.bookContent')}</TabsTrigger>
               <TabsTrigger value="cover" className="rounded-md">{t('publish.cover')}</TabsTrigger>
             </TabsList>
             
-            <div className="flex-1 overflow-y-auto">
-              <TabsContent value="info" className="mt-0 space-y-4">
+            <div className="flex-1 overflow-y-auto px-1">
+              <TabsContent value="info" className="mt-0 pb-4">
                 <BookInfoTab 
                   title={title}
                   setTitle={setTitle}
@@ -116,23 +116,23 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
                 />
               </TabsContent>
               
-              <TabsContent value="content" className="mt-0 space-y-4">
+              <TabsContent value="content" className="mt-0 pb-4">
                 <BookContentTab 
                   content={content}
                   setContent={setContent}
                 />
               </TabsContent>
               
-              <TabsContent value="cover" className="mt-0 space-y-4">
-                <div className="flex flex-col items-center justify-center min-h-[300px] border-2 border-dashed border-muted-foreground/20 rounded-lg bg-muted/10">
+              <TabsContent value="cover" className="mt-0 pb-4">
+                <div className="flex flex-col items-center justify-center min-h-[300px] border-2 border-dashed border-muted-foreground/20 rounded-xl bg-muted/10 p-6">
                   {coverImage ? (
                     <div className="space-y-4 text-center">
                       <img 
                         src={coverImage} 
                         alt={t('publish.cover')} 
-                        className="max-h-[200px] mx-auto object-contain rounded-lg" 
+                        className="max-h-[200px] mx-auto object-contain rounded-lg shadow-md" 
                       />
-                      <Button variant="outline" onClick={() => setCoverImage(null)}>
+                      <Button variant="outline" onClick={() => setCoverImage(null)} className="rounded-lg">
                         {t('publish.changeCover')}
                       </Button>
                     </div>
@@ -156,6 +156,7 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
                       <Button 
                         variant="secondary" 
                         onClick={() => document.getElementById('cover-upload')?.click()}
+                        className="rounded-lg"
                       >
                         {t('publish.selectImage')}
                       </Button>
@@ -167,18 +168,18 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
           </Tabs>
         </div>
         
-        <div className="pt-6 space-y-3 border-t bg-background">
+        <div className="pt-4 space-y-3 border-t bg-background shrink-0">
           <Button 
             onClick={handlePublish} 
             disabled={!title || !authors || !content}
-            className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg"
+            className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-xl transition-colors"
           >
             {t('publish.publish')}
           </Button>
           <Button 
             variant="outline"
             onClick={handleSaveDraft}
-            className="w-full h-12 border-2 hover:bg-muted/50 font-medium rounded-lg"
+            className="w-full h-12 border-2 hover:bg-muted/50 font-medium rounded-xl transition-colors"
           >
             {t('publish.saveDraft')}
           </Button>
