@@ -226,7 +226,7 @@ const Home: React.FC = () => {
             </div>
           </section>
 
-          {/* Фанфикшн */}
+          {/* Фанфики */}
           <section>
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold text-foreground">{t('sections.fanfiction')}</h2>
