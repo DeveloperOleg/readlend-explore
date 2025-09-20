@@ -113,10 +113,10 @@ const AutumnDecorations: React.FC = () => {
         </div>
       )}
 
-      {/* Static decorative elements */}
-      <div className="tea-cup" style={{ top: '10%', right: '10%' }}>☕</div>
-      <div className="tea-cup" style={{ bottom: '15%', left: '5%' }}>🫖</div>
-      <div className="tea-cup" style={{ top: '60%', right: '5%' }}>🕯️</div>
+      {/* Static decorative elements - positioned to avoid content areas */}
+      <div className="tea-cup" style={{ top: '5%', right: '15%' }}>☕</div>
+      <div className="tea-cup" style={{ bottom: '10%', left: '8%' }}>🫖</div>
+      <div className="tea-cup" style={{ top: '70%', right: '8%' }}>🕯️</div>
 
       {/* Click effects */}
       {clickEffects.map((effect) => (

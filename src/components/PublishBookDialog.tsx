@@ -172,14 +172,14 @@ const PublishBookDialog: React.FC<PublishBookDialogProps> = ({ open, onOpenChang
           <Button 
             onClick={handlePublish} 
             disabled={!title || !authors || !content}
-            className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-xl transition-colors"
+            className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-xl transition-colors autumn-theme:bg-autumn-button autumn-theme:text-white autumn-theme:hover:bg-autumn-accent"
           >
             {t('publish.publish')}
           </Button>
           <Button 
             variant="outline"
             onClick={handleSaveDraft}
-            className="w-full h-12 border-2 hover:bg-muted/50 font-medium rounded-xl transition-colors"
+            className="w-full h-12 border-2 hover:bg-muted/50 font-medium rounded-xl transition-colors autumn-theme:border-autumn-button autumn-theme:bg-white/90 autumn-theme:text-autumn-button autumn-theme:hover:bg-autumn-button autumn-theme:hover:text-white"
           >
             {t('publish.saveDraft')}
           </Button>

@@ -18,6 +18,8 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        autumn: "autumn-theme:bg-autumn-button autumn-theme:text-white autumn-theme:hover:bg-autumn-accent autumn-theme:shadow-lg autumn-theme:border autumn-theme:border-autumn-accent/20",
+        "autumn-outline": "autumn-theme:border-2 autumn-theme:border-autumn-button autumn-theme:bg-white/90 autumn-theme:text-autumn-button autumn-theme:hover:bg-autumn-button autumn-theme:hover:text-white autumn-theme:backdrop-blur-sm",
       },
       size: {
         default: "h-10 px-4 py-2",

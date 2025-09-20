@@ -48,10 +48,16 @@
     --autumn-gradient-start: 51 100% 50%; /* #FFD700 - Gold */
     --autumn-gradient-end: 25 75% 47%; /* #D2691E - Chocolate/Brown */
     --autumn-button: 30 100% 50%; /* #FF8C00 - Dark Orange */
-    --autumn-button-text: 25 52% 40%; /* #A0522D - Saddle Brown */
+    --autumn-button-text: 0 0% 100%; /* White text for better contrast */
     --autumn-accent: 39 100% 50%; /* #FFA500 - Orange accent */
     --autumn-leaf-brown: 30 67% 25%; /* #8B4513 - Dark brown for leaves */
     --autumn-fog: 0 0% 100%; /* White fog with transparency */
+    
+    /* Override theme colors for better readability */
+    --background: 0 0% 100%; /* Ensure white background for content areas */
+    --card: 0 0% 100%; /* White cards */
+    --popover: 0 0% 100%; /* White popovers */
+    --muted: 210 40% 96%; /* Light muted areas */
   }
 
   .dark {
@@ -224,6 +230,19 @@
   background: linear-gradient(135deg, hsl(var(--autumn-gradient-start)), hsl(var(--autumn-gradient-end)));
   background-attachment: fixed;
   min-height: 100vh;
+}
+
+/* Ensure content readability with semi-transparent overlays */
+.autumn-theme .main-content {
+  background: hsla(0, 0%, 100%, 0.95);
+  backdrop-filter: blur(2px);
+}
+
+.autumn-theme [data-radix-dialog-content],
+.autumn-theme .dialog-content {
+  background: hsla(0, 0%, 100%, 0.98);
+  backdrop-filter: blur(4px);
+  border: 1px solid hsla(30, 100%, 70%, 0.2);
 }
 
 .autumn-theme .autumn-background {
