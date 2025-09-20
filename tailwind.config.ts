@@ -67,6 +67,15 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				neon: 'hsl(var(--neon))',
+				autumn: {
+					'gradient-start': 'hsl(var(--autumn-gradient-start))',
+					'gradient-end': 'hsl(var(--autumn-gradient-end))',
+					'button': 'hsl(var(--autumn-button))',
+					'button-text': 'hsl(var(--autumn-button-text))',
+					'accent': 'hsl(var(--autumn-accent))',
+					'leaf-brown': 'hsl(var(--autumn-leaf-brown))',
+					'fog': 'hsl(var(--autumn-fog))',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -127,6 +136,40 @@ export default {
             boxShadow: '0 0 16px 4px hsl(var(--neon))',
             transform: 'scale(1.05)' 
           }
+        },
+        'autumn-fall': {
+          '0%': {
+            transform: 'translateY(-100vh) rotate(0deg)',
+            opacity: '0'
+          },
+          '10%': {
+            opacity: '0.7'
+          },
+          '90%': {
+            opacity: '0.7'
+          },
+          '100%': {
+            transform: 'translateY(100vh) rotate(360deg)',
+            opacity: '0'
+          }
+        },
+        'autumn-fog-drift': {
+          '0%, 100%': {
+            transform: 'translateX(-10px)'
+          },
+          '50%': {
+            transform: 'translateX(10px)'
+          }
+        },
+        'autumn-click-burst': {
+          '0%': {
+            transform: 'scale(0.5) rotate(0deg)',
+            opacity: '1'
+          },
+          '100%': {
+            transform: 'scale(1.5) rotate(180deg)',
+            opacity: '0'
+          }
         }
 			},
 			animation: {
@@ -139,7 +182,10 @@ export default {
         'scale-in': 'scale-in 0.3s ease-out',
         'search-expand': 'search-expand 0.3s ease-out forwards',
         'search-collapse': 'search-collapse 0.3s ease-out forwards',
-        'pulse-neon': 'pulse-neon 4s infinite'
+        'pulse-neon': 'pulse-neon 4s infinite',
+        'autumn-fall': 'autumn-fall linear infinite',
+        'autumn-fog-drift': 'autumn-fog-drift 10s ease-in-out infinite',
+        'autumn-click-burst': 'autumn-click-burst 0.6s ease-out'
 			}
 		}
 	},

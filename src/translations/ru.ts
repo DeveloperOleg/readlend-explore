@@ -333,4 +333,12 @@ export const ruTranslations = {
   'fanfiction.words': 'слов',
   'fanfiction.read': 'Читать',
   'fanfiction.reread': 'Перечитать',
+  
+  // Seasonal Themes
+  'settings.seasonalTheme': 'Сезонная тема',
+  'settings.seasonalThemeDescription': 'Добавляет декоративные элементы и анимации.',
+  'settings.theme.autumn': 'Осенняя',
+  'settings.theme.autumnDesc': 'Уютная осенняя атмосфера с падающими листьями',
+  'settings.theme.default': 'Обычная',
+  'settings.theme.defaultDesc': 'Стандартное оформление без декораций',
 };

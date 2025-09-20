@@ -4,13 +4,17 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 // Theme types
 type BaseTheme = 'light' | 'dark' | 'dark-night' | 'system';
 type UIStyle = 'standard' | 'gradient';
+type SeasonalTheme = 'default' | 'autumn';
 
 interface ThemeContextType {
   baseTheme: BaseTheme;
   uiStyle: UIStyle;
+  seasonalTheme: SeasonalTheme;
   toggleBaseTheme: () => void;
   toggleUIStyle: () => void;
+  toggleSeasonalTheme: () => void;
   setBaseTheme: (theme: BaseTheme) => void;
+  setSeasonalTheme: (theme: SeasonalTheme) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -30,6 +34,19 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return savedStyle || 'standard';
   });
 
+  const [seasonalTheme, setSeasonalThemeState] = useState<SeasonalTheme>(() => {
+    // Initialize seasonal theme from localStorage or auto-detect
+    const savedSeasonal = localStorage.getItem('readnest-seasonal-theme') as SeasonalTheme | null;
+    if (savedSeasonal) return savedSeasonal;
+    
+    // Auto-activate autumn theme from Sept 1 to Oct 31
+    const now = new Date();
+    const month = now.getMonth(); // 0-11
+    const isAutumnSeason = month === 8 || month === 9; // September (8) or October (9)
+    
+    return isAutumnSeason ? 'autumn' : 'default';
+  });
+
   // Get the actual theme to apply (resolve system theme)
   const getActualTheme = (): 'light' | 'dark' | 'dark-night' => {
     if (baseTheme === 'system') {
@@ -41,7 +58,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Update CSS variables based on selected theme
   const applyTheme = () => {
     // Remove all theme classes first
-    document.documentElement.classList.remove('dark', 'dark-night', 'gradient-ui');
+    document.documentElement.classList.remove('dark', 'dark-night', 'gradient-ui', 'autumn-theme');
     
     const actualTheme = getActualTheme();
     
@@ -55,6 +72,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     // Apply gradient UI if selected
     if (uiStyle === 'gradient') {
       document.documentElement.classList.add('gradient-ui');
+    }
+
+    // Apply seasonal theme
+    if (seasonalTheme === 'autumn') {
+      document.documentElement.classList.add('autumn-theme');
     }
   };
 
@@ -81,16 +103,17 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         mediaQuery.removeListener(handleChange);
       };
     }
-  }, [baseTheme, uiStyle]);
+  }, [baseTheme, uiStyle, seasonalTheme]);
 
   useEffect(() => {
     // Update localStorage
     localStorage.setItem('readnest-theme', baseTheme);
     localStorage.setItem('readnest-ui-style', uiStyle);
+    localStorage.setItem('readnest-seasonal-theme', seasonalTheme);
     
     // Apply theme
     applyTheme();
-  }, [baseTheme, uiStyle]);
+  }, [baseTheme, uiStyle, seasonalTheme]);
 
   const toggleBaseTheme = () => {
     setBaseTheme(prevTheme => {
@@ -105,14 +128,25 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setUIStyle(prevStyle => (prevStyle === 'standard' ? 'gradient' : 'standard'));
   };
 
+  const toggleSeasonalTheme = () => {
+    setSeasonalThemeState(prevTheme => (prevTheme === 'default' ? 'autumn' : 'default'));
+  };
+
+  const setSeasonalTheme = (theme: SeasonalTheme) => {
+    setSeasonalThemeState(theme);
+  };
+
   return (
     <ThemeContext.Provider 
       value={{ 
         baseTheme,
         uiStyle,
+        seasonalTheme,
         toggleBaseTheme,
         toggleUIStyle,
-        setBaseTheme
+        toggleSeasonalTheme,
+        setBaseTheme,
+        setSeasonalTheme
       }}
     >
       {children}

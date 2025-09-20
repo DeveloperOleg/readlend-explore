@@ -300,4 +300,12 @@ export const enTranslations = {
   'fanfiction.words': 'words',
   'fanfiction.read': 'Read',
   'fanfiction.reread': 'Re-read',
+  
+  // Seasonal Themes
+  'settings.seasonalTheme': 'Seasonal Theme',
+  'settings.seasonalThemeDescription': 'Adds decorative elements and animations.',
+  'settings.theme.autumn': 'Autumn',
+  'settings.theme.autumnDesc': 'Cozy autumn atmosphere with falling leaves',
+  'settings.theme.default': 'Default',
+  'settings.theme.defaultDesc': 'Standard appearance without decorations',
 };

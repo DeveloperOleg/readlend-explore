@@ -9,6 +9,7 @@ import { LanguageProvider } from "@/context/LanguageContext";
 import { InternetProvider } from "@/context/InternetContext";
 import LoadingScreen from "@/components/LoadingScreen";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import AutumnDecorations from "@/components/AutumnDecorations";
 
 import AppRoutes from "./routes";
 
@@ -42,6 +43,7 @@ const App = () => {
           <LanguageProvider>
             <InternetProvider>
               <TooltipProvider>
+                <AutumnDecorations />
                 <Toaster />
                 <Sonner position="bottom-center" />
                 <AppRoutes />
