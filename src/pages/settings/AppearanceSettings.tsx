@@ -11,7 +11,7 @@ const AppearanceSettings: React.FC = () => {
   const navigate = useNavigate();
 
   const goBack = () => {
-    navigate(-1);
+    navigate('/settings');
   };
 
   return (
