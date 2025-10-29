@@ -1,7 +1,7 @@
-import { useState } from 'react';
 import { User, ProfileUpdateData } from '@/types/auth';
-import { canViewSubscriptions, canCommentOnBook } from '@/utils/authUtils';
-import { getTestUserById, searchTestAuthors, searchTestBooks } from '@/utils/testData';
+import { canViewSubscriptions as checkViewSubscriptions, canCommentOnBook as checkCommentOnBook } from '@/utils/authUtils';
+import { validateBio, validateUsername } from '@/utils/validationUtils';
+import { supabase } from '@/integrations/supabase/client';
 
 export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<React.SetStateAction<User | null>>) => {
 
@@ -9,282 +9,299 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
     if (!user) return false;
 
     try {
-      // In a real app, you would make an API call here
-      // For demo, we'll just update the local state
-      const updatedUser = {
-        ...user,
-        ...(data.username && { username: data.username }),
-        ...(data.firstName !== undefined && { firstName: data.firstName }),
-        ...(data.lastName !== undefined && { lastName: data.lastName }),
-        ...(data.avatarUrl !== undefined && { avatarUrl: data.avatarUrl }),
-        ...(data.coverImageUrl !== undefined && { coverImageUrl: data.coverImageUrl }), // Update cover image
-        ...(data.bio !== undefined && { bio: data.bio }), // Make sure bio is updated
-        privacy: {
-          ...user.privacy,
-          ...(data.privacy?.hideSubscriptions !== undefined && {
-            hideSubscriptions: data.privacy.hideSubscriptions
-          }),
-          ...(data.privacy?.preventCopying !== undefined && {
-            preventCopying: data.privacy.preventCopying
-          }),
-          commentSettings: {
-            ...user.privacy.commentSettings,
-            ...(data.privacy?.commentSettings?.global !== undefined && {
-              global: data.privacy.commentSettings.global
-            }),
-            ...(data.privacy?.commentSettings?.perBook && {
-              perBook: {
-                ...user.privacy.commentSettings.perBook,
-                ...data.privacy.commentSettings.perBook
-              }
-            })
-          }
-        }
-      };
-      
-      setUser(updatedUser);
-      
-      // Если это не тестовый аккаунт, обновляем данные пользователя в хранилище аккаунтов
-      if (!user.isTestAccount) {
-        const storedAccounts = localStorage.getItem('readnest-accounts') || '{}';
-        const accounts = JSON.parse(storedAccounts);
-        
-        if (accounts[user.username]) {
-          accounts[user.username].userData = updatedUser;
-          localStorage.setItem('readnest-accounts', JSON.stringify(accounts));
+      // Validate inputs
+      if (data.username) {
+        const usernameValidation = validateUsername(data.username);
+        if (!usernameValidation.isValid) {
+          throw new Error(usernameValidation.message);
         }
       }
-      
-      localStorage.setItem('readnest-user', JSON.stringify(updatedUser));
+
+      if (data.bio) {
+        const bioValidation = validateBio(data.bio);
+        if (!bioValidation.isValid) {
+          throw new Error(bioValidation.message);
+        }
+      }
+
+      // Update profile in database
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({
+          username: data.username,
+          first_name: data.firstName,
+          last_name: data.lastName,
+          avatar_url: data.avatarUrl,
+          cover_image_url: data.coverImageUrl,
+          bio: data.bio
+        })
+        .eq('id', user.id);
+
+      if (profileError) throw profileError;
+
+      // Update privacy settings if provided
+      if (data.privacy) {
+        const { error: privacyError } = await supabase
+          .from('privacy_settings')
+          .update({
+            hide_subscriptions: data.privacy.hideSubscriptions,
+            prevent_copying: data.privacy.preventCopying,
+            global_comments_enabled: data.privacy.commentSettings?.global
+          })
+          .eq('user_id', user.id);
+
+        if (privacyError) throw privacyError;
+      }
+
+      // Update local state
+      const updatedUser: User = {
+        ...user,
+        ...data,
+        privacy: data.privacy ? {
+          hideSubscriptions: data.privacy.hideSubscriptions ?? user.privacy.hideSubscriptions,
+          preventCopying: data.privacy.preventCopying ?? user.privacy.preventCopying,
+          commentSettings: {
+            global: data.privacy.commentSettings?.global ?? user.privacy.commentSettings.global,
+            perBook: { ...user.privacy.commentSettings.perBook, ...(data.privacy.commentSettings?.perBook || {}) }
+          }
+        } : user.privacy
+      };
+
+      setUser(updatedUser);
       return true;
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error('Profile update error:', error);
       return false;
     }
   };
 
   const subscribeToUser = async (userId: string): Promise<boolean> => {
     if (!user) return false;
-    
+
     try {
-      // Check if already subscribed
-      if (user.subscriptions?.includes(userId)) {
-        return true;
-      }
-      
-      // In a real app, you would make an API call here
-      const updatedUser = {
-        ...user,
-        subscriptions: [...(user.subscriptions || []), userId]
-      };
-      
-      setUser(updatedUser);
-      
-      // Если это не тестовый аккаунт, обновляем данные пользователя в хранилище аккаунтов
-      if (!user.isTestAccount) {
-        const storedAccounts = localStorage.getItem('readnest-accounts') || '{}';
-        const accounts = JSON.parse(storedAccounts);
-        
-        if (accounts[user.username]) {
-          accounts[user.username].userData = updatedUser;
-          localStorage.setItem('readnest-accounts', JSON.stringify(accounts));
-        }
-      }
-      
-      localStorage.setItem('readnest-user', JSON.stringify(updatedUser));
+      const { error } = await supabase
+        .from('subscriptions')
+        .insert({
+          follower_id: user.id,
+          following_id: userId
+        });
+
+      if (error) throw error;
       return true;
     } catch (error) {
-      console.error('Error subscribing to user:', error);
+      console.error('Subscribe error:', error);
       return false;
     }
   };
   
   const unsubscribeFromUser = async (userId: string): Promise<boolean> => {
-    if (!user || !user.subscriptions) return false;
-    
+    if (!user) return false;
+
     try {
-      const updatedUser = {
-        ...user,
-        subscriptions: user.subscriptions.filter(id => id !== userId)
-      };
-      
-      setUser(updatedUser);
-      
-      // Если это не тестовый аккаунт, обновляем данные пользователя в хранилище аккаунтов
-      if (!user.isTestAccount) {
-        const storedAccounts = localStorage.getItem('readnest-accounts') || '{}';
-        const accounts = JSON.parse(storedAccounts);
-        
-        if (accounts[user.username]) {
-          accounts[user.username].userData = updatedUser;
-          localStorage.setItem('readnest-accounts', JSON.stringify(accounts));
-        }
-      }
-      
-      localStorage.setItem('readnest-user', JSON.stringify(updatedUser));
+      const { error } = await supabase
+        .from('subscriptions')
+        .delete()
+        .eq('follower_id', user.id)
+        .eq('following_id', userId);
+
+      if (error) throw error;
       return true;
     } catch (error) {
-      console.error('Error unsubscribing from user:', error);
+      console.error('Unsubscribe error:', error);
       return false;
     }
   };
   
   const blockUser = async (userId: string): Promise<boolean> => {
     if (!user) return false;
-    
+
     try {
-      // Check if already blocked
-      if (user.blockedUsers?.includes(userId)) {
-        return true;
-      }
-      
-      // If we block someone, we should unsubscribe from them
-      let updatedSubscriptions = user.subscriptions || [];
-      if (updatedSubscriptions.includes(userId)) {
-        updatedSubscriptions = updatedSubscriptions.filter(id => id !== userId);
-      }
-      
-      const updatedUser = {
-        ...user,
-        subscriptions: updatedSubscriptions,
-        blockedUsers: [...(user.blockedUsers || []), userId]
-      };
-      
-      setUser(updatedUser);
-      
-      // Если это не тестовый аккаунт, обновляем данные пользователя в хранилище аккаунтов
-      if (!user.isTestAccount) {
-        const storedAccounts = localStorage.getItem('readnest-accounts') || '{}';
-        const accounts = JSON.parse(storedAccounts);
-        
-        if (accounts[user.username]) {
-          accounts[user.username].userData = updatedUser;
-          localStorage.setItem('readnest-accounts', JSON.stringify(accounts));
-        }
-      }
-      
-      localStorage.setItem('readnest-user', JSON.stringify(updatedUser));
+      // First, unsubscribe from the user
+      await unsubscribeFromUser(userId);
+
+      // Block the user
+      const { error } = await supabase
+        .from('blocked_users')
+        .insert({
+          blocker_id: user.id,
+          blocked_id: userId
+        });
+
+      if (error) throw error;
       return true;
     } catch (error) {
-      console.error('Error blocking user:', error);
+      console.error('Block user error:', error);
       return false;
     }
   };
   
   const unblockUser = async (userId: string): Promise<boolean> => {
-    if (!user || !user.blockedUsers) return false;
-    
+    if (!user) return false;
+
     try {
-      const updatedUser = {
-        ...user,
-        blockedUsers: user.blockedUsers.filter(id => id !== userId)
-      };
-      
-      setUser(updatedUser);
-      
-      // Если это не тестовый аккаунт, обновляем данные пользователя в хранилище аккаунтов
-      if (!user.isTestAccount) {
-        const storedAccounts = localStorage.getItem('readnest-accounts') || '{}';
-        const accounts = JSON.parse(storedAccounts);
-        
-        if (accounts[user.username]) {
-          accounts[user.username].userData = updatedUser;
-          localStorage.setItem('readnest-accounts', JSON.stringify(accounts));
-        }
-      }
-      
-      localStorage.setItem('readnest-user', JSON.stringify(updatedUser));
+      const { error } = await supabase
+        .from('blocked_users')
+        .delete()
+        .eq('blocker_id', user.id)
+        .eq('blocked_id', userId);
+
+      if (error) throw error;
       return true;
     } catch (error) {
-      console.error('Error unblocking user:', error);
+      console.error('Unblock user error:', error);
       return false;
     }
   };
 
-  // Privacy and comment settings methods
   const toggleHideSubscriptions = async (hide: boolean): Promise<boolean> => {
-    return updateProfile({
-      privacy: {
-        hideSubscriptions: hide
-      }
-    });
+    if (!user) return false;
+
+    try {
+      const { error } = await supabase
+        .from('privacy_settings')
+        .update({ hide_subscriptions: hide })
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      const updatedUser = {
+        ...user,
+        privacy: {
+          ...user.privacy,
+          hideSubscriptions: hide
+        }
+      };
+      setUser(updatedUser);
+
+      return true;
+    } catch (error) {
+      console.error('Toggle hide subscriptions error:', error);
+      return false;
+    }
   };
 
   const toggleGlobalComments = async (enabled: boolean): Promise<boolean> => {
-    return updateProfile({
-      privacy: {
-        commentSettings: {
-          global: enabled
+    if (!user) return false;
+
+    try {
+      const { error } = await supabase
+        .from('privacy_settings')
+        .update({ global_comments_enabled: enabled })
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      const updatedUser = {
+        ...user,
+        privacy: {
+          ...user.privacy,
+          commentSettings: {
+            ...user.privacy.commentSettings,
+            global: enabled
+          }
         }
-      }
-    });
+      };
+      setUser(updatedUser);
+
+      return true;
+    } catch (error) {
+      console.error('Toggle global comments error:', error);
+      return false;
+    }
   };
 
   const togglePreventCopying = async (prevent: boolean): Promise<boolean> => {
-    return updateProfile({
-      privacy: {
-        preventCopying: prevent
-      }
-    });
+    if (!user) return false;
+
+    try {
+      const { error } = await supabase
+        .from('privacy_settings')
+        .update({ prevent_copying: prevent })
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      const updatedUser = {
+        ...user,
+        privacy: {
+          ...user.privacy,
+          preventCopying: prevent
+        }
+      };
+      setUser(updatedUser);
+
+      return true;
+    } catch (error) {
+      console.error('Toggle prevent copying error:', error);
+      return false;
+    }
   };
 
   const setBookCommentSetting = async (bookId: string, enabled: boolean): Promise<boolean> => {
     if (!user) return false;
 
-    const perBook = {
-      ...user.privacy.commentSettings.perBook,
-      [bookId]: enabled
-    };
-
-    return updateProfile({
+    const updatedUser = {
+      ...user,
       privacy: {
+        ...user.privacy,
         commentSettings: {
-          perBook
+          ...user.privacy.commentSettings,
+          perBook: {
+            ...user.privacy.commentSettings.perBook,
+            [bookId]: enabled
+          }
         }
       }
-    });
+    };
+
+    setUser(updatedUser);
+    return true;
   };
 
-  const getUserById = (userId: string): User | null => {
-    // Если пользователь не авторизован, возвращаем null
-    if (!user) return null;
-    
-    // Для тестового аккаунта или когда запрашиваем тестовый аккаунт
-    if (user.isTestAccount || userId.startsWith('author')) {
-      const testUser = getTestUserById(userId);
-      // Ensure test users have complete privacy structure
-      if (testUser) {
+  const getUserById = async (userId: string): Promise<User | null> => {
+    // First check if it's the current user
+    if (user && user.id === userId) {
+      return user;
+    }
+
+    // Fetch from database
+    try {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      const { data: privacySettings } = await supabase
+        .from('privacy_settings')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+
+      if (profile) {
         return {
-          ...testUser,
+          id: profile.id,
+          username: profile.username,
+          firstName: profile.first_name || undefined,
+          lastName: profile.last_name || undefined,
+          avatarUrl: profile.avatar_url || undefined,
+          coverImageUrl: profile.cover_image_url || undefined,
+          bio: profile.bio || undefined,
+          displayId: profile.display_id,
           privacy: {
-            hideSubscriptions: testUser.privacy?.hideSubscriptions || false,
-            preventCopying: false, // Default value for test users
+            hideSubscriptions: privacySettings?.hide_subscriptions || false,
+            preventCopying: privacySettings?.prevent_copying || false,
             commentSettings: {
-              global: testUser.privacy?.commentSettings?.global || true,
-              perBook: testUser.privacy?.commentSettings?.perBook || {}
+              global: privacySettings?.global_comments_enabled ?? true,
+              perBook: {}
             }
           }
         };
       }
-      return null;
+    } catch (error) {
+      console.error('Error fetching user:', error);
     }
-    
-    // Для реальных аккаунтов
-    const storedAccounts = localStorage.getItem('readnest-accounts') || '{}';
-    const accounts = JSON.parse(storedAccounts);
-    
-    // Ищем по ID среди всех аккаунтов
-    for (const username in accounts) {
-      if (accounts[username].userData.id === userId) {
-        const userData = accounts[username].userData;
-        // Ensure preventCopying exists for backward compatibility
-        if (!userData.privacy.hasOwnProperty('preventCopying')) {
-          userData.privacy.preventCopying = false;
-        }
-        return userData;
-      }
-    }
-    
+
     return null;
   };
 
@@ -299,8 +316,8 @@ export const useAuthFunctions = (user: User | null, setUser: React.Dispatch<Reac
     togglePreventCopying,
     setBookCommentSetting,
     getUserById,
-    canViewSubscriptions: (userId: string) => canViewSubscriptions(user, userId),
-    canCommentOnBook: (bookId: string, authorId: string) => canCommentOnBook(user, bookId, authorId)
+    canViewSubscriptions: (userId: string) => checkViewSubscriptions(user, userId),
+    canCommentOnBook: (bookId: string, authorId: string) => checkCommentOnBook(user, bookId, authorId)
   };
 };
 

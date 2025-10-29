@@ -23,19 +23,23 @@ const Profile: React.FC = () => {
   const isMobile = useIsMobile();
   
   useEffect(() => {
-    // If userId is provided, try to fetch that user's data
-    if (userId && userId !== user?.id) {
-      const foundUser = getUserById(userId);
-      if (foundUser) {
-        setProfileUser(foundUser);
+    const loadProfile = async () => {
+      // If userId is provided, try to fetch that user's data
+      if (userId && userId !== user?.id) {
+        const foundUser = await getUserById(userId);
+        if (foundUser) {
+          setProfileUser(foundUser);
+        } else {
+          // If user not found, redirect to current user's profile
+          navigate('/profile');
+        }
       } else {
-        // If user not found, redirect to current user's profile
-        navigate('/profile');
+        // Show current user's profile
+        setProfileUser(user);
       }
-    } else {
-      // Show current user's profile
-      setProfileUser(user);
-    }
+    };
+    
+    loadProfile();
   }, [userId, user, getUserById, navigate]);
   
   if (!profileUser) {

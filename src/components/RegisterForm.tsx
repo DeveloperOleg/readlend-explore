@@ -1,9 +1,7 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
-import { useInternet } from '@/context/InternetContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -11,9 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AlertCircle, WifiOff, Info, HelpCircle, KeyRound } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { toast } from 'sonner';
+import { Eye, EyeOff } from 'lucide-react';
 
 const userFormSchema = z.object({
   username: z.string()
@@ -23,7 +19,16 @@ const userFormSchema = z.object({
       message: 'Имя пользователя должно начинаться с буквы и может содержать только латинские буквы, цифры и символ подчеркивания' 
     }),
   password: z.string()
-    .min(6, { message: 'Пароль должен содержать не менее 6 символов' }),
+    .min(8, { message: 'Пароль должен содержать не менее 8 символов' }),
+  confirmPassword: z.string().optional()
+}).refine((data) => {
+  if (data.confirmPassword !== undefined) {
+    return data.password === data.confirmPassword;
+  }
+  return true;
+}, {
+  message: "Пароли не совпадают",
+  path: ["confirmPassword"],
 });
 
 type UserFormValues = z.infer<typeof userFormSchema>;
@@ -31,46 +36,55 @@ type UserFormValues = z.infer<typeof userFormSchema>;
 const RegisterForm: React.FC = () => {
   const { login, register } = useAuth();
   const { t } = useLanguage();
-  const { toast: uiToast } = useToast();
-  const { isOnline } = useInternet();
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(userFormSchema),
     defaultValues: {
       username: '',
       password: '',
+      confirmPassword: ''
     },
   });
 
   const onSubmit = async (values: UserFormValues) => {
-    if (!isOnline) {
-      toast.error("Ошибка подключения", {
-        description: "Для авторизации требуется подключение к интернету"
-      });
-      return;
-    }
-    
     setIsLoading(true);
     try {
       if (activeTab === 'login') {
         const success = await login(values.username, values.password);
         
         if (!success) {
-          form.setError('root', { message: 'Неверное имя пользователя или пароль' });
+          toast({
+            title: t('auth.error') || 'Ошибка',
+            description: t('auth.invalidCredentials') || 'Неверное имя пользователя или пароль',
+            variant: 'destructive'
+          });
         }
       } else {
-        // Блокируем регистрацию в тестовой версии
-        toast.error("Регистрация временно недоступна", {
-          description: "В тестовой версии приложения регистрация отключена. Используйте демо-аккаунт для входа.",
-          duration: 5000,
-        });
+        const success = await register(values.username, values.password);
+        
+        if (!success) {
+          toast({
+            title: t('auth.error') || 'Ошибка',
+            description: t('auth.registrationFailed') || 'Не удалось зарегистрировать аккаунт. Возможно, это имя уже занято.',
+            variant: 'destructive'
+          });
+        } else {
+          toast({
+            title: t('auth.success') || 'Успешно',
+            description: t('auth.registrationSuccess') || 'Аккаунт успешно создан!'
+          });
+        }
       }
     } catch (error) {
       console.error('Auth error:', error);
-      toast.error("Ошибка", {
-        description: "Произошла ошибка при обработке запроса"
+      toast({
+        title: t('auth.error') || 'Ошибка',
+        description: t('auth.unexpectedError') || 'Произошла непредвиденная ошибка',
+        variant: 'destructive'
       });
     } finally {
       setIsLoading(false);
@@ -82,142 +96,19 @@ const RegisterForm: React.FC = () => {
     form.reset();
   };
 
-  const handleDemo = async () => {
-    if (!isOnline) {
-      toast.error("Ошибка подключения", {
-        description: "Для авторизации требуется подключение к интернету"
-      });
-      return;
-    }
-    
-    setIsLoading(true);
-    await login('tester111', 'tester111');
-    setIsLoading(false);
-  };
-
-  const handleForgotPassword = () => {
-    toast.info("Восстановление пароля", {
-      description: "В тестовой версии приложения восстановление пароля недоступно. Используйте демо-аккаунт для входа.",
-      duration: 5000,
-    });
-  };
-
-  const handleNoAccess = () => {
-    toast.info("Нет доступа к аккаунту", {
-      description: "В тестовой версии приложения создание новых аккаунтов недоступно. Используйте демо-аккаунт для входа.",
-      duration: 5000,
-    });
-  };
-
-  useEffect(() => {
-    // Предупреждение о регистрации, если пользователь переключается на вкладку регистрации
-    if (activeTab === 'register') {
-      toast.info("Информация о регистрации", {
-        description: "В тестовой версии приложения регистрация отключена. Используйте демо-аккаунт для входа.",
-        icon: <Info className="h-4 w-4" />,
-        duration: 5000,
-      });
-    }
-  }, [activeTab]);
-
-  // Если нет интернета, показываем предупреждение
-  if (!isOnline) {
-    return (
-      <div className="w-full max-w-md mx-auto space-y-4">
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Нет подключения к интернету</AlertTitle>
-          <AlertDescription>
-            Для входа в аккаунт требуется подключение к интернету.
-            Пожалуйста, проверьте ваше соединение и попробуйте снова.
-          </AlertDescription>
-        </Alert>
-        
-        <div className="w-full max-w-md mx-auto">
-          <Tabs defaultValue="login" onValueChange={handleTabChange}>
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="login">Вход</TabsTrigger>
-              <TabsTrigger value="register">Регистрация</TabsTrigger>
-            </TabsList>
-            
-            <div className="mt-6">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Имя пользователя</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Введите имя пользователя" {...field} disabled />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Пароль</FormLabel>
-                        <FormControl>
-                          <Input type="password" placeholder="Введите пароль" {...field} disabled />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <Button type="submit" className="w-full" disabled>
-                    {activeTab === 'login' ? 'Войти' : 'Зарегистрироваться'}
-                  </Button>
-                </form>
-              </Form>
-              
-              <div className="mt-6">
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-background px-2 text-muted-foreground">
-                      или
-                    </span>
-                  </div>
-                </div>
-                
-                <Button variant="outline" className="w-full mt-4" disabled>
-                  Использовать демо-аккаунт
-                </Button>
-              </div>
-            </div>
-          </Tabs>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="w-full max-w-md mx-auto bg-card rounded-lg border shadow-sm p-6">
-      <Tabs defaultValue="login" onValueChange={handleTabChange}>
+      <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList className="grid w-full grid-cols-2 bg-muted/50">
-          <TabsTrigger value="login" className="data-[state=active]:bg-background">Вход</TabsTrigger>
-          <TabsTrigger value="register" className="data-[state=active]:bg-background">Регистрация</TabsTrigger>
+          <TabsTrigger value="login" className="data-[state=active]:bg-background">
+            {t('auth.login') || 'Вход'}
+          </TabsTrigger>
+          <TabsTrigger value="register" className="data-[state=active]:bg-background">
+            {t('auth.register') || 'Регистрация'}
+          </TabsTrigger>
         </TabsList>
         
-        <div className="mt-6 space-y-4">
-          {activeTab === 'register' && (
-            <Alert variant="default" className="border-blue-200 bg-blue-50">
-              <Info className="h-4 w-4 text-blue-600" />
-              <AlertDescription className="text-blue-800">
-                Регистрация временно недоступна
-              </AlertDescription>
-            </Alert>
-          )}
-          
+        <div className="mt-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
@@ -225,12 +116,15 @@ const RegisterForm: React.FC = () => {
                 name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium">Имя пользователя</FormLabel>
+                    <FormLabel className="text-sm font-medium">
+                      {t('auth.username') || 'Имя пользователя'}
+                    </FormLabel>
                     <FormControl>
                       <Input 
-                        placeholder="Введите имя пользователя" 
+                        placeholder={t('auth.usernamePlaceholder') || 'Введите имя пользователя'} 
                         {...field} 
                         className="h-11"
+                        disabled={isLoading}
                       />
                     </FormControl>
                     <FormMessage />
@@ -243,92 +137,83 @@ const RegisterForm: React.FC = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium">Пароль</FormLabel>
+                    <FormLabel className="text-sm font-medium">
+                      {t('auth.password') || 'Пароль'}
+                    </FormLabel>
                     <FormControl>
-                      <Input 
-                        type="password" 
-                        placeholder="Введите пароль" 
-                        {...field} 
-                        className="h-11"
-                      />
+                      <div className="relative">
+                        <Input 
+                          type={showPassword ? "text" : "password"}
+                          placeholder={t('auth.passwordPlaceholder') || 'Введите пароль'} 
+                          {...field} 
+                          className="h-11 pr-10"
+                          disabled={isLoading}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                        >
+                          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              {activeTab === 'register' && (
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium">
+                        {t('auth.confirmPassword') || 'Подтвердите пароль'}
+                      </FormLabel>
+                      <FormControl>
+                        <Input 
+                          type={showPassword ? "text" : "password"}
+                          placeholder={t('auth.confirmPasswordPlaceholder') || 'Введите пароль еще раз'} 
+                          {...field} 
+                          className="h-11"
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
               
               {form.formState.errors.root && (
                 <p className="text-sm font-medium text-destructive">
                   {form.formState.errors.root.message}
                 </p>
               )}
-
-              {activeTab === 'login' && (
-                <div className="flex justify-between text-sm">
-                  <Button 
-                    type="button" 
-                    variant="link" 
-                    className="text-blue-500 hover:text-blue-600 p-0 h-auto text-sm"
-                    onClick={handleForgotPassword}
-                  >
-                    Забыли пароль?
-                  </Button>
-                  <Button 
-                    type="button" 
-                    variant="link" 
-                    className="text-blue-500 hover:text-blue-600 p-0 h-auto text-sm"
-                    onClick={handleNoAccess}
-                  >
-                    Нет доступа к аккаунту
-                  </Button>
-                </div>
-              )}
               
               <Button 
                 type="submit" 
-                className="w-full h-11 bg-slate-800 hover:bg-slate-700 text-white" 
-                disabled={isLoading || (activeTab === 'register')}
+                className="w-full h-11" 
+                disabled={isLoading}
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center gap-2">
                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                    {activeTab === 'login' ? 'Вход...' : 'Регистрация...'}
+                    {activeTab === 'login' 
+                      ? (t('auth.loggingIn') || 'Вход...') 
+                      : (t('auth.registering') || 'Регистрация...')
+                    }
                   </div>
                 ) : (
-                  activeTab === 'login' ? 'Войти' : 'Зарегистрироваться'
+                  activeTab === 'login' 
+                    ? (t('auth.login') || 'Войти') 
+                    : (t('auth.register') || 'Зарегистрироваться')
                 )}
               </Button>
             </form>
           </Form>
-          
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">
-                  или
-                </span>
-              </div>
-            </div>
-            
-            <Button 
-              variant="outline" 
-              className="w-full mt-4 h-11" 
-              onClick={handleDemo} 
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <div className="flex items-center justify-center gap-2">
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                  Вход в демо...
-                </div>
-              ) : (
-                'Использовать демо-аккаунт'
-              )}
-            </Button>
-          </div>
         </div>
       </Tabs>
     </div>

@@ -82,7 +82,7 @@ export interface AuthContextType {
   togglePreventCopying: (prevent: boolean) => Promise<boolean>; // New method for toggling copy prevention
   canViewSubscriptions: (userId: string) => boolean;
   canCommentOnBook: (bookId: string, authorId: string) => boolean;
-  getUserById: (userId: string) => User | null;
+  getUserById: (userId: string) => Promise<User | null>;
 }
 
 /**
