@@ -55,28 +55,49 @@ const RegisterForm: React.FC = () => {
     setIsLoading(true);
     try {
       if (activeTab === 'login') {
-        const success = await login(values.username, values.password);
-        
-        if (!success) {
+        try {
+          const success = await login(values.username, values.password);
+          if (success) {
+            toast({
+              title: t('auth.success'),
+              description: t('auth.loginSuccess')
+            });
+          }
+        } catch (error: any) {
+          let errorMessage = t('auth.invalidCredentials');
+          
+          if (error.message?.includes('Invalid login credentials')) {
+            errorMessage = t('auth.invalidCredentials');
+          } else if (error.message?.includes('Email not confirmed')) {
+            errorMessage = t('auth.emailNotConfirmed');
+          }
+          
           toast({
             title: t('auth.error'),
-            description: t('auth.invalidCredentials'),
+            description: errorMessage,
             variant: 'destructive'
           });
         }
       } else {
-        const success = await register(values.username, values.password);
-        
-        if (!success) {
+        try {
+          const success = await register(values.username, values.password);
+          if (success) {
+            toast({
+              title: t('auth.success'),
+              description: t('auth.registrationSuccess')
+            });
+          }
+        } catch (error: any) {
+          let errorMessage = t('auth.registrationFailed');
+          
+          if (error.message?.includes('User already registered')) {
+            errorMessage = t('auth.userExists');
+          }
+          
           toast({
             title: t('auth.error'),
-            description: t('auth.registrationFailed'),
+            description: errorMessage,
             variant: 'destructive'
-          });
-        } else {
-          toast({
-            title: t('auth.success'),
-            description: t('auth.registrationSuccess')
           });
         }
       }

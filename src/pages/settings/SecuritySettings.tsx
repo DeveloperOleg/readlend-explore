@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Lock, Eye, EyeOff, RefreshCw, Copy, Check, Shield } from 'lucide-react';
+import { ArrowLeft, Lock, Eye, EyeOff, RefreshCw, Copy, Check, Shield, Smartphone } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -9,10 +9,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { hashPassword, verifyPassword, isPasswordStrong } from '@/utils/passwordUtils';
 import { validateUsername } from '@/utils/validationUtils';
+import { supabase } from '@/integrations/supabase/client';
+import { Switch } from '@/components/ui/switch';
 
 const SecuritySettings: React.FC = () => {
   const { t } = useLanguage();
@@ -30,9 +32,128 @@ const SecuritySettings: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isPasswordCopied, setIsPasswordCopied] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState<{ isStrong: boolean; message: string }>({ isStrong: false, message: '' });
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
+  const [showQRCode, setShowQRCode] = useState(false);
+  const [qrCodeUrl, setQrCodeUrl] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
+
+  // Check if 2FA is already enabled
+  useEffect(() => {
+    const check2FAStatus = async () => {
+      try {
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        if (authUser) {
+          const factors = await supabase.auth.mfa.listFactors();
+          setTwoFactorEnabled(factors.data?.totp && factors.data.totp.length > 0);
+        }
+      } catch (error) {
+        console.error('Error checking 2FA status:', error);
+      }
+    };
+    check2FAStatus();
+  }, []);
 
   const goBack = () => {
     navigate(-1);
+  };
+
+  const enable2FA = async () => {
+    try {
+      setIsSaving(true);
+      const { data, error } = await supabase.auth.mfa.enroll({
+        factorType: 'totp',
+        friendlyName: 'ReadNest'
+      });
+
+      if (error) throw error;
+
+      if (data) {
+        setQrCodeUrl(data.totp.qr_code);
+        setShowQRCode(true);
+        toast({
+          title: t('security.twoFactor.qrCodeGenerated'),
+        });
+      }
+    } catch (error: any) {
+      console.error('2FA enrollment error:', error);
+      toast({
+        title: t('security.twoFactor.enableError'),
+        variant: 'destructive'
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const verify2FA = async () => {
+    if (!verificationCode || verificationCode.length !== 6) {
+      toast({
+        title: t('security.twoFactor.invalidCode'),
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    try {
+      setIsSaving(true);
+      const factors = await supabase.auth.mfa.listFactors();
+      const factorId = factors.data?.totp?.[0]?.id;
+
+      if (!factorId) {
+        throw new Error('No factor ID found');
+      }
+
+      const { error } = await supabase.auth.mfa.challengeAndVerify({
+        factorId,
+        code: verificationCode
+      });
+
+      if (error) throw error;
+
+      setTwoFactorEnabled(true);
+      setShowQRCode(false);
+      setVerificationCode('');
+      toast({
+        title: t('security.twoFactor.enabled'),
+      });
+    } catch (error: any) {
+      console.error('2FA verification error:', error);
+      toast({
+        title: t('security.twoFactor.verificationError'),
+        variant: 'destructive'
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const disable2FA = async () => {
+    try {
+      setIsSaving(true);
+      const factors = await supabase.auth.mfa.listFactors();
+      const factorId = factors.data?.totp?.[0]?.id;
+
+      if (!factorId) {
+        throw new Error('No factor ID found');
+      }
+
+      const { error } = await supabase.auth.mfa.unenroll({ factorId });
+
+      if (error) throw error;
+
+      setTwoFactorEnabled(false);
+      toast({
+        title: t('security.twoFactor.disabled'),
+      });
+    } catch (error: any) {
+      console.error('2FA disable error:', error);
+      toast({
+        title: t('security.twoFactor.disableError'),
+        variant: 'destructive'
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const generateSecurePassword = () => {
@@ -358,6 +479,84 @@ const SecuritySettings: React.FC = () => {
               >
                 {isSaving ? 'Сохранение...' : 'Сохранить пароль'}
               </Button>
+            </CardContent>
+          </Card>
+
+          {/* Two-Factor Authentication Card */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Smartphone className="h-5 w-5 text-primary" />
+                <CardTitle>{t('security.twoFactor.title')}</CardTitle>
+              </div>
+              <CardDescription>
+                {t('security.twoFactor.description')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>{t('security.twoFactor.status')}</Label>
+                  <p className="text-sm text-muted-foreground">
+                    {twoFactorEnabled ? t('security.twoFactor.enabled') : t('security.twoFactor.disabled')}
+                  </p>
+                </div>
+                <Switch
+                  checked={twoFactorEnabled}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      enable2FA();
+                    } else {
+                      disable2FA();
+                    }
+                  }}
+                  disabled={isSaving || showQRCode}
+                />
+              </div>
+
+              {showQRCode && (
+                <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
+                  <div className="text-center">
+                    <p className="text-sm font-medium mb-2">{t('security.twoFactor.scanQR')}</p>
+                    {qrCodeUrl && (
+                      <img src={qrCodeUrl} alt="QR Code" className="mx-auto w-48 h-48" />
+                    )}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="verification-code">{t('security.twoFactor.enterCode')}</Label>
+                    <Input
+                      id="verification-code"
+                      type="text"
+                      placeholder="000000"
+                      maxLength={6}
+                      value={verificationCode}
+                      onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, ''))}
+                      className="text-center text-lg tracking-widest"
+                    />
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={verify2FA}
+                      disabled={isSaving || verificationCode.length !== 6}
+                      className="flex-1"
+                    >
+                      {isSaving ? t('common.saving') : t('security.twoFactor.verify')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setShowQRCode(false);
+                        setVerificationCode('');
+                      }}
+                      disabled={isSaving}
+                    >
+                      {t('common.cancel')}
+                    </Button>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

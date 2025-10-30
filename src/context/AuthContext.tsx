@@ -97,7 +97,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         password
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Login error:', error);
+        throw error;
+      }
       
       if (data.user) {
         await loadUserProfile(data.user.id);
@@ -105,8 +108,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
       return false;
     } catch (error: any) {
-      console.error('Login error:', error.message);
-      return false;
+      console.error('Login error:', error);
+      throw error;
     }
   };
 

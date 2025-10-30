@@ -4,6 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { searchTestAuthors, searchTestBooks } from '@/utils/testData';
 import { toast } from 'sonner';
 import { useLanguage } from '@/context/LanguageContext';
+import { supabase } from '@/integrations/supabase/client';
 
 type SearchType = 'books' | 'authors';
 
@@ -47,50 +48,57 @@ export const useSearch = () => {
     toast.success(t('search.historyCleared'));
   };
 
-  const handleSearch = (searchQuery: string) => {
+  const handleSearch = async (searchQuery: string) => {
     if (!searchQuery.trim()) return;
     
     addToHistory(searchQuery.trim());
     setSearching(true);
     setShowHistory(false);
-    setShowEmpty(false); // Reset empty state when starting new search
+    setShowEmpty(false);
     
-    setTimeout(() => {
-      if (isTestAccount) {
-        // Search both books and authors simultaneously
-        const bookResults = searchTestBooks(searchQuery);
-        const authorResults = searchTestAuthors(searchQuery);
-        
-        setBookResults(bookResults);
-        setAuthorResults(authorResults);
-        
-        // Check if we have results
-        const hasNoResults = bookResults.length === 0 && authorResults.length === 0;
-        
-        if (hasNoResults) {
-          // Show empty state and stop loading
-          setShowEmpty(true);
-          setSearching(false);
-        } else {
-          // We have results, stop loading but don't show empty
-          setShowEmpty(false);
-          setSearching(false);
-          
-          // Set search type based on which has more results, defaulting to books
-          if (authorResults.length > bookResults.length) {
-            setSearchType('authors');
-          } else {
-            setSearchType('books');
-          }
-        }
-      } else {
-        // Clear any previous results and show empty state for non-test accounts
-        setBookResults([]);
-        setAuthorResults([]);
+    try {
+      // Search profiles in database
+      const { data: profiles, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .or(`username.ilike.%${searchQuery}%,first_name.ilike.%${searchQuery}%,last_name.ilike.%${searchQuery}%`)
+        .limit(20);
+
+      if (error) {
+        console.error('Search error:', error);
+        toast.error(t('search.error'));
         setShowEmpty(true);
         setSearching(false);
+        return;
       }
-    }, 800);
+
+      // Map profiles to author results format
+      const mappedAuthors = profiles?.map(profile => ({
+        id: profile.id,
+        name: profile.username,
+        displayName: `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || profile.username,
+        avatar: profile.avatar_url || '/placeholder.svg',
+        subscriberCount: 0,
+        bookCount: 0,
+        bio: profile.bio
+      })) || [];
+
+      setAuthorResults(mappedAuthors);
+      setBookResults([]); // Clear book results for now
+
+      if (mappedAuthors.length === 0) {
+        setShowEmpty(true);
+      } else {
+        setShowEmpty(false);
+        setSearchType('authors');
+      }
+    } catch (error) {
+      console.error('Search error:', error);
+      toast.error(t('search.error'));
+      setShowEmpty(true);
+    } finally {
+      setSearching(false);
+    }
   };
 
   const clearResults = () => {
