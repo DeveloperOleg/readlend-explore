@@ -142,10 +142,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Logout
   const logout = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-    setSession(null);
-    setIsAuthenticated(false);
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Logout error:', error);
+      }
+      // Clear state regardless of error
+      setUser(null);
+      setSession(null);
+      setIsAuthenticated(false);
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Clear state even if there's an error
+      setUser(null);
+      setSession(null);
+      setIsAuthenticated(false);
+    }
   };
 
   // Get auth functions from hook

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
@@ -11,28 +11,6 @@ import * as z from 'zod';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Eye, EyeOff } from 'lucide-react';
 
-const userFormSchema = z.object({
-  username: z.string()
-    .min(3, { message: 'Имя пользователя должно содержать не менее 3 символов' })
-    .max(20, { message: 'Имя пользователя должно содержать не более 20 символов' })
-    .regex(/^[a-zA-Z][a-zA-Z0-9_]*$/, { 
-      message: 'Имя пользователя должно начинаться с буквы и может содержать только латинские буквы, цифры и символ подчеркивания' 
-    }),
-  password: z.string()
-    .min(8, { message: 'Пароль должен содержать не менее 8 символов' }),
-  confirmPassword: z.string().optional()
-}).refine((data) => {
-  if (data.confirmPassword !== undefined) {
-    return data.password === data.confirmPassword;
-  }
-  return true;
-}, {
-  message: "Пароли не совпадают",
-  path: ["confirmPassword"],
-});
-
-type UserFormValues = z.infer<typeof userFormSchema>;
-
 const RegisterForm: React.FC = () => {
   const { login, register } = useAuth();
   const { t } = useLanguage();
@@ -40,6 +18,29 @@ const RegisterForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
   const [showPassword, setShowPassword] = useState(false);
+
+  // Create schema with translations
+  const userFormSchema = useMemo(() => z.object({
+    username: z.string()
+      .min(3, { message: t('auth.usernameMinLength') })
+      .max(20, { message: t('auth.usernameMaxLength') })
+      .regex(/^[a-zA-Z][a-zA-Z0-9_]*$/, { 
+        message: t('auth.usernameFormat')
+      }),
+    password: z.string()
+      .min(8, { message: t('auth.passwordMinLength') }),
+    confirmPassword: z.string().optional()
+  }).refine((data) => {
+    if (data.confirmPassword !== undefined) {
+      return data.password === data.confirmPassword;
+    }
+    return true;
+  }, {
+    message: t('auth.passwordMismatch'),
+    path: ["confirmPassword"],
+  }), [t]);
+
+  type UserFormValues = z.infer<typeof userFormSchema>;
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(userFormSchema),
@@ -58,8 +59,8 @@ const RegisterForm: React.FC = () => {
         
         if (!success) {
           toast({
-            title: t('auth.error') || 'Ошибка',
-            description: t('auth.invalidCredentials') || 'Неверное имя пользователя или пароль',
+            title: t('auth.error'),
+            description: t('auth.invalidCredentials'),
             variant: 'destructive'
           });
         }
@@ -68,22 +69,22 @@ const RegisterForm: React.FC = () => {
         
         if (!success) {
           toast({
-            title: t('auth.error') || 'Ошибка',
-            description: t('auth.registrationFailed') || 'Не удалось зарегистрировать аккаунт. Возможно, это имя уже занято.',
+            title: t('auth.error'),
+            description: t('auth.registrationFailed'),
             variant: 'destructive'
           });
         } else {
           toast({
-            title: t('auth.success') || 'Успешно',
-            description: t('auth.registrationSuccess') || 'Аккаунт успешно создан!'
+            title: t('auth.success'),
+            description: t('auth.registrationSuccess')
           });
         }
       }
     } catch (error) {
       console.error('Auth error:', error);
       toast({
-        title: t('auth.error') || 'Ошибка',
-        description: t('auth.unexpectedError') || 'Произошла непредвиденная ошибка',
+        title: t('auth.error'),
+        description: t('auth.unexpectedError'),
         variant: 'destructive'
       });
     } finally {
@@ -101,10 +102,10 @@ const RegisterForm: React.FC = () => {
       <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList className="grid w-full grid-cols-2 bg-muted/50">
           <TabsTrigger value="login" className="data-[state=active]:bg-background">
-            {t('auth.login') || 'Вход'}
+            {t('auth.login')}
           </TabsTrigger>
           <TabsTrigger value="register" className="data-[state=active]:bg-background">
-            {t('auth.register') || 'Регистрация'}
+            {t('auth.register')}
           </TabsTrigger>
         </TabsList>
         
@@ -117,11 +118,11 @@ const RegisterForm: React.FC = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium">
-                      {t('auth.username') || 'Имя пользователя'}
+                      {t('auth.username')}
                     </FormLabel>
                     <FormControl>
                       <Input 
-                        placeholder={t('auth.usernamePlaceholder') || 'Введите имя пользователя'} 
+                        placeholder={t('auth.usernamePlaceholder')} 
                         {...field} 
                         className="h-11"
                         disabled={isLoading}
@@ -138,13 +139,13 @@ const RegisterForm: React.FC = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium">
-                      {t('auth.password') || 'Пароль'}
+                      {t('auth.password')}
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Input 
                           type={showPassword ? "text" : "password"}
-                          placeholder={t('auth.passwordPlaceholder') || 'Введите пароль'} 
+                          placeholder={t('auth.passwordPlaceholder')} 
                           {...field} 
                           className="h-11 pr-10"
                           disabled={isLoading}
@@ -170,12 +171,12 @@ const RegisterForm: React.FC = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-medium">
-                        {t('auth.confirmPassword') || 'Подтвердите пароль'}
+                        {t('auth.confirmPassword')}
                       </FormLabel>
                       <FormControl>
                         <Input 
                           type={showPassword ? "text" : "password"}
-                          placeholder={t('auth.confirmPasswordPlaceholder') || 'Введите пароль еще раз'} 
+                          placeholder={t('auth.confirmPasswordPlaceholder')} 
                           {...field} 
                           className="h-11"
                           disabled={isLoading}
@@ -202,14 +203,14 @@ const RegisterForm: React.FC = () => {
                   <div className="flex items-center justify-center gap-2">
                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                     {activeTab === 'login' 
-                      ? (t('auth.loggingIn') || 'Вход...') 
-                      : (t('auth.registering') || 'Регистрация...')
+                      ? t('auth.loggingIn') 
+                      : t('auth.registering')
                     }
                   </div>
                 ) : (
                   activeTab === 'login' 
-                    ? (t('auth.login') || 'Войти') 
-                    : (t('auth.register') || 'Зарегистрироваться')
+                    ? t('auth.login') 
+                    : t('auth.register')
                 )}
               </Button>
             </form>
